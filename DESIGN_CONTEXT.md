@@ -20,7 +20,7 @@
 - **Homepage**: Clean, focused introduction with navigation
 - **About**: Mission, 2 key differentiators, 2 core values
 - **Technique Library**: Categories without repetitive emojis
-- **Spot Guides**: Features and regions without excessive icons
+- **Spots**: Features and regions without excessive icons
 - **Contribute**: Clear contribution types and guidelines
 
 ## Navigation

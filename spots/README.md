@@ -1,6 +1,6 @@
 # Surf Spots
 
-This directory contains community-contributed surf spot guides. Each spot has its own markdown file with detailed information about:
+This directory contains community-contributed surf spots. Each spot has its own markdown file with detailed information about:
 
 - Wave characteristics and best conditions
 - Local knowledge and tips
@@ -8,7 +8,7 @@ This directory contains community-contributed surf spot guides. Each spot has it
 - Access information
 - Skill level requirements
 
-## Contributing a Spot Guide
+## Contributing a Spot
 
 1. Create a new markdown file with the spot name (e.g., `linda-mar.md`)
 2. Follow the template structure used in existing guides
