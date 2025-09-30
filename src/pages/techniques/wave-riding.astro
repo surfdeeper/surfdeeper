@@ -30,7 +30,7 @@ import Layout from '../../layouts/Layout.astro';
     
     <p>When you feel yourself getting too far ahead of the wave, that's your cue for a <a href="/techniques/cutbacks">cutback</a>. Don't wait until you're in the flats—start the turn while you still have the wave's energy. The cutback isn't just a maneuver; it's a survival technique for staying in the pocket.</p>
     
-    <p>Listen to the wave. The sound changes as you move through different sections. In the pocket, you'll hear the wave building behind you. When you're too far ahead, the sound changes—you'll hear the wave breaking in front of you instead of behind you.</p>
+    <p>Listen to the wave. The sound changes as you move through different sections. In the pocket, you'll hear the wave building behind you. When you're too far ahead, the sound changes—you'll hear the sounds of the wave breaking dwindle, you'll feel the wave flatten.</p>
   </section>
 
   <section class="cutbacks-and-positioning">
@@ -118,186 +118,21 @@ import Layout from '../../layouts/Layout.astro';
     padding-bottom: 0.5rem;
   }
 
-  .reading-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  p {
+    color: #e2e8f0;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
   }
 
-  .reading-card {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1.5rem;
-  }
-
-  .reading-card h3 {
+  a {
     color: #00ff88;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.3s ease;
   }
 
-  .reading-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .reading-card li {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .reading-card li::before {
-    content: "🌊";
-    position: absolute;
-    left: 0;
-  }
-
-  .turns-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .turn-card {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1.5rem;
-  }
-
-  .turn-card h3 {
-    color: #00ff88;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .turn-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .turn-card li {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .turn-card li::before {
-    content: "↻";
-    position: absolute;
-    left: 0;
-    color: #00cc6a;
-  }
-
-  .stance-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .stance-card {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1.5rem;
-  }
-
-  .stance-card h3 {
-    color: #00ff88;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .stance-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .stance-card li {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .stance-card li::before {
-    content: "⚖️";
-    position: absolute;
-    left: 0;
-  }
-
-  .mistakes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .mistake-card {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1.5rem;
-  }
-
-  .mistake-card h3 {
-    color: #00ff88;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .mistake-card p {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-  }
-
-  .drills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .drill-card {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1.5rem;
-  }
-
-  .drill-card h3 {
-    color: #00ff88;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .drill-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .drill-card li {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .drill-card li::before {
-    content: "🏄‍♂️";
-    position: absolute;
-    left: 0;
+  a:hover {
+    border-bottom-color: #00ff88;
   }
 
   .tips-list {
