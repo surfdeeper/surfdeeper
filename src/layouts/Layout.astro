@@ -21,7 +21,9 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     <nav class="main-nav">
       <div class="nav-container">
         <a href="/" class="nav-logo" aria-label="Surf Deeper home">
-          <img src="/logo.png?v=3" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
+          <span class="logo-crop">
+            <img src="/logo.png?v=3" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
+          </span>
         </a>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
@@ -96,7 +98,9 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
   .main-nav {
     background-color: #1e293b;
     border-bottom: 2px solid #00ff88;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
+    --nav-logo-height: 56px;
+    --nav-logo-scale: 2.5;
   }
 
   .nav-container {
@@ -119,10 +123,19 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     font-size: 1.25rem;
   }
 
-  .nav-logo .image-logo {
-    width: 180px;
-    height: auto;
+  .nav-logo .logo-crop {
     display: block;
+    height: var(--nav-logo-height);
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .nav-logo .image-logo {
+    height: var(--nav-logo-height);
+    width: auto;
+    display: block;
+    transform: scale(var(--nav-logo-scale));
+    transform-origin: center center;
     filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
   }
 
@@ -238,5 +251,6 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     .footer-container {
       padding: 1rem;
     }
+    .main-nav { --nav-logo-height: 48px; --nav-logo-scale: 2; }
   }
 </style>
