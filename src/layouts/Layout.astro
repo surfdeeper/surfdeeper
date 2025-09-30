@@ -123,8 +123,7 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     background-color: #1e293b;
     border-bottom: 2px solid #00ff88;
     padding: 0.5rem 0;
-    --nav-logo-height: 56px;
-    --nav-logo-scale: 2.5;
+    --nav-logo-height: 96px;
   }
 
   .nav-container {
@@ -149,17 +148,18 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
 
   .nav-logo .logo-crop {
     display: block;
-    height: var(--nav-logo-height);
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
     line-height: 0;
   }
 
   .nav-logo .image-logo {
-    height: var(--nav-logo-height);
+    max-height: var(--nav-logo-height);
+    height: auto;
     width: auto;
     display: block;
-    transform: scale(var(--nav-logo-scale));
-    transform-origin: center center;
+    object-fit: contain;
+    object-position: center;
     filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
   }
 
@@ -275,6 +275,6 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     .footer-container {
       padding: 1rem;
     }
-    .main-nav { --nav-logo-height: 48px; --nav-logo-scale: 2; }
+    .main-nav { --nav-logo-height: 72px; }
   }
 </style>
