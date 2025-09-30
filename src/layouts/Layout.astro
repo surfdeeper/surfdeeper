@@ -94,6 +94,30 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     box-sizing: border-box;
   }
 
+  /* Global link styles (apply to slotted content) */
+  :global(a) {
+    color: #00ff88;
+    text-decoration: underline;
+    text-decoration-color: #00cc6a;
+    text-underline-offset: 3px;
+    transition: color 0.3s ease;
+  }
+
+  :global(a:hover) {
+    color: #00cc6a;
+    text-decoration-color: #00ff88;
+  }
+
+  :global(a:visited) {
+    color: #00ff88;
+  }
+
+  :global(a:focus-visible) {
+    outline: 2px dashed #00ff88;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
   /* Navigation Styles */
   .main-nav {
     background-color: #1e293b;
