@@ -44,6 +44,15 @@ import Layout from '../layouts/Layout.astro';
           <li>Focused on learning and sharing, not profit</li>
         </ul>
       </section>
+
+      <section class="pullquote">
+        <blockquote>
+          <p>“Before diving into wave types, note the striking similarity between ocean waves, hurricanes, and even galaxies. Spirals are nature’s way of channeling energy efficiently. Waves curl, roll, and crash along these spirals, revealing patterns that are physical, mathematical, and profoundly beautiful.”</p>
+        </blockquote>
+        <p class="pullquote-cta">
+          <a href="/how-to/types-of-waves#spirals-in-motion">Explore the spiral connection →</a>
+        </p>
+      </section>
 </Layout>
 
 <style>
@@ -109,5 +118,29 @@ import Layout from '../layouts/Layout.astro';
   p {
     margin-bottom: 1rem;
     color: #00ff88;
+  }
+
+  .pullquote {
+    margin-top: 3rem;
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .pullquote blockquote {
+    margin: 0 0 0.75rem 0;
+    padding-left: 1rem;
+    border-left: 4px solid #00ff88;
+  }
+
+  .pullquote p {
+    color: #00ff88;
+  }
+
+  .pullquote-cta a {
+    color: #00ff88;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 </style>
