@@ -12,7 +12,7 @@ import Layout from '../layouts/Layout.astro';
     <h2>Technique Categories</h2>
     <div class="category-grid">
       <div class="category-card">
-        <h3>Paddling</h3>
+        <h3><a href="/techniques/paddling">Paddling</a></h3>
         <p>Efficient paddling techniques for catching waves and positioning</p>
         <ul>
           <li>Basic paddling form</li>
@@ -32,7 +32,7 @@ import Layout from '../layouts/Layout.astro';
       </div>
       
       <div class="category-card">
-        <h3>Wave Riding</h3>
+        <h3><a href="/techniques/wave-riding">Wave Riding</a></h3>
         <p>Techniques for riding different parts of the wave</p>
         <ul>
           <li>Bottom turns</li>
@@ -49,6 +49,7 @@ import Layout from '../layouts/Layout.astro';
           <li>Barrel riding</li>
           <li>Tube riding</li>
         </ul>
+        <p class="coming-soon-text">🚧 Coming soon - need experienced contributors</p>
       </div>
     </div>
   </section>
@@ -160,6 +161,17 @@ import Layout from '../layouts/Layout.astro';
     position: absolute;
     left: 0;
     color: #00cc6a;
+  }
+
+  .coming-soon-text {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 1rem;
+    margin-bottom: 0;
+    text-align: center;
+    border-top: 1px solid #334155;
+    padding-top: 0.75rem;
   }
 
   .coming-soon {
