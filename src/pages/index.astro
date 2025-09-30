@@ -13,6 +13,19 @@
   <body>
     <main>
       <header>
+        <div class="logo-container">
+          <svg class="wave-logo" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00cc6a;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <path d="M20,80 Q40,20 80,40 Q120,60 160,30 Q180,20 200,50 L200,120 L0,120 Z" fill="url(#waveGradient)" />
+            <path d="M20,90 Q50,50 90,70 Q130,90 170,60 Q190,50 200,80 L200,120 L0,120 Z" fill="#00cc6a" opacity="0.8" />
+            <path d="M20,100 Q60,70 100,90 Q140,110 180,80 Q200,70 200,100 L200,120 L0,120 Z" fill="#00aa55" opacity="0.6" />
+          </svg>
+        </div>
         <h1>Surf Deeper</h1>
         <p class="tagline">Surf deeper. Learn more. Share what you know.</p>
       </header>
@@ -59,6 +72,18 @@
   header {
     text-align: center;
     margin-bottom: 3rem;
+  }
+  
+  .logo-container {
+    margin-bottom: 2rem;
+  }
+  
+  .wave-logo {
+    width: 120px;
+    height: 72px;
+    margin: 0 auto;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(0, 255, 136, 0.3));
   }
   
   h1 {
