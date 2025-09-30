@@ -1,0 +1,294 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Spot Guides - Surf Deeper" description="Discover surf spots with maps, local insights, tide charts, and hazards contributed by the community.">
+  <header class="page-header">
+    <h1>Spot Guides</h1>
+    <p class="page-subtitle">Discover waves around the world</p>
+  </header>
+
+  <section class="spot-features">
+    <h2>What You'll Find</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>Interactive Maps</h3>
+        <p>Detailed maps showing break locations, access points, and parking areas</p>
+      </div>
+      
+      <div class="feature-card">
+        <h3>Wave Information</h3>
+        <p>Wave type, size, direction, and best conditions for each spot</p>
+      </div>
+      
+      <div class="feature-card">
+        <h3>Tide Charts</h3>
+        <p>Local tide information and how it affects wave quality</p>
+      </div>
+      
+      <div class="feature-card">
+        <h3>⚠️ Hazards & Safety</h3>
+        <p>Important safety information, hazards, and local knowledge</p>
+      </div>
+      
+      <div class="feature-card">
+        <h3>Local Insights</h3>
+        <p>Tips from locals about crowd levels, best times, and etiquette</p>
+      </div>
+      
+      <div class="feature-card">
+        <h3>Photos & Videos</h3>
+        <p>Visual guides showing the break in different conditions</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="spot-categories">
+    <h2>Browse by Region</h2>
+    <div class="region-grid">
+      <div class="region-card">
+        <h3>California</h3>
+        <p>From Malibu to Mavericks</p>
+        <ul>
+          <li>Los Angeles County</li>
+          <li>Orange County</li>
+          <li>San Diego</li>
+          <li>Central Coast</li>
+          <li>Northern California</li>
+        </ul>
+      </div>
+      
+      <div class="region-card">
+        <h3>Hawaii</h3>
+        <p>The birthplace of surfing</p>
+        <ul>
+          <li>Oahu</li>
+          <li>Maui</li>
+          <li>Kauai</li>
+          <li>Big Island</li>
+        </ul>
+      </div>
+      
+      <div class="region-card">
+        <h3>Australia</h3>
+        <p>World-class waves down under</p>
+        <ul>
+          <li>Gold Coast</li>
+          <li>Byron Bay</li>
+          <li>Bells Beach</li>
+          <li>Margaret River</li>
+        </ul>
+      </div>
+      
+      <div class="region-card">
+        <h3>Europe</h3>
+        <p>Cold water perfection</p>
+        <ul>
+          <li>Portugal</li>
+          <li>Spain</li>
+          <li>France</li>
+          <li>Ireland</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="coming-soon">
+    <h2>Coming Soon</h2>
+    <p>We're building a comprehensive database of surf spots with detailed information contributed by the community. Each spot guide will include:</p>
+    <ul>
+      <li>📍 Precise location and access information</li>
+      <li>🌊 Wave characteristics and best conditions</li>
+      <li>🌅 Tide and wind dependencies</li>
+      <li>⚠️ Safety considerations and hazards</li>
+      <li>👥 Local etiquette and crowd information</li>
+      <li>📸 Photos and videos from the community</li>
+      <li>💬 Reviews and tips from surfers</li>
+    </ul>
+  </section>
+
+  <section class="contribute-cta">
+    <h2>Share Your Local Knowledge</h2>
+    <p>Know a great surf spot? Help the community by sharing your local knowledge and insights.</p>
+    <a href="/contribute" class="cta-button">Add a Spot Guide</a>
+  </section>
+</Layout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-header h1 {
+    color: #00ff88;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .page-subtitle {
+    font-size: 1.25rem;
+    color: #00ff88;
+    font-weight: 500;
+  }
+
+  .spot-features h2,
+  .spot-categories h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #00ff88;
+    padding-bottom: 0.5rem;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .feature-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: border-color 0.3s ease;
+  }
+
+  .feature-card:hover {
+    border-color: #00ff88;
+  }
+
+  .feature-card h3 {
+    color: #00ff88;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card p {
+    color: #00ff88;
+    opacity: 0.9;
+  }
+
+  .region-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .region-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .region-card:hover {
+    border-color: #00ff88;
+  }
+
+  .region-card h3 {
+    color: #00ff88;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .region-card p {
+    color: #00ff88;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .region-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .region-card li {
+    color: #00ff88;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .region-card li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #00cc6a;
+  }
+
+  .coming-soon {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .coming-soon h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .coming-soon p {
+    color: #00ff88;
+    margin-bottom: 1rem;
+  }
+
+  .coming-soon ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .coming-soon li {
+    color: #00ff88;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .contribute-cta {
+    text-align: center;
+    background-color: #1e293b;
+    border: 2px solid #00ff88;
+    border-radius: 8px;
+    padding: 2rem;
+  }
+
+  .contribute-cta h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .contribute-cta p {
+    color: #00ff88;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background-color: #00ff88;
+    color: #0f172a;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  .cta-button:hover {
+    background-color: #00cc6a;
+  }
+</style>

@@ -1,0 +1,384 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Contribute - Surf Deeper" description="Share your surf knowledge with the community. Contribute techniques, spot guides, and help build the ultimate surf resource.">
+  <header class="page-header">
+    <h1>Contribute</h1>
+    <p class="page-subtitle">Share your knowledge, help the community</p>
+  </header>
+
+  <section class="contribution-types">
+    <h2>How You Can Contribute</h2>
+    <div class="contribution-grid">
+      <div class="contribution-card">
+        <h3>Technique Guides</h3>
+        <p>Share your expertise on specific surf techniques</p>
+        <ul>
+          <li>Step-by-step instructions</li>
+          <li>Common mistakes to avoid</li>
+          <li>Pro tips and variations</li>
+          <li>Video demonstrations</li>
+        </ul>
+        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/techniques" target="_blank" class="contribute-link">Add Technique</a>
+      </div>
+      
+      <div class="contribution-card">
+        <h3>Spot Guides</h3>
+        <p>Help others discover great surf spots</p>
+        <ul>
+          <li>Location and access information</li>
+          <li>Wave characteristics</li>
+          <li>Best conditions and timing</li>
+          <li>Safety considerations</li>
+        </ul>
+        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/spots" target="_blank" class="contribute-link">Add Spot</a>
+      </div>
+      
+      <div class="contribution-card">
+        <h3>Photos & Videos</h3>
+        <p>Share visual content to illustrate techniques and spots</p>
+        <ul>
+          <li>Technique demonstrations</li>
+          <li>Spot photos in different conditions</li>
+          <li>Wave riding footage</li>
+          <li>Safety and hazard documentation</li>
+        </ul>
+        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/media" target="_blank" class="contribute-link">Add Media</a>
+      </div>
+      
+      <div class="contribution-card">
+        <h3>Reviews & Tips</h3>
+        <p>Share your experiences and local knowledge</p>
+        <ul>
+          <li>Spot reviews and ratings</li>
+          <li>Local etiquette and customs</li>
+          <li>Equipment recommendations</li>
+          <li>Safety warnings and tips</li>
+        </ul>
+        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/reviews" target="_blank" class="contribute-link">Add Review</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="contribution-guidelines">
+    <h2>Contribution Guidelines</h2>
+    <div class="guidelines-content">
+      <div class="guideline-section">
+        <h3>Content Quality</h3>
+        <ul>
+          <li>Provide clear, detailed information</li>
+          <li>Use proper grammar and spelling</li>
+          <li>Include relevant photos or videos when possible</li>
+          <li>Be specific about conditions and skill levels</li>
+        </ul>
+      </div>
+      
+      <div class="guideline-section">
+        <h3>⚠️ Safety First</h3>
+        <ul>
+          <li>Always prioritize safety information</li>
+          <li>Include hazard warnings and precautions</li>
+          <li>Mention local emergency services if relevant</li>
+          <li>Respect local regulations and customs</li>
+        </ul>
+      </div>
+      
+      <div class="guideline-section">
+        <h3>Community Spirit</h3>
+        <ul>
+          <li>Be respectful and constructive</li>
+          <li>Share knowledge freely and openly</li>
+          <li>Help others learn and improve</li>
+          <li>Respect local surf culture and etiquette</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="github-contribution">
+    <h2>How to Contribute via GitHub</h2>
+    <p>Since we're open-source, you can contribute directly through GitHub. Here's how to get started:</p>
+    
+    <div class="contribution-steps">
+      <div class="step-card">
+        <h3>1. Fork the Repository</h3>
+        <p>Go to our <a href="https://github.com/surfdeeper/surfdeeper" target="_blank">GitHub repository</a> and click the "Fork" button in the top right corner.</p>
+      </div>
+      
+      <div class="step-card">
+        <h3>2. Create a New File</h3>
+        <p>Navigate to the appropriate folder (techniques/, spots/, etc.) and click "Add file" → "Create new file".</p>
+      </div>
+      
+      <div class="step-card">
+        <h3>3. Add Your Content</h3>
+        <p>Write your technique guide or spot information using Markdown format. Include clear headings and descriptions.</p>
+      </div>
+      
+      <div class="step-card">
+        <h3>4. Submit a Pull Request</h3>
+        <p>Click "Propose new file" → "Create pull request". Add a descriptive title and we'll review your contribution.</p>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-header h1 {
+    color: #00ff88;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .page-subtitle {
+    font-size: 1.25rem;
+    color: #00ff88;
+    font-weight: 500;
+  }
+
+  .contribution-types h2,
+  .contribution-guidelines h2,
+  .coming-soon h2,
+  .contact-info h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #00ff88;
+    padding-bottom: 0.5rem;
+  }
+
+  .contribution-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .contribution-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .contribution-card:hover {
+    border-color: #00ff88;
+  }
+
+  .contribution-card h3 {
+    color: #00ff88;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .contribution-card p {
+    color: #00ff88;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .contribution-card ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .contribution-card li {
+    color: #00ff88;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .contribution-card li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #00cc6a;
+  }
+
+  .contribute-link {
+    display: inline-block;
+    background-color: #00ff88;
+    color: #0f172a;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  .contribute-link:hover {
+    background-color: #00cc6a;
+  }
+
+  .guidelines-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .guideline-section {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .guideline-section h3 {
+    color: #00ff88;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .guideline-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .guideline-section li {
+    color: #00ff88;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .guideline-section li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #00cc6a;
+  }
+
+  .coming-soon {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .coming-soon p {
+    color: #00ff88;
+    margin-bottom: 1rem;
+  }
+
+  .coming-soon ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+
+  .coming-soon li {
+    color: #00ff88;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .github-contribution {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .github-contribution h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .github-contribution p {
+    color: #00ff88;
+    margin-bottom: 2rem;
+  }
+
+  .contribution-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .step-card {
+    background-color: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .step-card:hover {
+    border-color: #00ff88;
+  }
+
+  .step-card h3 {
+    color: #00ff88;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .step-card p {
+    color: #00ff88;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .step-card a {
+    color: #00cc6a;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .step-card a:hover {
+    color: #00ff88;
+  }
+
+  .contact-info {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 2rem;
+  }
+
+  .contact-info p {
+    color: #00ff88;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .contact-method {
+    text-align: center;
+  }
+
+  .contact-method h4 {
+    color: #00ff88;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-method p {
+    color: #00ff88;
+    opacity: 0.9;
+    margin: 0;
+  }
+</style>

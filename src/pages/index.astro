@@ -1,34 +1,25 @@
 ---
-// Astro component script (runs at build time)
+import Layout from '../layouts/Layout.astro';
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Surf Deeper</title>
-  </head>
-  <body>
-    <main>
-      <header>
-        <div class="logo-container">
-          <svg class="wave-logo" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#00cc6a;stop-opacity:1" />
-              </linearGradient>
-            </defs>
-            <path d="M20,80 Q40,20 80,40 Q120,60 160,30 Q180,20 200,50 L200,120 L0,120 Z" fill="url(#waveGradient)" />
-            <path d="M20,90 Q50,50 90,70 Q130,90 170,60 Q190,50 200,80 L200,120 L0,120 Z" fill="#00cc6a" opacity="0.8" />
-            <path d="M20,100 Q60,70 100,90 Q140,110 180,80 Q200,70 200,100 L200,120 L0,120 Z" fill="#00aa55" opacity="0.6" />
-          </svg>
-        </div>
-        <h1>Surf Deeper</h1>
-        <p class="tagline">Surf deeper. Learn more. Share what you know.</p>
-      </header>
+<Layout title="Surf Deeper" description="Surf deeper. Learn more. Share what you know. A community-driven hub for surfers of all levels.">
+  <header class="homepage-header">
+    <div class="logo-container">
+      <svg class="wave-logo" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#00cc6a;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M20,80 Q40,20 80,40 Q120,60 160,30 Q180,20 200,50 L200,120 L0,120 Z" fill="url(#waveGradient)" />
+        <path d="M20,90 Q50,50 90,70 Q130,90 170,60 Q190,50 200,80 L200,120 L0,120 Z" fill="#00cc6a" opacity="0.8" />
+        <path d="M20,100 Q60,70 100,90 Q140,110 180,80 Q200,70 200,100 L200,120 L0,120 Z" fill="#00aa55" opacity="0.6" />
+      </svg>
+    </div>
+    <h1>Surf Deeper</h1>
+    <p class="tagline">Surf deeper. Learn more. Share what you know.</p>
+  </header>
 
       <section class="about">
         <h2>About</h2>
@@ -53,23 +44,10 @@
           <li>Focused on learning and sharing, not profit</li>
         </ul>
       </section>
-    </main>
-  </body>
-</html>
+</Layout>
 
 <style>
-  body {
-    font-family: system-ui, sans-serif;
-    line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #0f172a;
-    color: #00ff88;
-    min-height: 100vh;
-  }
-  
-  header {
+  .homepage-header {
     text-align: center;
     margin-bottom: 3rem;
   }
@@ -86,7 +64,7 @@
     filter: drop-shadow(0 4px 8px rgba(0, 255, 136, 0.3));
   }
   
-  h1 {
+  .homepage-header h1 {
     color: #00ff88;
     font-size: 3rem;
     margin-bottom: 0.5rem;
@@ -120,24 +98,9 @@
   
   li {
     margin-bottom: 0.75rem;
-    padding-left: 1.5rem;
-    position: relative;
     color: #00ff88;
   }
   
-  li::before {
-    content: "🌊";
-    position: absolute;
-    left: 0;
-  }
-  
-  .features li::before {
-    content: "📚";
-  }
-  
-  .why-different li::before {
-    content: "✨";
-  }
   
   strong {
     color: #00ff88;

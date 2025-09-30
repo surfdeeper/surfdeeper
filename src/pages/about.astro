@@ -1,0 +1,155 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About - Surf Deeper" description="Learn about Surf Deeper - a community-driven hub for surfers of all levels. Open-source, free, and focused on learning and sharing.">
+  <header class="page-header">
+    <h1>About Surf Deeper</h1>
+    <p class="page-subtitle">Community-driven surf knowledge for everyone</p>
+  </header>
+
+  <section class="mission">
+    <h2>Our Mission</h2>
+    <p>Surf Deeper is building a community-driven resource for surfers of all levels. We believe surf knowledge should be freely shared, openly accessible, and continuously improved by the community.</p>
+  </section>
+
+  <section class="what-makes-different">
+    <h2>What Makes Us Different</h2>
+    <div class="difference-grid">
+      <div class="difference-card">
+        <h3>Community-Driven</h3>
+        <p>All content is created and maintained by real surfers sharing real knowledge.</p>
+      </div>
+      
+      <div class="difference-card">
+        <h3>Open & Free</h3>
+        <p>Our platform is open-source and free, focused on education, not profit.</p>
+      </div>
+      
+    </div>
+  </section>
+
+  <section class="community-values">
+    <h2>Community Values</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <h3>Respect</h3>
+        <p>For the ocean, fellow surfers, and local communities.</p>
+      </div>
+      
+      <div class="value-card">
+        <h3>🌱 Sustainability</h3>
+        <p>Promoting environmental awareness and sustainable surfing practices.</p>
+      </div>
+      
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-header h1 {
+    color: #00ff88;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .page-subtitle {
+    font-size: 1.25rem;
+    color: #00ff88;
+    font-weight: 500;
+  }
+
+  .mission h2,
+  .what-makes-different h2,
+  .our-vision h2,
+  .community-values h2,
+  .get-involved h2,
+  .contact h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #00ff88;
+    padding-bottom: 0.5rem;
+  }
+
+  .mission p {
+    color: #00ff88;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+
+
+  .difference-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .difference-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .difference-card:hover {
+    border-color: #00ff88;
+  }
+
+  .difference-card h3 {
+    color: #00ff88;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .difference-card p {
+    color: #00ff88;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .value-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: border-color 0.3s ease;
+  }
+
+  .value-card:hover {
+    border-color: #00ff88;
+  }
+
+  .value-card h3 {
+    color: #00ff88;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .value-card p {
+    color: #00ff88;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+</style>

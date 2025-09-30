@@ -1,0 +1,261 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Surf deeper. Learn more. Share what you know." } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <nav class="main-nav">
+      <div class="nav-container">
+        <a href="/" class="nav-logo">
+          <svg class="wave-logo" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00cc6a;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <path d="M20,80 Q40,20 80,40 Q120,60 160,30 Q180,20 200,50 L200,120 L0,120 Z" fill="url(#waveGradient)" />
+            <path d="M20,90 Q50,50 90,70 Q130,90 170,60 Q190,50 200,80 L200,120 L0,120 Z" fill="#00cc6a" opacity="0.8" />
+            <path d="M20,100 Q60,70 100,90 Q140,110 180,80 Q200,70 200,100 L200,120 L0,120 Z" fill="#00aa55" opacity="0.6" />
+          </svg>
+          <span>Surf Deeper</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/technique-library">Technique Library</a></li>
+          <li><a href="/spot-guides">Spot Guides</a></li>
+          <li><a href="/contribute">Contribute</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-container">
+        <div class="footer-logo">
+          <svg class="wave-logo" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="footerWaveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#00cc6a;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <path d="M20,80 Q40,20 80,40 Q120,60 160,30 Q180,20 200,50 L200,120 L0,120 Z" fill="url(#footerWaveGradient)" />
+            <path d="M20,90 Q50,50 90,70 Q130,90 170,60 Q190,50 200,80 L200,120 L0,120 Z" fill="#00cc6a" opacity="0.8" />
+            <path d="M20,100 Q60,70 100,90 Q140,110 180,80 Q200,70 200,100 L200,120 L0,120 Z" fill="#00aa55" opacity="0.6" />
+          </svg>
+          <span>Surf Deeper</span>
+        </div>
+        <div class="footer-links">
+          <div class="footer-section">
+            <h4>🌊 Ride the Wave</h4>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/technique-library">Technique Library</a></li>
+              <li><a href="/spot-guides">Spot Guides</a></li>
+              <li><a href="/contribute">Contribute</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>🏄‍♂️ Drop In</h4>
+            <ul>
+              <li><a href="/contribute">Share Knowledge</a></li>
+              <li><a href="/spot-guides">Add Spots</a></li>
+              <li><a href="/technique-library">Submit Techniques</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 Surf Deeper. Community-driven surf knowledge.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    background-color: #0f172a;
+    color: #00ff88;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Navigation Styles */
+  .main-nav {
+    background-color: #1e293b;
+    border-bottom: 2px solid #00ff88;
+    padding: 1rem 0;
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #00ff88;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .nav-logo .wave-logo {
+    width: 40px;
+    height: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    color: #00ff88;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: #00cc6a;
+  }
+
+  /* Footer Styles */
+  .main-footer {
+    background-color: #1e293b;
+    border-top: 2px solid #00ff88;
+    margin-top: auto;
+  }
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    color: #00ff88;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .footer-logo .wave-logo {
+    width: 40px;
+    height: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
+  }
+
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .footer-section h4 {
+    color: #00ff88;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-section li {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-section a {
+    color: #00ff88;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-section a:hover {
+    color: #00cc6a;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid #334155;
+    padding-top: 1rem;
+    text-align: center;
+  }
+
+  .footer-bottom p {
+    color: #94a3b8;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .nav-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      gap: 1rem;
+    }
+
+    .main {
+      padding: 1rem;
+    }
+
+    .footer-container {
+      padding: 1rem;
+    }
+  }
+</style>

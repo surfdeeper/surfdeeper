@@ -1,0 +1,220 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Technique Library - Surf Deeper" description="Step-by-step surf techniques, from paddling efficiently to riding the pocket. Learn from the community.">
+  <header class="page-header">
+    <h1>Technique Library</h1>
+    <p class="page-subtitle">Master the fundamentals and advanced techniques</p>
+  </header>
+
+  <section class="technique-categories">
+    <h2>Technique Categories</h2>
+    <div class="category-grid">
+      <div class="category-card">
+        <h3>Paddling</h3>
+        <p>Efficient paddling techniques for catching waves and positioning</p>
+        <ul>
+          <li>Basic paddling form</li>
+          <li>Duck diving</li>
+          <li>Paddle positioning</li>
+        </ul>
+      </div>
+      
+      <div class="category-card">
+        <h3>Pop-up</h3>
+        <p>Getting to your feet quickly and smoothly</p>
+        <ul>
+          <li>Beginner pop-up</li>
+          <li>Advanced pop-up variations</li>
+          <li>Pop-up timing</li>
+        </ul>
+      </div>
+      
+      <div class="category-card">
+        <h3>Wave Riding</h3>
+        <p>Techniques for riding different parts of the wave</p>
+        <ul>
+          <li>Bottom turns</li>
+          <li>Top turns</li>
+          <li>Cutbacks</li>
+        </ul>
+      </div>
+      
+      <div class="category-card">
+        <h3>Advanced Moves</h3>
+        <p>Progressive techniques for experienced surfers</p>
+        <ul>
+          <li>Aerials</li>
+          <li>Barrel riding</li>
+          <li>Tube riding</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="coming-soon">
+    <h2>Coming Soon</h2>
+    <p>We're building a comprehensive library of surf techniques with step-by-step guides, video tutorials, and community contributions. Each technique will include:</p>
+    <ul>
+      <li>📝 Detailed written instructions</li>
+      <li>🎥 Video demonstrations</li>
+      <li>⚠️ Common mistakes to avoid</li>
+      <li>💡 Pro tips from experienced surfers</li>
+      <li>📊 Difficulty ratings</li>
+    </ul>
+  </section>
+
+  <section class="contribute-cta">
+    <h2>Share Your Knowledge</h2>
+    <p>Have a technique you've mastered? Share it with the community and help others improve their surfing.</p>
+    <a href="/contribute" class="cta-button">Contribute a Technique</a>
+  </section>
+</Layout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-header h1 {
+    color: #00ff88;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .page-subtitle {
+    font-size: 1.25rem;
+    color: #00ff88;
+    font-weight: 500;
+  }
+
+  .technique-categories h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #00ff88;
+    padding-bottom: 0.5rem;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .category-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .category-card:hover {
+    border-color: #00ff88;
+  }
+
+  .category-card h3 {
+    color: #00ff88;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-card p {
+    color: #00ff88;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .category-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .category-card li {
+    color: #00ff88;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .category-card li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #00cc6a;
+  }
+
+  .coming-soon {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .coming-soon h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .coming-soon p {
+    color: #00ff88;
+    margin-bottom: 1rem;
+  }
+
+  .coming-soon ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .coming-soon li {
+    color: #00ff88;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .contribute-cta {
+    text-align: center;
+    background-color: #1e293b;
+    border: 2px solid #00ff88;
+    border-radius: 8px;
+    padding: 2rem;
+  }
+
+  .contribute-cta h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .contribute-cta p {
+    color: #00ff88;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background-color: #00ff88;
+    color: #0f172a;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  .cta-button:hover {
+    background-color: #00cc6a;
+  }
+</style>
