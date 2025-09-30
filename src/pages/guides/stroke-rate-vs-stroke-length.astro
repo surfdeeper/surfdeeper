@@ -1,0 +1,63 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Stroke Rate vs Stroke Length — Finding Your Balance - Surf Deeper" description="Understand stroke rate (cadence) and stroke length (distance per stroke), and how to balance them for surfing-focused efficiency.">
+  <header class="page-header">
+    <h1>Stroke Rate vs Stroke Length</h1>
+    <p class="page-subtitle">Finding your personal efficiency zone</p>
+  </header>
+
+  <article class="technique-article">
+    <section>
+      <h2>Definitions</h2>
+      <ul>
+        <li>Stroke Rate: cadence (strokes per minute)</li>
+        <li>Stroke Length: distance covered per stroke</li>
+        <li>Tradeoff: higher rate often reduces length, and vice versa</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Why Surfers Need Balance</h2>
+      <ul>
+        <li>Goal is sustainable propulsion with low heart rate</li>
+        <li>Cadence spikes for sprints; length focus for cruising economy</li>
+        <li>Conditions change: currents, chop, board buoyancy, wetsuits</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>How to Find Your Zone</h2>
+      <ul>
+        <li>Short repeats: test different cadences at easy effort</li>
+        <li>Note breath cadence and RPE, not just speed</li>
+        <li>Keep EVF quality; don’t let catch slip as cadence rises</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Practical Surf Translation</h2>
+      <ul>
+        <li>Default: relaxed, long strokes; sprint: quick, compact cadence</li>
+        <li>Match cadence to wave timing, not arbitrary numbers</li>
+        <li>Quality over quantity: clean catches beat thrashy turnover</li>
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .page-header { text-align: center; margin-bottom: 3rem; }
+  .page-header h1 { color: #00ff88; font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .page-subtitle { font-size: 1.1rem; color: #00ff88; font-weight: 500; }
+  .technique-article { max-width: 800px; margin: 0 auto; line-height: 1.7; }
+  .technique-article section { margin-bottom: 2rem; }
+  .technique-article h2 { color: #00ff88; font-size: 1.5rem; margin-bottom: 0.75rem; border-bottom: 2px solid #00ff88; padding-bottom: 0.5rem; }
+  .technique-article ul { list-style: none; padding: 0; margin: 0; }
+  .technique-article li { color: #00ff88; margin-bottom: 0.4rem; padding-left: 1.25rem; position: relative; }
+  .technique-article li::before { content: "◦"; position: absolute; left: 0; color: #00cc6a; }
+  @media (max-width: 768px) { .page-header h1 { font-size: 1.8rem; } .technique-article { padding: 0 1rem; } }
+</style>
+
+

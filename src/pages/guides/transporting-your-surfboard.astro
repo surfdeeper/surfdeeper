@@ -1,0 +1,135 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Transporting Your Surfboard: Every Method Explained - Surf Deeper" description="Carry, bike, and car transport options for surfboards with safety-first tips and setup outlines.">
+  <header class="page-header">
+    <h1>Transporting Your Surfboard: Every Method Explained</h1>
+    <p class="page-subtitle">Practical setups for foot, bike, and car</p>
+  </header>
+
+  <article class="technique-article">
+    <section>
+      <h2>On Foot</h2>
+      <ul>
+        <li>Underarm carry</li>
+        <li>On head</li>
+        <li>Resting vertically on foot</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>By Bike</h2>
+      <ul>
+        <li>Side racks vs. trailers</li>
+        <li>Balance and safety</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>By Car (Outside)</h2>
+      <ul>
+        <li>Hard racks with cam straps</li>
+        <li>Soft racks / temp racks</li>
+        <li>Stacking multiple boards (nose/tail alternation, padding)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>By Car (Inside)</h2>
+      <ul>
+        <li>Fitting shortboards vs. longboards</li>
+        <li>Seat-down hacks</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Board Bags & Protection</h2>
+      <ul>
+        <li>Day bags</li>
+        <li>Board socks</li>
+        <li>Travel coffins (airline travel tips)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Strapping & Safety</h2>
+      <ul>
+        <li>Nose forward, fins up rule</li>
+        <li>Cam straps vs. ratchet straps (pros/cons)</li>
+        <li>Avoiding strap vibration</li>
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-header h1 {
+    color: #00ff88;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: #00ff88;
+    font-weight: 500;
+  }
+
+  .technique-article {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .technique-article section {
+    margin-bottom: 2rem;
+  }
+
+  .technique-article h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 2px solid #00ff88;
+    padding-bottom: 0.5rem;
+  }
+
+  .technique-article ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .technique-article li {
+    color: #00ff88;
+    margin-bottom: 0.4rem;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .technique-article li::before {
+    content: "◦";
+    position: absolute;
+    left: 0;
+    color: #00cc6a;
+  }
+
+  @media (max-width: 768px) {
+    .page-header h1 {
+      font-size: 1.8rem;
+    }
+    .technique-article {
+      padding: 0 1rem;
+    }
+  }
+</style>
+
+
