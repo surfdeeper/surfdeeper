@@ -12,8 +12,35 @@
   </head>
   <body>
     <main>
-      <h1>Welcome to Surf Deeper</h1>
-      <p>Your minimal Astro site is ready to go!</p>
+      <header>
+        <h1>Surf Deeper</h1>
+        <p class="tagline">Surf deeper. Learn more. Share what you know.</p>
+      </header>
+
+      <section class="about">
+        <h2>About</h2>
+        <p>Explore the ocean, master the waves, and share your knowledge.</p>
+        <p>Coming soon: a community-driven hub for surfers of all levels — from first waves to advanced lines. Learn techniques, discover surf spots, and contribute your own guides.</p>
+      </section>
+
+      <section class="features">
+        <h2>What You'll Find Here:</h2>
+        <ul>
+          <li><strong>Technique Library:</strong> Step-by-step tips, from paddling efficiently to riding the pocket.</li>
+          <li><strong>Spot Guides:</strong> Maps, local insights, tide charts, and hazards contributed by the community.</li>
+          <li><strong>Video & Photo Guides:</strong> See the waves in action and learn from real experiences.</li>
+          <li><strong>Open Contribution:</strong> Share your own tips, maps, and stories with fellow surfers.</li>
+        </ul>
+      </section>
+
+      <section class="why-different">
+        <h2>Why It's Different:</h2>
+        <ul>
+          <li>Techniques broken down with nuance and clarity, so you can improve safely</li>
+          <li>Open-source, free, and community-driven</li>
+          <li>Focused on learning and sharing, not profit</li>
+        </ul>
+      </section>
     </main>
   </body>
 </html>
@@ -25,9 +52,69 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem;
+    color: #333;
+  }
+  
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
   }
   
   h1 {
-    color: #333;
+    color: #1e40af;
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  
+  .tagline {
+    font-size: 1.25rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+  
+  section {
+    margin-bottom: 2.5rem;
+  }
+  
+  h2 {
+    color: #1e40af;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  
+  li::before {
+    content: "🌊";
+    position: absolute;
+    left: 0;
+  }
+  
+  .features li::before {
+    content: "📚";
+  }
+  
+  .why-different li::before {
+    content: "✨";
+  }
+  
+  strong {
+    color: #1e40af;
+  }
+  
+  p {
+    margin-bottom: 1rem;
   }
 </style>
