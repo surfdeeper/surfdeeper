@@ -16,6 +16,15 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-4EL168HRYZ');
+    </script>
   </head>
   <body>
     <nav class="main-nav">
