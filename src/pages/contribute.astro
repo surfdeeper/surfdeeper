@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Contribute - Surf Deeper" description="Share your surf knowledge with the community. Contribute guides, spots, and help build the ultimate surf resource.">
+<Layout title="Contribute - Surf Deeper" description="How to contribute guides and spots using our content system: folders, sections, ordering, and Markdown formatting.">
   <header class="page-header">
     <h1>Contribute</h1>
     <p class="page-subtitle">Share your knowledge, help the community</p>
@@ -13,82 +13,50 @@ import Layout from '../layouts/Layout.astro';
     <div class="contribution-grid">
       <div class="contribution-card">
         <h3>Guides</h3>
-        <p>Share your expertise through simple Markdown guides</p>
-        <ul>
-          <li>Step-by-step instructions</li>
-          <li>Common mistakes to avoid</li>
-          <li>Pro tips and variations</li>
-          <li>Video demonstrations</li>
-        </ul>
-        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/src/pages/guides" target="_blank" class="contribute-link">Add Markdown Guide</a>
+        <p>Write Markdown articles in our `guides` collection.</p>
+        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/guides" target="_blank" class="contribute-link">Guides folder</a>
       </div>
-      
+
+      <div class="contribution-card">
+        <h3>Sections</h3>
+        <p>Lightly manage sections for Guides.</p>
+        <a href="https://github.com/surfdeeper/surfdeeper/blob/main/src/content/guides/_sections.json" target="_blank" class="contribute-link">Sections config</a>
+      </div>
+
       <div class="contribution-card">
         <h3>Spots</h3>
-        <p>Help others discover great surf spots</p>
-        <ul>
-          <li>Location and access information</li>
-          <li>Wave characteristics</li>
-          <li>Best conditions and timing</li>
-          <li>Safety considerations</li>
-        </ul>
-        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/spots" target="_blank" class="contribute-link">Add Spot</a>
-      </div>
-      
-    </div>
-  </section>
-
-  <section class="contribution-guidelines">
-    <h2>Contribution Guidelines</h2>
-    <div class="guidelines-content">
-      <div class="guideline-section">
-        <h3>Content Quality</h3>
-        <ul>
-          <li>Provide clear, detailed information</li>
-          <li>Use proper grammar and spelling</li>
-          <li>Include relevant photos or videos when possible</li>
-          <li>Be specific about conditions and skill levels</li>
-        </ul>
-      </div>
-      
-      
-      <div class="guideline-section">
-        <h3>Community Spirit</h3>
-        <ul>
-          <li>Be respectful and constructive</li>
-          <li>Share knowledge freely and openly</li>
-          <li>Help others learn and improve</li>
-          <li>Respect local surf culture and etiquette</li>
-        </ul>
+        <p>Optional for now — brief Markdown spot profiles.</p>
+        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/spots" target="_blank" class="contribute-link">Spots folder</a>
       </div>
     </div>
   </section>
 
-  <section class="github-contribution">
-    <h2>How to Contribute via GitHub</h2>
-    <p>Since we're open-source, you can contribute directly through GitHub. Here's how to get started:</p>
-    
-    <div class="contribution-steps">
-      <div class="step-card">
-        <h3>1. Fork the Repository</h3>
-        <p>Go to our <a href="https://github.com/surfdeeper/surfdeeper" target="_blank">GitHub repository</a> and click the "Fork" button in the top right corner.</p>
-      </div>
-      
-      <div class="step-card">
-        <h3>2. Create a New File</h3>
-        <p>Navigate to the appropriate folder (src/pages/guides/, spots/, etc.) and click "Add file" → "Create new file".</p>
-      </div>
-      
-      <div class="step-card">
-        <h3>3. Add Your Content</h3>
-        <p>Write your guide or spot information in Markdown. Prefer <code>.md</code> files for easy editing and PR review.</p>
-      </div>
-      
-      <div class="step-card">
-        <h3>4. Submit a Pull Request</h3>
-        <p>Click "Propose new file" → "Create pull request". Add a descriptive title and we'll review your contribution.</p>
-      </div>
-    </div>
+  <section class="article">
+    <h2>How it works</h2>
+    <p>Keep it simple. Follow existing patterns. That’s it.</p>
+    <ul>
+      <li>Put guides in <code>src/content/guides/&lt;section&gt;/&lt;slug&gt;.md</code></li>
+      <li>Frontmatter: <code>title</code> (required), <code>description</code> and <code>order</code> (optional)</li>
+      <li>Sections = folder names; display labels and order live in <a href="https://github.com/surfdeeper/surfdeeper/blob/main/src/content/guides/_sections.json" target="_blank">_sections.json</a></li>
+      <li>Sorting: by <code>order</code>, then by <code>title</code></li>
+    </ul>
+
+    <p>Schema lives in <a href="https://github.com/surfdeeper/surfdeeper/blob/main/src/content/config.ts" target="_blank">content config</a>. Browse existing files in the <a href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/guides" target="_blank">guides folder</a> and copy the closest example.</p>
+  </section>
+
+  <section class="article">
+    <h2>Quick steps</h2>
+    <ol>
+      <li>Open the <a href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/guides" target="_blank">guides folder</a>.</li>
+      <li>Copy an existing file in the right section; rename with a clear slug.</li>
+      <li>Edit the <code>title</code> and content; add <code>order</code> if you want to control position.</li>
+      <li>Open a PR. We’ll review quickly.</li>
+    </ol>
+  </section>
+
+  <section class="article">
+    <h2>PR workflow (short)</h2>
+    <p>Use the GitHub UI for quick edits, or develop locally with <code>npm run dev</code>. Keep changes small and follow existing patterns. Link sources when helpful.</p>
   </section>
 
 </Layout>
@@ -115,9 +83,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .contribution-types h2,
-  .contribution-guidelines h2,
-  .coming-soon h2,
-  .contact-info h2 {
+  .article h2 {
     color: #00ff88;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
@@ -191,71 +157,19 @@ import Layout from '../layouts/Layout.astro';
     background-color: #00cc6a;
   }
 
-  .guidelines-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+  .article {
+    max-width: 800px;
+    margin: 0 auto 2rem;
   }
-
-  .guideline-section {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1.5rem;
-  }
-
-  .guideline-section h3 {
+  .article p, .article li {
     color: #00ff88;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
+    opacity: 0.95;
+  }
+  .article ul, .article ol {
+    margin-left: 1rem;
   }
 
-  .guideline-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .guideline-section li {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .guideline-section li::before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    color: #00cc6a;
-  }
-
-  .coming-soon {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .coming-soon p {
-    color: #00ff88;
-    margin-bottom: 1rem;
-  }
-
-  .coming-soon ul {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 2rem;
-  }
-
-  .coming-soon li {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-    padding-left: 1.5rem;
-    position: relative;
-  }
+  /* remove extra cardy blocks */
 
   .github-contribution {
     background-color: #1e293b;
@@ -263,6 +177,16 @@ import Layout from '../layouts/Layout.astro';
     border-radius: 8px;
     padding: 2rem;
     margin-bottom: 3rem;
+  }
+
+  .templates .code-block {
+    display: block;
+    background: #0f172a;
+    color: #d1fae5;
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    white-space: pre-wrap;
   }
 
   .github-contribution h2 {

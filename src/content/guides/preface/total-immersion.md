@@ -1,33 +1,35 @@
 ---
-title: "Total Immersion: Spirals, Flow, and Efficient Movement"
-description: "Explore the spiral connection across waves, hurricanes, and galaxies. Apply balance, streamline, and relaxed power to swim and paddle better."
+title: "Swimming Fundamentals for Surfers"
+description: "Front‑quadrant timing, two‑beat kick, streamline, and RPE management to paddle farther with less fatigue."
 order: 2
 ---
 
-# Total Immersion: Spirals, Flow, and Efficient Movement
+# Swimming Fundamentals for Surfers
 
-Before wave types, note the striking similarity between ocean waves, hurricanes, and even galaxies. Spirals are nature’s way of channeling energy efficiently. “Total Immersion” (TI) applies these ideas to swimming. Focus on balance, streamlining, and relaxed power to reduce drag and move with the water. For surfers, this means calmer paddling, better endurance, and clearer timing in chaotic conditions.
+Strong surf paddling comes from precise body control in the water: a long body line, front‑quadrant timing, a quiet two‑beat kick, and managing effort so you don’t redline between sets. For more perspectives, explore methods like [Total Immersion](https://www.totalimmersion.net) and [Swim Smooth](https://www.swimsmooth.com) — this guide stays neutral and focuses on transferable fundamentals.
 
-## Spirals Everywhere
-- Ocean waves roll and pitch along curved paths, conserving and transforming energy
-- Hurricanes spin as self-organizing systems, channeling pressure and heat into motion
-- Galaxies arc into logarithmic spirals, distributing matter along elegant curves
 
-These aren’t coincidences — they’re expressions of how energy organizes in flow. When you align your body with flow, you waste less effort and go farther with less.
 
-## Core Principles (Applied to Surfing)
-### 1) Balance
-Float your head and chest; let the hips rise. On a surfboard, this feels like a long, quiet body line with the sternum lightly raised — not pressing the nose down.
+## Core Focus for Surfers
+### 1) Front‑Quadrant Timing
+Keep the lead arm extended until the catch starts on the other side to minimize dead spots. On the board, this feels like steady, overlapping strokes rather than pausing with both arms by your sides.
 
-### 2) Streamline
-Lengthen through the crown of the head; keep the lead arm forward just long enough to shape a narrow profile. In paddling, avoid splayed elbows or flared knees that create drag.
+### 2) Two‑Beat Kick
+Use a light kick that syncs one kick to each arm catch. It’s for balance and rhythm more than propulsion — quiet ankles, small amplitude, consistent timing.
 
-### 3) Relaxed Power
-Apply force only where it counts: a high‑elbow catch that presses water back (not down); a quiet recovery; a steady rhythm. Relaxation improves timing, which matters more than brute strength in surf.
+### 3) Streamline and Balance
+Lengthen through the crown of the head; keep the spine long and the hips high. On a surfboard, lightly lift the sternum instead of pressing the nose down to reduce drag.
+
+### 4) Relaxed Power, High‑Elbow Catch
+Set the forearm vertical early and press water back, not down. Keep the recovery quiet, shoulders relaxed, and let rotation help you connect core to catch.
+
+### 5) RPE Management (Rate of Perceived Exertion)
+Cruise most of the time at RPE 3–5 so you can spike to 7–8 only when chasing and popping up. Downshift between efforts with long exhales and smooth strokes.
 
 ## Simple Drills You Can Use Today
 - Superman Glide: push off lightly with one arm forward; feel head–spine–hips align. On the board, keep the head neutral and hips high
-- Balance Kicks: side kick with a light flutter; breathe by rolling the whole body, not craning the neck
+- Back‑Float Streamline: float on your back, reach long through the fingertips, let the head lean back to align ears with water, ribs heavy — learn effortless buoyancy
+- Side‑Balance Kick: side kick with a light flutter; breathe by rolling the whole body, not craning the neck
 - Spearing Entry: enter fingers first, wrist–elbow following a narrow slot; quiet entries conserve momentum
 - High‑Elbow Catch: set the forearm vertical early and press water back; on a board, make deeper, anchored pulls that move you forward
 
@@ -40,12 +42,15 @@ Apply force only where it counts: a high‑elbow catch that presses water back (
 ## Connect the Dots
 - [Swimming for Surfers](/guides/swimming-for-surfers) — foundations of relaxed, efficient movement
 - [Stroke Rate vs Stroke Length](/guides/stroke-rate-vs-stroke-length) — finding your sustainable rhythm
-- [Paddling](/guides/paddling) — translate TI principles to the board
-- [Types of Waves](/guides/types-of-waves#spirals-in-motion) — see spiral patterns in the ocean
+- [Paddling](/guides/paddling) — translate pool skills to the board
+- [Total Immersion](https://www.totalimmersion.net) — drills and balance/streamline concepts
+- [Swim Smooth](https://www.swimsmooth.com) — stroke styles, rhythm, and training ideas
+
 
 ## Next Steps
 - Practice one drill per session; keep it easy and curious
 - Film a 10–15 second clip of your paddle to observe drag and rhythm
-- Notice spirals in clouds, currents, and kelp; let them cue relaxation
+- Prioritize form over speed; if it feels strained, slow down
+- Swim mostly at RPE 3–4; add 2–3 short surges at RPE 7–8 each session
 
 
