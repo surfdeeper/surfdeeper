@@ -18,7 +18,7 @@ const { Content } = await entry.render();
 const { data } = entry;
 ---
 
-<Layout title={data.title} description={data.description}>
+<Layout title={data.title} description={data.description} editPath={`src/content/guides/${entry.slug}.md`}>
   <article class="guide-article">
     <Content />
   </article>

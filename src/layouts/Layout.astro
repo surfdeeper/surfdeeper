@@ -2,9 +2,19 @@
 export interface Props {
   title: string;
   description?: string;
+  editPath?: string;
 }
 
-const { title, description = "Surf deeper. Learn more. Share what you know." } = Astro.props;
+const { title, description = "Surf deeper. Learn more. Share what you know.", editPath } = Astro.props;
+
+// Compute a default edit path for static pages based on the current route
+const pathname = Astro.url.pathname;
+let cleaned = pathname.replace(/\/$/, "");
+if (cleaned === "" || cleaned === "/") cleaned = "/index";
+const inferredPath = `src/pages${cleaned}.astro`;
+const effectivePath = editPath ?? inferredPath;
+const editBase = 'https://github.com/surfdeeper/surfdeeper/edit/main/';
+const editUrl = editBase + effectivePath;
 ---
 
 <!DOCTYPE html>
@@ -45,7 +55,17 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     </nav>
 
     <main>
+      <div class="edit-prompt" role="complementary" aria-label="Suggest an edit">
+        <span>See anything to improve? Help the community by suggesting an edit.</span>
+        <a class="edit-link-button" href={editUrl} target="_blank" rel="noopener noreferrer">Edit this page on GitHub</a>
+      </div>
+
       <slot />
+
+      <div class="edit-prompt" role="complementary" aria-label="Suggest an edit">
+        <span>Knowledge gets better together. Found a mistake or have tips?</span>
+        <a class="edit-link-button" href={editUrl} target="_blank" rel="noopener noreferrer">Suggest an edit</a>
+      </div>
     </main>
 
     <footer class="main-footer">
@@ -285,5 +305,39 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
       padding: 1rem;
     }
     .main-nav { --nav-logo-height: 72px; }
+  }
+
+  /* Edit prompt */
+  .edit-prompt {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .edit-prompt span {
+    color: #00ff88;
+    opacity: 0.95;
+  }
+
+  .edit-link-button {
+    display: inline-block;
+    background-color: #00ff88;
+    color: #0f172a;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .edit-link-button:hover {
+    background-color: #00cc6a;
   }
 </style>
