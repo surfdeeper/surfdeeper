@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Contribute - Surf Deeper" description="Share your surf knowledge with the community. Contribute techniques, spots, and help build the ultimate surf resource.">
+<Layout title="Contribute - Surf Deeper" description="Share your surf knowledge with the community. Contribute guides, spots, and help build the ultimate surf resource.">
   <header class="page-header">
     <h1>Contribute</h1>
     <p class="page-subtitle">Share your knowledge, help the community</p>
@@ -13,14 +13,14 @@ import Layout from '../layouts/Layout.astro';
     <div class="contribution-grid">
       <div class="contribution-card">
         <h3>Guides</h3>
-        <p>Share your expertise on specific surf techniques</p>
+        <p>Share your expertise through simple Markdown guides</p>
         <ul>
           <li>Step-by-step instructions</li>
           <li>Common mistakes to avoid</li>
           <li>Pro tips and variations</li>
           <li>Video demonstrations</li>
         </ul>
-        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/techniques" target="_blank" class="contribute-link">Add Technique</a>
+        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/src/pages/guides" target="_blank" class="contribute-link">Add Markdown Guide</a>
       </div>
       
       <div class="contribution-card">
@@ -76,12 +76,12 @@ import Layout from '../layouts/Layout.astro';
       
       <div class="step-card">
         <h3>2. Create a New File</h3>
-        <p>Navigate to the appropriate folder (techniques/, spots/, etc.) and click "Add file" → "Create new file".</p>
+        <p>Navigate to the appropriate folder (src/pages/guides/, spots/, etc.) and click "Add file" → "Create new file".</p>
       </div>
       
       <div class="step-card">
         <h3>3. Add Your Content</h3>
-        <p>Write your technique guide or spot information using Markdown format. Include clear headings and descriptions.</p>
+        <p>Write your guide or spot information in Markdown. Prefer <code>.md</code> files for easy editing and PR review.</p>
       </div>
       
       <div class="step-card">

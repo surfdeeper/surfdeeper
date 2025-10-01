@@ -1,3 +1,9 @@
+---
+layout: ../../layouts/Layout.astro
+title: The Pop-Up
+description: Master the fundamental pop-up technique — from lying to standing on your board.
+---
+
 # The Pop-Up
 
 ## Overview
@@ -70,3 +76,5 @@ Once you can pop up consistently in white water, you're ready to try catching sm
 
 ---
 *Master the pop-up and everything else becomes easier*
+
+
