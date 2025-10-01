@@ -1,0 +1,8 @@
+{
+  "preface": { "order": 1, "label": "Preface" },
+  "paddling": { "order": 2, "label": "Paddling" },
+  "gear": { "order": 3, "label": "Gear" },
+  "foundations": { "order": 4, "label": "Foundations" },
+  "core-skills": { "order": 5, "label": "Core Skills" }
+}
+

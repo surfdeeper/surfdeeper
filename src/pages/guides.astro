@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import sections from '../content/guides/_sections.json';
 
 const entries = await getCollection('guides');
 
@@ -27,16 +28,20 @@ for (const key of Object.keys(grouped)) {
   <section class="surfing-manual">
     <h2>The Surfing Deeper Manual</h2>
     <div class="outline-tree">
-      {Object.entries(grouped).map(([section, items]) => (
-        <div class="outline-section">
-          <h3>{section}</h3>
-          <ul>
-            {items.map((e) => (
-              <li><a href={`/guides/${e.slug}`}>{e.data.title}</a></li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {
+        Object.entries(grouped)
+          .sort(([a], [b]) => (sections[a]?.order ?? 999) - (sections[b]?.order ?? 999))
+          .map(([section, items]) => (
+            <div class="outline-section">
+              <h3>{sections[section]?.label ?? section}</h3>
+              <ul>
+                {items.map((e) => (
+                  <li><a href={`/guides/${e.slug}`}>{e.data.title}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))
+      }
     </div>
   </section>
 
