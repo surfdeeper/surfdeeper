@@ -1,7 +1,6 @@
 ---
-layout: ../../layouts/Layout.astro
-title: Swimming for Surfers: The Real Secret Sauce
-description: Why swimming is the secret sauce for surfing: efficiency, safety, calm. Clear outlines and training ideas that translate to surfing.
+title: "Swimming for Surfers: The Real Secret Sauce"
+description: "Why swimming is the secret sauce for surfing: efficiency, safety, calm. Clear outlines and training ideas that translate to surfing."
 ---
 
 # Swimming for Surfers: The Real Secret Sauce

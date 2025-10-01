@@ -1,7 +1,6 @@
 ---
-layout: ../../layouts/Layout.astro
-title: Total Immersion: Spirals, Flow, and Efficient Movement
-description: Explore the spiral connection across waves, hurricanes, and galaxies. Apply balance, streamline, and relaxed power to swim and paddle better.
+title: "Total Immersion: Spirals, Flow, and Efficient Movement"
+description: "Explore the spiral connection across waves, hurricanes, and galaxies. Apply balance, streamline, and relaxed power to swim and paddle better."
 ---
 
 # Total Immersion: Spirals, Flow, and Efficient Movement

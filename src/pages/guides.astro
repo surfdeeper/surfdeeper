@@ -1,5 +1,136 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const entries = await getCollection('guides');
+
+// Group by first path segment (supports nested folders later)
+const grouped = entries.reduce((acc, e) => {
+  const [section] = e.slug.split('/');
+  (acc[section] ||= []).push(e);
+  return acc;
+}, {} as Record<string, typeof entries>);
+
+for (const key of Object.keys(grouped)) {
+  grouped[key].sort((a, b) =>
+    (a.data.order ?? 999) - (b.data.order ?? 999) || a.data.title.localeCompare(b.data.title)
+  );
+}
+---
+
+<Layout title="Guides - Surf Deeper" description="Guides for understanding waves, ocean safety, and surf techniques. Learn from the community.">
+  <header class="page-header">
+    <h1>Guides</h1>
+    <p class="page-subtitle">Master the fundamentals and advanced techniques</p>
+  </header>
+
+  <section class="surfing-manual">
+    <h2>The Surfing Deeper Manual</h2>
+    <div class="outline-tree">
+      {Object.entries(grouped).map(([section, items]) => (
+        <div class="outline-section">
+          <h3>{section}</h3>
+          <ul>
+            {items.map((e) => (
+              <li><a href={`/guides/${e.slug}`}>{e.data.title}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="coming-soon">
+    <h2>Share Your Knowledge</h2>
+    <p>Have a technique you've mastered? Share it with the community and help others improve their surfing.</p>
+    <a href="/contribute" class="cta-button">Contribute a Technique</a>
+  </section>
+
+  <style>
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .page-header h1 {
+      color: #00ff88;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .page-subtitle {
+      font-size: 1.25rem;
+      color: #00ff88;
+      font-weight: 500;
+    }
+    .surfing-manual h2 {
+      color: #00ff88;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #00ff88;
+      padding-bottom: 0.5rem;
+      text-align: center;
+    }
+    .outline-tree {
+      max-width: 800px;
+      margin: 0 auto 3rem;
+    }
+    .outline-section {
+      margin-bottom: 2rem;
+    }
+    .outline-section h3 {
+      color: #00ff88;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #00ff88;
+      padding-left: 1rem;
+      text-transform: capitalize;
+    }
+    .outline-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .outline-section li {
+      color: #00ff88;
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+      opacity: 0.9;
+    }
+    .outline-section li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #00cc6a;
+      font-weight: bold;
+    }
+    .outline-section li a {
+      color: #00ff88;
+      text-decoration: underline;
+      text-decoration-color: #00cc6a;
+      text-underline-offset: 3px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .outline-section li a:hover {
+      color: #00cc6a;
+      text-decoration-color: #00ff88;
+    }
+    .cta-button {
+      display: inline-block;
+      background-color: #00ff88;
+      color: #0f172a;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .cta-button:hover { background-color: #00cc6a; }
+  </style>
+</Layout>
 ---
 
 <Layout title="Guides - Surf Deeper" description="Guides for understanding waves, ocean safety, and surf techniques. Learn from the community.">

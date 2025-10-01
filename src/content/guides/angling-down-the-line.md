@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/Layout.astro
 title: Angling Down the Line
 description: Master the art of angling down the line — from longboard push/pull to shortboard control, and flow with the wave’s energy.
 ---

@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/Layout.astro
 title: The Types of Waves
 description: Understand rolling, plunging, collapsing, and surging waves — how they move, where they appear, and how to read their energy.
 ---

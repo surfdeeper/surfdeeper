@@ -1,7 +1,6 @@
 ---
-layout: ../../layouts/Layout.astro
-title: Transporting Your Surfboard: Every Method Explained
-description: Carry, bike, and car transport options for surfboards with safety‑first tips and setup outlines.
+title: "Transporting Your Surfboard: Every Method Explained"
+description: "Carry, bike, and car transport options for surfboards with safety‑first tips and setup outlines."
 ---
 
 # Transporting Your Surfboard: Every Method Explained

@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/Layout.astro
 title: The Cobra Pose
 description: Master the cobra pose for precise longboard control — prevent pearling while maintaining speed and angle.
 ---

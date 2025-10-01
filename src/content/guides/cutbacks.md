@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/Layout.astro
 title: Cutbacks
 description: Master the cutback to stay in the pocket and maintain position on the wave.
 ---

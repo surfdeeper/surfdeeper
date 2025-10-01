@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntryBySlug } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('guides');
+  return entries.map((e) => ({ params: { slug: e.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntryBySlug('guides', slug);
+
+if (!entry) {
+  throw Astro.redirect('/guides');
+}
+
+const { Content } = await entry.render();
+const { data } = entry;
+---
+
+<Layout title={data.title} description={data.description}>
+  <article class="guide-article">
+    <Content />
+  </article>
+
+  <style>
+    .guide-article {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  </style>
+</Layout>
+
+

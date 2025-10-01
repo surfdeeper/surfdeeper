@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/Layout.astro
 title: Stroke Rate vs Stroke Length
 description: Understand cadence and distance per stroke — and balance them for surf efficiency.
 ---

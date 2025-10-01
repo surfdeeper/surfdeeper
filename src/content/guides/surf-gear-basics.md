@@ -1,7 +1,6 @@
 ---
-layout: ../../layouts/Layout.astro
-title: Surf Gear Basics: What You Actually Need
-description: Beginner-friendly surf gear overview: wetsuits, leashes, wax/traction, and beginner board choices.
+title: "Surf Gear Basics: What You Actually Need"
+description: "Beginner-friendly surf gear overview: wetsuits, leashes, wax/traction, and beginner board choices."
 ---
 
 # Surf Gear Basics: What You Actually Need
