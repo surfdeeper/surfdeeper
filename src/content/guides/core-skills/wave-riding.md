@@ -1,6 +1,7 @@
 ---
 title: Wave Riding
 description: Learn to feel and read waves. Stay in the pocket, find steeper sections, and use cutbacks to maintain position.
+order: 1
 ---
 
 # Wave Riding

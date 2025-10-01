@@ -1,6 +1,7 @@
 ---
 title: "Surf Gear Basics: What You Actually Need"
 description: "Beginner-friendly surf gear overview: wetsuits, leashes, wax/traction, and beginner board choices."
+order: 1
 ---
 
 # Surf Gear Basics: What You Actually Need

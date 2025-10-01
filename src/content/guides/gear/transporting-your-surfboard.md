@@ -1,6 +1,7 @@
 ---
 title: "Transporting Your Surfboard: Every Method Explained"
 description: "Carry, bike, and car transport options for surfboards with safety‑first tips and setup outlines."
+order: 2
 ---
 
 # Transporting Your Surfboard: Every Method Explained

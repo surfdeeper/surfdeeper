@@ -1,6 +1,7 @@
 ---
 title: "Total Immersion: Spirals, Flow, and Efficient Movement"
 description: "Explore the spiral connection across waves, hurricanes, and galaxies. Apply balance, streamline, and relaxed power to swim and paddle better."
+order: 2
 ---
 
 # Total Immersion: Spirals, Flow, and Efficient Movement

@@ -1,6 +1,7 @@
 ---
 title: The Types of Waves
 description: Understand rolling, plunging, collapsing, and surging waves — how they move, where they appear, and how to read their energy.
+order: 1
 ---
 
 # The Types of Waves
