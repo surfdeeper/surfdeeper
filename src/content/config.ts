@@ -9,6 +9,16 @@ const guides = defineCollection({
   }),
 });
 
-export const collections = { guides };
+const spots = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    latitude: z.number(),
+    longitude: z.number(),
+  }),
+});
+
+export const collections = { guides, spots };
 
 

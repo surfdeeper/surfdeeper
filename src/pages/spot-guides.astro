@@ -1,5 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+import '../styles/spot-guides.css';
+import spotGuidesScript from '../scripts/spot-guides.js?url';
+
+const spots = await getCollection('spots');
 ---
 
 <Layout title="Spots - Surf Deeper" description="Discover surf spots with maps, local insights, tide charts, and hazards contributed by the community.">
@@ -7,6 +13,11 @@ import Layout from '../layouts/Layout.astro';
     <h1>Spots</h1>
     <p class="page-subtitle">Discover waves around the world</p>
   </header>
+
+  <section class="spot-map">
+    <h2>Map</h2>
+    <div id="map"></div>
+  </section>
 
   <section class="spot-features">
     <h2>What You'll Find</h2>
@@ -115,181 +126,20 @@ import Layout from '../layouts/Layout.astro';
   </section>
 </Layout>
 
-<style>
-  .page-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
+ 
 
-  .page-header h1 {
-    color: #00ff88;
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
 
-  .page-subtitle {
-    font-size: 1.25rem;
-    color: #00ff88;
-    font-weight: 500;
-  }
-
-  .spot-features h2,
-  .spot-categories h2 {
-    color: #00ff88;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #00ff88;
-    padding-bottom: 0.5rem;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .feature-card {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1.5rem;
-    text-align: center;
-    transition: border-color 0.3s ease;
-  }
-
-  .feature-card:hover {
-    border-color: #00ff88;
-  }
-
-  .feature-card h3 {
-    color: #00ff88;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .feature-card p {
-    color: #00ff88;
-    opacity: 0.9;
-  }
-
-  .region-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .region-card {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: border-color 0.3s ease;
-  }
-
-  .region-card:hover {
-    border-color: #00ff88;
-  }
-
-  .region-card h3 {
-    color: #00ff88;
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .region-card p {
-    color: #00ff88;
-    margin-bottom: 1rem;
-    opacity: 0.9;
-  }
-
-  .region-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .region-card li {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .region-card li::before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    color: #00cc6a;
-  }
-
-  .coming-soon {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .coming-soon h2 {
-    color: #00ff88;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .coming-soon p {
-    color: #00ff88;
-    margin-bottom: 1rem;
-  }
-
-  .coming-soon ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .coming-soon li {
-    color: #00ff88;
-    margin-bottom: 0.5rem;
-    padding-left: 1.5rem;
-    position: relative;
-  }
-
-  .contribute-cta {
-    text-align: center;
-    background-color: #1e293b;
-    border: 2px solid #00ff88;
-    border-radius: 8px;
-    padding: 2rem;
-  }
-
-  .contribute-cta h2 {
-    color: #00ff88;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .contribute-cta p {
-    color: #00ff88;
-    margin-bottom: 1.5rem;
-  }
-
-  .cta-button {
-    display: inline-block;
-    background-color: #00ff88;
-    color: #0f172a;
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-
-  .cta-button:hover {
-    background-color: #00cc6a;
-  }
-</style>
+<script
+  type="application/json"
+  id="spots-data"
+  set:html={JSON.stringify(spots.map((s) => ({
+    title: s.data.title,
+    description: s.data.description || '',
+    latitude: s.data.latitude,
+    longitude: s.data.longitude,
+    slug: s.slug,
+  })))}
+></script>
+<script src={spotGuidesScript} defer></script>
