@@ -169,7 +169,12 @@ try {
       <div class="map-preview-section">
         <h2>🗺️ Surf Spots</h2>
         <p class="map-preview-description">Explore surf breaks along the California coast</p>
-        <div id="map-preview" class="map-preview-container"></div>
+        <div id="map-preview" class="map-preview-container">
+          <div id="spot-list-panel-homepage" class="spot-list-panel-homepage">
+            <h3>Spots on Map</h3>
+            <ul id="spot-list-homepage"></ul>
+          </div>
+        </div>
         <a href="/maps" class="map-view-all-link">View Full Interactive Map →</a>
       </div>
     </div>
@@ -340,9 +345,26 @@ try {
       // Add theme switcher control
       addThemeSwitcherToMap(map, DEFAULT_THEME_HOMEPAGE, 'topright');
 
-      for (const spot of spots) {
+      const spotList = document.getElementById('spot-list-homepage');
+      const markers: any[] = [];
+      
+      // Sort spots alphabetically for consistent numbering
+      const sortedSpots = [...spots].sort((a, b) => a.title.localeCompare(b.title));
+      
+      sortedSpots.forEach((spot, index) => {
         if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
-          const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+          const spotNumber = index + 1;
+          
+          // Create numbered marker
+          const icon = L.divIcon({
+            className: 'numbered-marker-homepage',
+            html: `<div class="marker-content"><span class="marker-number">${spotNumber}</span></div>`,
+            iconSize: [36, 36],
+            iconAnchor: [18, 36],
+            popupAnchor: [0, -36]
+          });
+          
+          const marker = L.marker([spot.latitude, spot.longitude], { icon }).addTo(map);
           const popup = `
             <div style="font-family: inherit;">
               <b>${spot.title}</b>
@@ -353,8 +375,48 @@ try {
             </div>
           `;
           marker.bindPopup(popup);
+          marker.spotData = spot;
+          marker.spotNumber = spotNumber;
+          
+          markers.push(marker);
+          
+          // Add spot to list panel
+          if (spotList) {
+            const listItem = document.createElement('li');
+            listItem.className = 'spot-list-item-homepage';
+            listItem.dataset.spotNumber = spotNumber.toString();
+            listItem.innerHTML = `
+              <span class="spot-number">${spotNumber}.</span>
+              <div class="spot-info">
+                <span class="spot-name">${spot.title}</span>
+              </div>
+            `;
+            
+            // Click to zoom to spot
+            listItem.addEventListener('click', () => {
+              map.setView([spot.latitude, spot.longitude], 13);
+              marker.openPopup();
+            });
+            
+            // Hover effects
+            listItem.addEventListener('mouseenter', () => {
+              marker.getElement()?.classList.add('highlight');
+            });
+            listItem.addEventListener('mouseleave', () => {
+              marker.getElement()?.classList.remove('highlight');
+            });
+            
+            marker.on('mouseover', () => {
+              listItem.classList.add('highlight');
+            });
+            marker.on('mouseout', () => {
+              listItem.classList.remove('highlight');
+            });
+            
+            spotList.appendChild(listItem);
+          }
         }
-      }
+      });
 
       // Set view to show entire Santa Cruz to Bolinas coastline
       map.setView([37.44, -122.36], 9);
@@ -538,9 +600,57 @@ try {
     
     // Duplicate content for seamless scrolling
     tickerContent.innerHTML = fullMessage + ' • ' + fullMessage;
+    
+    // Restart marquee animation after content update
+    initMarqueeAnimation();
   }
 
-  // Initial update
+  // JavaScript-based marquee animation for mobile compatibility
+  let animationFrameId = null;
+  
+  function initMarqueeAnimation() {
+    const tickerContent = document.getElementById('ticker-content');
+    if (!tickerContent) return;
+    
+    // Cancel any existing animation
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+    
+    // Check if user prefers reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      return; // Don't animate if user prefers reduced motion
+    }
+    
+    let position = 0;
+    const speed = 0.5; // pixels per frame (adjust for speed)
+    
+    function animate() {
+      // Get the width of the content
+      const contentWidth = tickerContent.offsetWidth;
+      
+      // Move the content
+      position -= speed;
+      
+      // Reset position when we've scrolled half the content (due to duplication)
+      if (Math.abs(position) >= contentWidth / 2) {
+        position = 0;
+      }
+      
+      // Apply transform
+      tickerContent.style.transform = `translateX(${position}px)`;
+      
+      // Continue animation
+      animationFrameId = requestAnimationFrame(animate);
+    }
+    
+    // Start the animation
+    animationFrameId = requestAnimationFrame(animate);
+  }
+
+  // Initial update and start animation
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     updateSurfTicker();
   } else {
@@ -594,7 +704,7 @@ try {
     font-weight: 600;
     padding: 0 2rem;
     display: inline-block;
-    animation: marquee-scroll 120s linear infinite;
+    will-change: transform;
   }
 
   .marquee span a {
@@ -604,15 +714,6 @@ try {
   .marquee span a:hover {
     opacity: 0.8;
     border-bottom-color: #00cc6a !important;
-  }
-
-  @keyframes marquee-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
   }
 
   /* Three Column Layout - Desktop Only */
@@ -1235,10 +1336,176 @@ try {
     opacity: 0.9;
   }
 
-  /* For users who prefer reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .marquee span {
-      animation: none;
+  /* Reduced motion is now handled in JavaScript */
+
+  /* Numbered marker styles for homepage */
+  :global(.numbered-marker-homepage) {
+    background: none;
+    border: none;
+  }
+
+  :global(.numbered-marker-homepage .marker-content) {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  :global(.numbered-marker-homepage .marker-number) {
+    width: 32px;
+    height: 32px;
+    background: #00ff88;
+    color: #0f172a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 3px solid #0f172a;
+    transition: all 0.2s ease;
+  }
+
+  :global(.numbered-marker-homepage .marker-content::after) {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #0f172a;
+  }
+
+  :global(.numbered-marker-homepage.highlight .marker-number) {
+    background: #fbbf24;
+    transform: scale(1.2);
+    box-shadow: 0 4px 16px rgba(251, 191, 36, 0.6);
+  }
+
+  /* Spot list panel styles for homepage - ultra-compact horizontal strip */
+  .spot-list-panel-homepage {
+    position: absolute;
+    bottom: 30px;
+    left: 10px;
+    right: 10px;
+    height: auto;
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    border-radius: 6px;
+    padding: 4px 8px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .spot-list-panel-homepage h3 {
+    display: none;
+  }
+
+  .spot-list-panel-homepage ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .spot-list-panel-homepage ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  :global(.spot-list-item-homepage) {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 4px 12px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-right: 1px solid rgba(0, 255, 136, 0.2);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  :global(.spot-list-item-homepage:last-child) {
+    border-right: none;
+  }
+
+  :global(.spot-list-item-homepage:hover),
+  :global(.spot-list-item-homepage.highlight) {
+    background: rgba(0, 255, 136, 0.15);
+  }
+
+  :global(.spot-list-item-homepage .spot-number) {
+    color: #00ff88;
+    font-weight: 700;
+    font-size: 12px;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+
+  :global(.spot-list-item-homepage.highlight .spot-number) {
+    color: #fbbf24;
+  }
+
+  :global(.spot-list-item-homepage .spot-info) {
+    min-width: 0;
+  }
+
+  :global(.spot-list-item-homepage .spot-name) {
+    color: #e2e8f0;
+    font-weight: 400;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 120px;
+  }
+
+  :global(.spot-list-item-homepage.highlight .spot-name) {
+    color: #fbbf24;
+    font-weight: 500;
+  }
+
+  /* Mobile responsive - even more compact */
+  @media (max-width: 768px) {
+    .spot-list-panel-homepage {
+      bottom: 25px;
+      left: 5px;
+      right: 5px;
+      padding: 3px 6px;
+    }
+
+    :global(.spot-list-item-homepage) {
+      padding: 3px 10px;
+    }
+
+    :global(.spot-list-item-homepage .spot-number) {
+      font-size: 11px;
+      margin-right: 3px;
+    }
+
+    :global(.spot-list-item-homepage .spot-name) {
+      font-size: 11px;
+      max-width: 100px;
+    }
+  }
+
+  /* Hide spot list on very large screens where map is fullscreen */
+  @media (min-width: 1400px) {
+    .spot-list-panel-homepage {
+      display: block;
     }
   }
 </style>
