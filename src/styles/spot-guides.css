@@ -4,8 +4,8 @@
   bottom: 2rem;
   right: 2rem;
   z-index: 1000;
-  background-color: #0066cc;
-  color: white;
+  background-color: #febc08;
+  color: #111a22;
   border: none;
   border-radius: 50%;
   width: 56px;
@@ -15,13 +15,13 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+  box-shadow: 0 4px 12px rgba(254, 188, 8, 0.4);
 }
 
 .view-toggle:hover {
-  background-color: #0052a3;
+  background-color: #e0a607;
   transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 102, 204, 0.5);
+  box-shadow: 0 6px 16px rgba(254, 188, 8, 0.5);
 }
 
 .view-toggle:active {
@@ -62,7 +62,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #1a1f2e;
+  background-color: #111a22;
 }
 
 /* Directory View */
@@ -75,7 +75,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #0f172a;
+  background-color: #111a22;
   overflow-y: auto;
 }
 
@@ -93,18 +93,18 @@
   text-align: center;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid #00ff88;
+  border-bottom: 2px solid #febc08;
 }
 
 .directory-header h1 {
   margin: 0 0 0.5rem 0;
-  color: #00ff88;
+  color: #febc08;
   font-size: 2.5rem;
 }
 
 .directory-description {
   margin: 0;
-  color: #cbd5e1;
+  color: #999999;
   font-size: 1.125rem;
   opacity: 0.9;
 }
@@ -123,15 +123,15 @@
 }
 
 .spot-item {
-  background-color: #1e293b;
-  border: 1px solid #334155;
+  background-color: #111a22;
+  border: 1px solid #111a22;
   border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .spot-item:hover {
-  border-color: #00ff88;
-  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+  border-color: #febc08;
+  box-shadow: 0 4px 12px rgba(254, 188, 8, 0.2);
   transform: translateY(-2px);
 }
 
@@ -144,14 +144,14 @@
 
 .spot-link h3 {
   margin: 0 0 0.75rem 0;
-  color: #00ff88;
+  color: #febc08;
   font-size: 1.25rem;
   font-weight: 600;
 }
 
 .spot-excerpt {
   margin: 0 0 1rem 0;
-  color: #cbd5e1;
+  color: #999999;
   font-size: 0.95rem;
   line-height: 1.6;
   opacity: 0.9;
@@ -194,7 +194,7 @@
 }
 
 .wave-type {
-  color: #94a3b8;
+  color: #999999;
   font-size: 0.875rem;
 }
 
@@ -238,7 +238,7 @@
 .popup-actions {
   margin-top: 0.75rem;
   padding-top: 0.5rem;
-  border-top: 1px solid rgba(0, 255, 136, 0.2);
+  border-top: 1px solid rgba(254, 188, 8, 0.2);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -246,8 +246,8 @@
 
 .view-spot-link {
   display: inline-block;
-  color: #0f172a;
-  background-color: #00ff88;
+  color: #132635;
+  background-color: #febc08;
   font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
@@ -258,12 +258,12 @@
 }
 
 .view-spot-link:hover {
-  background-color: #00cc6a;
+  background-color: #e0a607;
 }
 
 .edit-location-link {
   display: inline-block;
-  color: #00ff88;
+  color: #febc08;
   font-size: 0.9rem;
   text-decoration: none;
   padding: 0.25rem 0;
@@ -279,15 +279,15 @@
 .coordinates {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background-color: rgba(0, 255, 136, 0.1);
+  background-color: rgba(254, 188, 8, 0.1);
   border-radius: 4px;
   font-family: monospace;
   font-size: 0.9rem;
 }
 
 .done-dragging-btn {
-  background-color: #00ff88;
-  color: #0f172a;
+  background-color: #febc08;
+  color: #132635;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -298,7 +298,7 @@
 }
 
 .done-dragging-btn:hover {
-  background-color: #00cc6a;
+  background-color: #e0a607;
 }
 
 /* Contribution modal styles */
@@ -317,8 +317,8 @@
 }
 
 .contribution-modal-content {
-  background-color: #1e293b;
-  border: 2px solid #00ff88;
+  background-color: #111a22;
+  border: 2px solid #febc08;
   border-radius: 8px;
   padding: 2rem;
   max-width: 600px;
@@ -328,20 +328,20 @@
 }
 
 .contribution-modal-content h2 {
-  color: #00ff88;
+  color: #febc08;
   margin-top: 0;
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
 
 .contribution-modal-content p {
-  color: #00ff88;
+  color: #999999;
   margin-bottom: 1rem;
   opacity: 0.9;
 }
 
 .contribution-modal-content ol {
-  color: #00ff88;
+  color: #999999;
   margin-bottom: 1rem;
   padding-left: 1.5rem;
 }
@@ -352,7 +352,7 @@
 }
 
 .contribution-modal-content a {
-  color: #00ff88;
+  color: #febc08;
   text-decoration: underline;
   font-weight: 600;
 }
@@ -362,19 +362,19 @@
 }
 
 .contribution-modal-content .code-block {
-  background-color: #0f172a;
-  border: 1px solid #334155;
+  background-color: #132635;
+  border: 1px solid #111a22;
   border-radius: 4px;
   padding: 1rem;
   margin: 1rem 0;
   font-family: monospace;
-  color: #00ff88;
+  color: #febc08;
   font-size: 0.9rem;
 }
 
 .close-modal-btn {
-  background-color: #00ff88;
-  color: #0f172a;
+  background-color: #febc08;
+  color: #132635;
   border: none;
   padding: 0.5rem 1.5rem;
   border-radius: 4px;
@@ -386,7 +386,7 @@
 }
 
 .close-modal-btn:hover {
-  background-color: #00cc6a;
+  background-color: #e0a607;
 }
 
 

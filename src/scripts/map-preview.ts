@@ -50,7 +50,7 @@ export function initMapPreview() {
       scrollWheelZoom: false,
       dragging: true,
       zoomControl: true,
-      backgroundColor: '#1a1f2e'
+      backgroundColor: '#132635'
     });
     
     // Add tiles with the selected theme
@@ -93,8 +93,8 @@ export function initMapPreview() {
           <div style="font-family: inherit;">
             <b>${spot.title}</b>
             ${spot.description ? `<br/>${spot.description}` : ''}
-            <div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(0, 255, 136, 0.2);">
-              <a href="/spots/${spot.slug}" style="display: inline-block; color: #0f172a; background-color: #00ff88; font-size: 0.95rem; font-weight: 600; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; text-align: center;">View Spot →</a>
+            <div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(254, 188, 8, 0.2);">
+              <a href="/spots/${spot.slug}" style="display: inline-block; color: #132635; background-color: #febc08; font-size: 0.95rem; font-weight: 600; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; text-align: center;">View Spot →</a>
             </div>
           </div>
         `;

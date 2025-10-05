@@ -171,8 +171,8 @@ const serializedSpots = serializeSpots(spots);
   :global(.marker-badge) {
     width: 28px;
     height: 28px;
-    background: #00ff88;
-    color: #0f172a;
+    background: #febc08;
+    color: #132635;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -180,22 +180,22 @@ const serializedSpots = serializeSpots(spots);
     font-weight: 700;
     font-size: 13px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    border: 2px solid #0f172a;
+    border: 2px solid #132635;
     transition: all 0.2s ease;
     flex-shrink: 0;
     z-index: 2;
   }
 
   :global(.marker-label) {
-    background: rgba(15, 23, 42, 0.95);
-    color: #00ff88;
+    background: rgba(19, 38, 53, 0.95);
+    color: #febc08;
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(0, 255, 136, 0.4);
+    border: 1px solid rgba(254, 188, 8, 0.4);
     backdrop-filter: blur(4px);
     z-index: 1;
   }
@@ -208,19 +208,19 @@ const serializedSpots = serializeSpots(spots);
     height: 0;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-top: 6px solid #0f172a;
+    border-top: 6px solid #132635;
     z-index: 2;
   }
 
   :global(.numbered-marker-with-label:hover .marker-badge) {
-    background: #fbbf24;
+    background: #e0a607;
     transform: scale(1.1);
   }
 
   :global(.numbered-marker-with-label:hover .marker-label) {
-    background: rgba(251, 191, 36, 0.15);
-    border-color: #fbbf24;
-    color: #fbbf24;
+    background: rgba(224, 166, 7, 0.15);
+    border-color: #e0a607;
+    color: #e0a607;
   }
 
   /* Mobile responsive - smaller labels */
@@ -241,7 +241,7 @@ const serializedSpots = serializeSpots(spots);
       left: 6px;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
-      border-top: 5px solid #0f172a;
+      border-top: 5px solid #132635;
     }
   }
 </style>

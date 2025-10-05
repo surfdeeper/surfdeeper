@@ -1,4 +1,6 @@
 ---
+import Navigation from '../components/Navigation.astro';
+
 export interface Props {
   title: string;
   description?: string;
@@ -41,22 +43,7 @@ const canonicalURL = `${Astro.site}${path}`;
     </script>
   </head>
   <body>
-    <nav class="main-nav">
-      <div class="nav-container">
-        <a href="/" class="nav-logo" aria-label="Surf Deeper home">
-          <span class="logo-crop">
-            <img src="/logo.png?v=5" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
-          </span>
-        </a>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/guide">Guide</a></li>
-          <li><a href="/maps">Map</a></li>
-          <li><a href="/contribute">Contribute</a></li>
-            <li><a href="/gallery">Gallery</a></li>
-        </ul>
-      </div>
-    </nav>
+    <Navigation />
 
     <main>
       <slot />
@@ -81,7 +68,7 @@ const canonicalURL = `${Astro.site}${path}`;
     <footer class="main-footer">
       <div class="footer-container">
         <div class="footer-logo">
-          <img src="/logo.png?v=5" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
+          <img src="/new-logo.png" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
           <span>Surf Deeper</span>
         </div>
         <div class="footer-links">
@@ -129,8 +116,8 @@ const canonicalURL = `${Astro.site}${path}`;
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
     margin: 0;
-    background-color: #0f172a;
-    color: #00ff88;
+    background-color: #111a22;
+    color: #999999;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -147,97 +134,34 @@ const canonicalURL = `${Astro.site}${path}`;
 
   /* Global link styles (apply to slotted content) */
   :global(a) {
-    color: #00ff88;
+    color: #febc08;
     text-decoration: underline;
-    text-decoration-color: #00cc6a;
+    text-decoration-color: #febc08;
     text-underline-offset: 3px;
     transition: color 0.3s ease;
   }
 
   :global(a:hover) {
-    color: #00cc6a;
-    text-decoration-color: #00ff88;
+    color: #e0a607;
+    text-decoration-color: #febc08;
   }
 
   :global(a:visited) {
-    color: #00ff88;
+    color: #febc08;
   }
 
   :global(a:focus-visible) {
-    outline: 2px dashed #00ff88;
+    outline: 2px dashed #febc08;
     outline-offset: 2px;
     border-radius: 2px;
   }
 
-  /* Navigation Styles */
-  .main-nav {
-    background-color: #1e293b;
-    border-bottom: 2px solid #00ff88;
-    padding: 0.5rem 0;
-    --nav-logo-height: 200px;
-  }
 
-  .nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    color: #00ff88;
-    font-weight: 700;
-    font-size: 1.25rem;
-  }
-
-  .nav-logo .logo-crop {
-    display: block;
-    height: auto;
-    overflow: visible;
-    line-height: 0;
-  }
-
-  .nav-logo .image-logo {
-    max-height: var(--nav-logo-height);
-    height: auto;
-    width: auto;
-    display: block;
-    object-fit: contain;
-    object-position: center;
-  }
-
-  .nav-links {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 2rem;
-  }
-
-  .nav-links a {
-    color: #00ff88;
-    text-decoration: none;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-
-  .nav-links a:hover {
-    color: #00cc6a;
-  }
 
   /* Footer Styles */
   .main-footer {
-    background-color: #1e293b;
-    border-top: 2px solid #00ff88;
+    background-color: #132635;
+    border-top: 2px solid #febc08;
     margin-top: auto;
   }
 
@@ -252,7 +176,7 @@ const canonicalURL = `${Astro.site}${path}`;
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 2rem;
-    color: #00ff88;
+    color: #febc08;
     font-weight: 700;
     font-size: 1.25rem;
   }
@@ -271,7 +195,7 @@ const canonicalURL = `${Astro.site}${path}`;
   }
 
   .footer-section h4 {
-    color: #00ff88;
+    color: #febc08;
     margin-bottom: 1rem;
     font-size: 1.1rem;
   }
@@ -287,32 +211,32 @@ const canonicalURL = `${Astro.site}${path}`;
   }
 
   .footer-section a {
-    color: #00ff88;
+    color: #999999;
     text-decoration: none;
     transition: color 0.3s ease;
   }
 
   .footer-section a:hover {
-    color: #00cc6a;
+    color: #febc08;
   }
 
   .footer-disclaimer {
-    background-color: #0f172a;
-    border: 2px solid #334155;
+    background-color: #111a22;
+    border: 2px solid #132635;
     border-radius: 8px;
     padding: 1.5rem;
     margin-bottom: 2rem;
   }
 
   .footer-disclaimer h4 {
-    color: #00ff88;
+    color: #febc08;
     margin: 0 0 0.75rem 0;
     font-size: 1rem;
     text-align: center;
   }
 
   .footer-disclaimer p {
-    color: #94a3b8;
+    color: #999999;
     margin: 0;
     font-size: 0.8rem;
     line-height: 1.6;
@@ -320,41 +244,41 @@ const canonicalURL = `${Astro.site}${path}`;
   }
 
   .footer-disclaimer strong {
-    color: #00ff88;
+    color: #febc08;
     font-weight: 700;
   }
 
   .footer-bottom {
-    border-top: 1px solid #334155;
+    border-top: 1px solid #132635;
     padding-top: 1rem;
     text-align: center;
   }
 
   .footer-bottom p {
-    color: #94a3b8;
+    color: #999999;
     margin: 0;
     font-size: 0.9rem;
   }
 
   /* Leaflet Map Dark Theme - Prevent white flicker on tile load */
   :global(.leaflet-container) {
-    background-color: #1a1f2e !important;
+    background-color: #111a22 !important;
   }
 
   :global(.leaflet-tile-pane) {
-    background-color: #1a1f2e !important;
+    background-color: #111a22 !important;
   }
 
   :global(.leaflet-tile-container) {
-    background-color: #1a1f2e !important;
+    background-color: #111a22 !important;
   }
 
   :global(.leaflet-tile) {
-    background-color: #1a1f2e !important;
+    background-color: #111a22 !important;
   }
 
   :global(.dark-tiles) {
-    background-color: #1a1f2e !important;
+    background-color: #111a22 !important;
   }
 
   :global(.leaflet-pane) {
@@ -362,28 +286,18 @@ const canonicalURL = `${Astro.site}${path}`;
   }
 
   :global(.leaflet-map-pane) {
-    background-color: #1a1f2e;
+    background-color: #111a22;
   }
 
   /* Responsive Design */
   @media (max-width: 768px) {
-    .nav-container {
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .nav-links {
-      gap: 1rem;
-    }
-
-    .main {
+    main {
       padding: 1rem;
     }
 
     .footer-container {
       padding: 1rem;
     }
-    .main-nav { --nav-logo-height: 120px; }
   }
 
   /* Edit page button */
@@ -391,9 +305,9 @@ const canonicalURL = `${Astro.site}${path}`;
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    color: #00ff88;
+    background-color: #111a22;
+    border: 2px solid #111a22;
+    color: #febc08;
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -409,15 +323,15 @@ const canonicalURL = `${Astro.site}${path}`;
 
   .edit-page-button:hover {
     opacity: 1;
-    background-color: #00ff88;
-    color: #0f172a;
-    border-color: #00ff88;
+    background-color: #febc08;
+    color: #111a22;
+    border-color: #febc08;
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 255, 136, 0.4);
+    box-shadow: 0 6px 16px rgba(254, 188, 8, 0.4);
   }
 
   .edit-page-button:focus-visible {
-    outline: 2px dashed #00ff88;
+    outline: 2px dashed #febc08;
     outline-offset: 4px;
   }
 
