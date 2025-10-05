@@ -10,7 +10,7 @@ import sections from '../content/guides/_sections.json';
 const spots = await getCollection('spots');
 
 // Fetch recent git commits during build
-let recentCommits: Array<{ hash: string; date: string; message: string; url: string }> = [];
+let recentCommits: Array<{ hash: string; date: string; isoDate: string; message: string; url: string }> = [];
 try {
   const gitLog = execSync(
     'git log -5 --pretty=format:"%h|%ai|%s"',
@@ -20,14 +20,8 @@ try {
     const [hash, date, message] = line.split('|');
     return {
       hash,
-      date: new Date(date).toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      }),
+      date: date, // Keep raw ISO date for client-side formatting
+      isoDate: date, // Also store as isoDate for clarity
       message,
       url: `https://github.com/surfdeeper/surfdeeper/commit/${hash}`
     };
@@ -106,14 +100,7 @@ try {
           filesWithDates.push({
             title,
             url,
-            date: new Date(gitDate).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-              hour: 'numeric',
-              minute: '2-digit',
-              hour12: true
-            }),
+            date: gitDate, // Keep raw ISO date for client-side formatting
             timestamp,
             hierarchy
           });
@@ -177,7 +164,7 @@ try {
             <ul class="updates-list">
               {recentlyUpdated.map(page => (
                 <li class="update-item">
-                  <span class="update-date">{page.date}</span>
+                  <span class="update-date" data-timestamp={page.date}>{page.date}</span>
                   <a href={page.url} class="update-message">
                     <span class="page-hierarchy">{page.hierarchy}</span>
                     <span class="page-title">{page.title}</span>
@@ -194,7 +181,7 @@ try {
             <ul class="updates-list">
               {recentCommits.map(commit => (
                 <li class="update-item">
-                  <span class="update-date">{commit.date}</span>
+                  <span class="update-date" data-timestamp={commit.isoDate}>{commit.date}</span>
                   <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-message">
                     {commit.message}
                   </a>
@@ -279,6 +266,48 @@ try {
     initMapPreview();
   } else {
     document.addEventListener('DOMContentLoaded', initMapPreview);
+  }
+</script>
+
+<script is:inline>
+  // Format timestamps to user's local timezone
+  function formatTimestamps() {
+    const dateElements = document.querySelectorAll('.update-date[data-timestamp]');
+    
+    dateElements.forEach(element => {
+      const isoDate = element.getAttribute('data-timestamp');
+      if (!isoDate) return;
+      
+      try {
+        const date = new Date(isoDate);
+        
+        // Format the date in user's local timezone
+        const formattedDate = date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
+        
+        // Get the timezone abbreviation
+        const timezone = date.toLocaleTimeString('en-US', {
+          timeZoneName: 'short'
+        }).split(' ').pop();
+        
+        // Update the element with formatted date and timezone
+        element.textContent = `${formattedDate} ${timezone}`;
+      } catch (error) {
+        console.error('Error formatting date:', error);
+      }
+    });
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    formatTimestamps();
+  } else {
+    document.addEventListener('DOMContentLoaded', formatTimestamps);
   }
 </script>
 
