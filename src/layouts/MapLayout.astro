@@ -19,6 +19,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"></script>
@@ -35,7 +38,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="nav-container">
         <a href="/" class="nav-logo" aria-label="Surf Deeper home">
           <span class="logo-crop">
-            <img src="/logo.png?v=4" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
+            <img src="/logo.png?v=5" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
           </span>
         </a>
         <ul class="nav-links">
@@ -62,7 +65,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   }
 
   body {
-    font-family: system-ui, sans-serif;
+    font-family: 'Roboto', sans-serif;
     line-height: 1.6;
     background-color: #0f172a;
     color: #00ff88;
@@ -99,7 +102,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     background-color: #1e293b;
     border-bottom: 2px solid #00ff88;
     padding: 0.5rem 0;
-    --nav-logo-height: 96px;
+    --nav-logo-height: 200px;
     flex-shrink: 0;
   }
 
@@ -137,7 +140,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     display: block;
     object-fit: contain;
     object-position: center;
-    filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
   }
 
   .nav-links {
@@ -151,6 +153,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   .nav-links a {
     color: #00ff88;
     text-decoration: none;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1rem;
     font-weight: 500;
     transition: color 0.3s ease;
   }
@@ -180,7 +184,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     }
 
     .main-nav { 
-      --nav-logo-height: 72px; 
+      --nav-logo-height: 120px; 
     }
   }
 </style>

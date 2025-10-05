@@ -167,12 +167,15 @@ try {
       <section class="content">
     <div class="main-content-grid">
       <div class="map-preview-section">
+        <h2>🗺️ Surf Spots</h2>
+        <p class="map-preview-description">Explore surf breaks along the California coast</p>
         <div id="map-preview" class="map-preview-container">
           <div id="spot-list-panel-homepage" class="spot-list-panel-homepage">
             <h3>Spots on Map</h3>
             <ul id="spot-list-homepage"></ul>
           </div>
         </div>
+        <a href="/maps" class="map-view-all-link">View Full Interactive Map →</a>
       </div>
     </div>
       </section>

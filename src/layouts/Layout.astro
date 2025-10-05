@@ -26,6 +26,9 @@ const canonicalURL = `${Astro.site}${path}`;
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"></script>
@@ -42,7 +45,7 @@ const canonicalURL = `${Astro.site}${path}`;
       <div class="nav-container">
         <a href="/" class="nav-logo" aria-label="Surf Deeper home">
           <span class="logo-crop">
-            <img src="/logo.png?v=4" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
+            <img src="/logo.png?v=5" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
           </span>
         </a>
         <ul class="nav-links">
@@ -77,7 +80,7 @@ const canonicalURL = `${Astro.site}${path}`;
     <footer class="main-footer">
       <div class="footer-container">
         <div class="footer-logo">
-          <img src="/logo.png?v=4" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
+          <img src="/logo.png?v=5" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
           <span>Surf Deeper</span>
         </div>
         <div class="footer-links">
@@ -121,7 +124,7 @@ const canonicalURL = `${Astro.site}${path}`;
 
 <style>
   body {
-    font-family: system-ui, sans-serif;
+    font-family: 'Roboto', sans-serif;
     line-height: 1.6;
     margin: 0;
     background-color: #0f172a;
@@ -169,7 +172,7 @@ const canonicalURL = `${Astro.site}${path}`;
     background-color: #1e293b;
     border-bottom: 2px solid #00ff88;
     padding: 0.5rem 0;
-    --nav-logo-height: 96px;
+    --nav-logo-height: 200px;
   }
 
   .nav-container {
@@ -206,7 +209,6 @@ const canonicalURL = `${Astro.site}${path}`;
     display: block;
     object-fit: contain;
     object-position: center;
-    filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
   }
 
   .nav-links {
@@ -220,6 +222,8 @@ const canonicalURL = `${Astro.site}${path}`;
   .nav-links a {
     color: #00ff88;
     text-decoration: none;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1rem;
     font-weight: 500;
     transition: color 0.3s ease;
   }
@@ -255,7 +259,6 @@ const canonicalURL = `${Astro.site}${path}`;
     width: 180px;
     height: auto;
     display: block;
-    filter: drop-shadow(0 2px 4px rgba(0, 255, 136, 0.3));
   }
 
   .footer-links {
@@ -378,7 +381,7 @@ const canonicalURL = `${Astro.site}${path}`;
     .footer-container {
       padding: 1rem;
     }
-    .main-nav { --nav-logo-height: 72px; }
+    .main-nav { --nav-logo-height: 120px; }
   }
 
   /* Edit page button */
