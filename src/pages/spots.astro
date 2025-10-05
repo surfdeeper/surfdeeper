@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import MapLayout from '../layouts/MapLayout.astro';
 import { getCollection } from 'astro:content';
 
 import '../styles/spot-guides.css';
@@ -8,20 +8,9 @@ import spotGuidesScript from '../scripts/spot-guides.js?url';
 const spots = await getCollection('spots');
 ---
 
-<Layout title="Spots - Surf Deeper" description="Discover surf spots with maps, local insights, tide charts, and hazards contributed by the community.">
-  <header class="page-header">
-    <h1>Spots</h1>
-    <p class="page-subtitle">An open-source map of surf breaks, built by the community.</p>
-  </header>
-
-  <section class="spot-map">
-    <div id="map"></div>
-  </section>
-
-  <section class="contribute-cta">
-    <p>Know a spot? <a href="/contribute" class="contribute-link">Add it to the map</a></p>
-  </section>
-</Layout>
+<MapLayout title="Spots - Surf Deeper" description="Discover surf spots with maps, local insights, tide charts, and hazards contributed by the community.">
+  <div id="map"></div>
+</MapLayout>
 
  
 
