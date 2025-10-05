@@ -227,36 +227,36 @@ const canonicalURL = `${Astro.site}${path}`;
   }
 
   .footer-bottom {
-    border-top: 1px solid #132635;
-    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
     text-align: center;
   }
 
   .footer-bottom p {
-    color: #999999;
+    color: var(--color-text-primary);
     margin: 0;
-    font-size: 0.9rem;
+    font-size: var(--font-size-sm);
   }
 
   /* Leaflet Map Dark Theme - Prevent white flicker on tile load */
   :global(.leaflet-container) {
-    background-color: #111a22 !important;
+    background-color: var(--color-surface-primary) !important;
   }
 
   :global(.leaflet-tile-pane) {
-    background-color: #111a22 !important;
+    background-color: var(--color-surface-primary) !important;
   }
 
   :global(.leaflet-tile-container) {
-    background-color: #111a22 !important;
+    background-color: var(--color-surface-primary) !important;
   }
 
   :global(.leaflet-tile) {
-    background-color: #111a22 !important;
+    background-color: var(--color-surface-primary) !important;
   }
 
   :global(.dark-tiles) {
-    background-color: #111a22 !important;
+    background-color: var(--color-surface-primary) !important;
   }
 
   :global(.leaflet-pane) {
@@ -264,7 +264,7 @@ const canonicalURL = `${Astro.site}${path}`;
   }
 
   :global(.leaflet-map-pane) {
-    background-color: #111a22;
+    background-color: var(--color-surface-primary);
   }
 
   /* Responsive Design */
@@ -283,9 +283,9 @@ const canonicalURL = `${Astro.site}${path}`;
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    background-color: #111a22;
-    border: 2px solid #111a22;
-    color: #febc08;
+    background-color: var(--color-surface-primary);
+    border: 2px solid var(--color-surface-primary);
+    color: var(--color-accent);
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -294,22 +294,22 @@ const canonicalURL = `${Astro.site}${path}`;
     justify-content: center;
     text-decoration: none;
     transition: all 0.3s ease;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: var(--z-dropdown);
+    box-shadow: var(--shadow-base);
     opacity: 0.7;
   }
 
   .edit-page-button:hover {
     opacity: 1;
-    background-color: #febc08;
-    color: #111a22;
-    border-color: #febc08;
+    background-color: var(--color-accent);
+    color: var(--color-text-on-primary);
+    border-color: var(--color-accent);
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(254, 188, 8, 0.4);
+    box-shadow: var(--shadow-primary);
   }
 
   .edit-page-button:focus-visible {
-    outline: 2px dashed #febc08;
+    outline: 2px dashed var(--color-accent);
     outline-offset: 4px;
   }
 

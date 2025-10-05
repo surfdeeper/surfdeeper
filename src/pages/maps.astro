@@ -179,7 +179,7 @@ const serializedSpots = serializeSpots(spots);
     justify-content: center;
     font-weight: var(--font-weight-bold);
     font-size: var(--font-size-xs);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 6px #0000004d;
     border: 2px solid var(--color-surface-primary);
     transition: all 0.2s ease;
     flex-shrink: 0;
@@ -187,15 +187,15 @@ const serializedSpots = serializeSpots(spots);
   }
 
   :global(.marker-label) {
-    background: rgba(17, 26, 34, 0.95);
+    background: #111a22f2;
     color: var(--color-accent);
     padding: var(--space-xs) var(--space-sm);
     border-radius: var(--border-radius-md);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
     white-space: nowrap;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(254, 188, 8, 0.4);
+  box-shadow: 0 2px 6px #0000004d;
+  border: 1px solid #febc0866;
     backdrop-filter: blur(4px);
     z-index: 1;
   }
@@ -218,7 +218,7 @@ const serializedSpots = serializeSpots(spots);
   }
 
   :global(.numbered-marker-with-label:hover .marker-label) {
-    background: rgba(224, 166, 7, 0.15);
+    background: #e0a60726;
     border-color: var(--color-accent-hover);
     color: var(--color-accent-hover);
   }
@@ -228,11 +228,11 @@ const serializedSpots = serializeSpots(spots);
     :global(.marker-badge) {
       width: 24px;
       height: 24px;
-      font-size: 11px;
+      font-size: var(--font-size-xs);
     }
 
     :global(.marker-label) {
-      font-size: 11px;
+      font-size: var(--font-size-xs);
       padding: 3px 8px;
     }
 

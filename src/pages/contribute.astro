@@ -7,10 +7,10 @@ import Layout from '../layouts/Layout.astro';
   <header class="page-header">
     <h1>Contribute</h1>
     <p class="page-subtitle">Share your knowledge, help the community</p>
-    <div style="margin: 1.5rem 0;">
-      <a href="https://github.com/surfdeeper/surfdeeper" target="_blank" style="display: flex; align-items: center; gap: 1rem; justify-content: center;">
-        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" width="48" height="48" style="background: #fff; border-radius: 50%; padding: 4px;" />
-        <span style="font-size: 1.25rem; font-weight: 700; color: #00ff88;">github.com/surfdeeper/surfdeeper</span>
+    <div class="github-cta">
+      <a href="https://github.com/surfdeeper/surfdeeper" target="_blank" class="github-cta-link">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" width="48" height="48" class="github-cta-img" />
+        <span class="github-cta-text">github.com/surfdeeper/surfdeeper</span>
       </a>
     </div>
   </header>
@@ -53,8 +53,8 @@ import Layout from '../layouts/Layout.astro';
         <p>Go to your fork on GitHub, click <b>Compare & pull request</b>, add a description, and submit!</p>
       </div>
     </div>
-    <p style="margin-top:2rem; text-align:center;">
-      <a href="https://github.com/surfdeeper/surfdeeper" target="_blank" class="contribute-link" style="font-size:1.2rem;">Visit the Project Repo</a>
+    <p class="visit-repo">
+      <a href="https://github.com/surfdeeper/surfdeeper" target="_blank" class="contribute-link">Visit the Project Repo</a>
     </p>
   </section>
 
@@ -108,8 +108,8 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .page-header h1 {
-    color: #00ff88;
-    font-size: 2.5rem;
+    color: var(--color-accent-green);
+    font-size: var(--font-size-4xl);
     margin-bottom: 0.5rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -117,17 +117,17 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .page-subtitle {
-    font-size: 1.25rem;
-    color: #00ff88;
+    font-size: var(--font-size-xl);
+    color: var(--color-accent-green);
     font-weight: 500;
   }
 
   .contribution-types h2,
   .article h2 {
-    color: #00ff88;
-    font-size: 1.5rem;
+    color: var(--color-accent-green);
+    font-size: var(--font-size-2xl);
     margin-bottom: 1.5rem;
-    border-bottom: 2px solid #00ff88;
+    border-bottom: 2px solid var(--color-accent-green);
     padding-bottom: 0.5rem;
   }
 
@@ -139,25 +139,25 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .contribution-card {
-    background-color: #1e293b;
-    border: 2px solid #334155;
+    background-color: var(--color-surface-dark);
+    border: 2px solid var(--color-border);
     border-radius: 8px;
     padding: 1.5rem;
     transition: border-color 0.3s ease;
   }
 
   .contribution-card:hover {
-    border-color: #00ff88;
+    border-color: var(--color-accent-green);
   }
 
   .contribution-card h3 {
-    color: #00ff88;
-    font-size: 1.25rem;
+    color: var(--color-accent-green);
+    font-size: var(--font-size-xl);
     margin-bottom: 1rem;
   }
 
   .contribution-card p {
-    color: #00ff88;
+    color: var(--color-accent-green);
     margin-bottom: 1rem;
     opacity: 0.9;
   }
@@ -169,7 +169,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .contribution-card li {
-    color: #00ff88;
+    color: var(--color-accent-green);
     margin-bottom: 0.5rem;
     padding-left: 1rem;
     position: relative;
@@ -179,13 +179,13 @@ import Layout from '../layouts/Layout.astro';
     content: "→";
     position: absolute;
     left: 0;
-    color: #00cc6a;
+    color: #0c6; /* visually similar accent */
   }
 
   .contribute-link {
     display: inline-block;
-    background-color: #00ff88;
-    color: #0f172a;
+    background-color: var(--color-accent-green);
+    color: var(--color-surface-deep);
     padding: 0.5rem 1rem;
     border-radius: 6px;
     text-decoration: none;
@@ -194,7 +194,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .contribute-link:hover {
-    background-color: #00cc6a;
+    background-color: #0c6;
   }
 
   .article {
@@ -202,7 +202,7 @@ import Layout from '../layouts/Layout.astro';
     margin: 0 auto 2rem;
   }
   .article p, .article li {
-    color: #00ff88;
+    color: var(--color-accent-green);
     opacity: 0.95;
   }
   .article ul, .article ol {
@@ -212,8 +212,8 @@ import Layout from '../layouts/Layout.astro';
   /* remove extra cardy blocks */
 
   .github-contribution {
-    background-color: #1e293b;
-    border: 2px solid #334155;
+    background-color: var(--color-surface-dark);
+    border: 2px solid var(--color-border);
     border-radius: 8px;
     padding: 2rem;
     margin-bottom: 3rem;
@@ -221,22 +221,22 @@ import Layout from '../layouts/Layout.astro';
 
   .templates .code-block {
     display: block;
-    background: #0f172a;
+    background: var(--color-surface-deep);
     color: #d1fae5;
     padding: 1rem;
     border-radius: 6px;
-    border: 1px solid #334155;
+    border: 1px solid var(--color-border);
     white-space: pre-wrap;
   }
 
   .github-contribution h2 {
-    color: #00ff88;
-    font-size: 1.5rem;
+    color: var(--color-accent-green);
+    font-size: var(--font-size-2xl);
     margin-bottom: 1rem;
   }
 
   .github-contribution p {
-    color: #00ff88;
+    color: var(--color-accent-green);
     margin-bottom: 2rem;
   }
 
@@ -247,48 +247,48 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .step-card {
-    background-color: #0f172a;
-    border: 2px solid #334155;
+    background-color: var(--color-surface-deep);
+    border: 2px solid var(--color-border);
     border-radius: 8px;
     padding: 1.5rem;
     transition: border-color 0.3s ease;
   }
 
   .step-card:hover {
-    border-color: #00ff88;
+    border-color: var(--color-accent-green);
   }
 
   .step-card h3 {
-    color: #00ff88;
-    font-size: 1.25rem;
+    color: var(--color-accent-green);
+    font-size: var(--font-size-xl);
     margin-bottom: 1rem;
   }
 
   .step-card p {
-    color: #00ff88;
+    color: var(--color-accent-green);
     margin: 0;
     opacity: 0.9;
   }
 
   .step-card a {
-    color: #00cc6a;
+    color: #0c6;
     text-decoration: none;
     font-weight: 600;
   }
 
   .step-card a:hover {
-    color: #00ff88;
+    color: var(--color-accent-green);
   }
 
   .contact-info {
-    background-color: #1e293b;
-    border: 2px solid #334155;
+    background-color: var(--color-surface-dark);
+    border: 2px solid var(--color-border);
     border-radius: 8px;
     padding: 2rem;
   }
 
   .contact-info p {
-    color: #00ff88;
+    color: var(--color-accent-green);
     margin-bottom: 1.5rem;
   }
 
@@ -303,14 +303,44 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .contact-method h4 {
-    color: #00ff88;
-    font-size: 1.1rem;
+    color: var(--color-accent-green);
+    font-size: var(--font-size-1_1);
     margin-bottom: 0.5rem;
   }
 
   .contact-method p {
-    color: #00ff88;
+    color: var(--color-accent-green);
     opacity: 0.9;
     margin: 0;
+  }
+
+  /* Inline element replacements */
+  .github-cta {
+    margin: var(--space-6) 0;
+    text-align: center;
+  }
+
+  .github-cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    justify-content: center;
+  }
+
+  .github-cta-img {
+    background: #fff;
+    border-radius: 50%;
+    padding: 4px;
+  }
+
+  .github-cta-text {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent-green);
+  }
+
+  .visit-repo {
+    margin-top: var(--space-8);
+    text-align: center;
   }
 </style>

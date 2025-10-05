@@ -33,9 +33,9 @@ for (const key of Object.keys(grouped)) {
         (Object.entries(grouped) as [string, EntryType[]][])
           .sort(([a], [b]) => (sections[a]?.order ?? 999) - (sections[b]?.order ?? 999))
           .map(([section, items]) => (
-            <a href={`/guide/${section}`} class="section-card">
+            <a href={`/guide/${section}`} class="card card-elevated section-card">
               <div class="card-content">
-                <h3>{sections[section]?.label ?? section}</h3>
+                <h3 class="heading heading-md">{sections[section]?.label ?? section}</h3>
                 <p class="guide-count">{items.length} {items.length === 1 ? 'guide' : 'guides'}</p>
                 <ul class="guide-preview">
                   {items.slice(0, 3).map((e) => (
@@ -44,19 +44,17 @@ for (const key of Object.keys(grouped)) {
                   {items.length > 3 && <li class="more">+{items.length - 3} more</li>}
                 </ul>
               </div>
-              <div class="card-link">
-                View Guides →
-              </div>
+              <div class="card-link">View Guides →</div>
             </a>
           ))
       }
     </div>
   </section>
 
-  <section class="coming-soon">
+  <section class="coming-soon card card-elevated">
     <h2>Share Your Knowledge</h2>
     <p>Have a technique you've mastered? Share it with the community and help others improve their surfing.</p>
-    <a href="/contribute" class="cta-button">Contribute a Technique</a>
+    <a href="/contribute" class="btn btn-primary">Contribute a Technique</a>
   </section>
 
   <style>
@@ -92,19 +90,15 @@ for (const key of Object.keys(grouped)) {
     }
     
     .section-card {
-      background-color: var(--color-surface-secondary);
-      border: 2px solid var(--color-surface-secondary);
-      border-radius: var(--border-radius-lg);
-      padding: var(--space-lg);
-      display: flex;
-      flex-direction: column;
       text-decoration: none;
       color: inherit;
-      transition: border-color 0.3s ease;
+      transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
     }
-    
+
     .section-card:hover {
-      border-color: var(--color-accent);
+      border-color: var(--color-border-accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-primary);
     }
     
     .card-content {
@@ -168,10 +162,6 @@ for (const key of Object.keys(grouped)) {
     }
     
     .coming-soon {
-      background-color: var(--color-surface-secondary);
-      border: 2px solid var(--color-border);
-      border-radius: var(--border-radius-lg);
-      padding: var(--space-md);
       text-align: center;
     }
     
@@ -187,20 +177,7 @@ for (const key of Object.keys(grouped)) {
       opacity: 0.9;
     }
     
-    .cta-button {
-      display: inline-block;
-      background-color: var(--color-accent);
-      color: var(--color-surface-primary);
-      padding: var(--space-sm) var(--space-md);
-      border-radius: var(--border-radius-md);
-      text-decoration: none;
-      font-weight: var(--font-weight-semibold);
-      transition: background-color 0.3s ease;
-    }
-    
-    .cta-button:hover { 
-      background-color: var(--color-accent-hover); 
-    }
+    /* button styles are provided by .btn .btn-primary */
     
     @media (max-width: 768px) {
       .section-grid {

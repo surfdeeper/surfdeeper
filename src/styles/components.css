@@ -23,10 +23,8 @@ OR BETTER: Using component classes
 .spot-card {
   /* Instead of: background-color: #132635; */
   background-color: var(--color-surface-secondary);
-  
   /* Instead of: border: 1px solid #132635; */
   border: 1px solid var(--color-border);
-  
   border-radius: var(--radius-base);
   padding: var(--space-6);
   transition: border-color var(--transition-base);
@@ -60,7 +58,7 @@ OR BETTER: Using component classes
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #000000cc;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,7 +170,7 @@ OR BETTER: Using component classes
 .form-field select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(254, 188, 8, 0.1);
+  box-shadow: 0 0 0 3px #febc081a;
 }
 
 /* Example: Alert/Status Components */

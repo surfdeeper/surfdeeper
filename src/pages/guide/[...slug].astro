@@ -79,15 +79,15 @@ if (isSectionPage) {
     }
 
     .section-guides {
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 2px solid #334155;
+      margin-top: var(--space-12);
+      padding-top: var(--space-8);
+      border-top: 2px solid var(--color-border);
     }
 
     .section-guides h2 {
-      color: #00ff88;
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
+      color: var(--color-accent);
+      font-size: var(--font-size-3xl);
+      margin-bottom: var(--space-6);
       text-align: center;
     }
 
@@ -98,8 +98,8 @@ if (isSectionPage) {
     }
 
     .guides-list li {
-      margin-bottom: 1.5rem;
-      padding-left: 1.5rem;
+      margin-bottom: var(--space-6);
+      padding-left: var(--space-6);
       position: relative;
     }
 
@@ -107,32 +107,32 @@ if (isSectionPage) {
       content: "•";
       position: absolute;
       left: 0;
-      color: #00cc6a;
+      color: var(--color-accent);
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: var(--font-size-lg);
     }
 
     .guides-list li a {
-      color: #00ff88;
+      color: var(--color-accent);
       text-decoration: underline;
-      text-decoration-color: #00cc6a;
+      text-decoration-color: var(--color-accent);
       text-underline-offset: 3px;
-      transition: all 0.3s ease;
-      font-size: 1.1rem;
-      font-weight: 600;
+      transition: color var(--transition-base);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
     }
 
     .guides-list li a:hover {
-      color: #00cc6a;
-      text-decoration-color: #00ff88;
+      color: var(--color-accent-hover);
+      text-decoration-color: var(--color-accent);
     }
 
     .guide-description {
-      color: #00ff88;
-      opacity: 0.8;
-      margin: 0.5rem 0 0 0;
-      line-height: 1.5;
-      font-size: 0.95rem;
+      color: var(--color-text-primary);
+      opacity: 0.9;
+      margin: var(--space-2) 0 0 0;
+      line-height: var(--line-height-relaxed);
+      font-size: var(--font-size-sm);
     }
   </style>
 </Layout>

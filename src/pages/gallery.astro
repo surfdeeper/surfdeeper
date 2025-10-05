@@ -122,7 +122,7 @@ const imagesBySection = images.reduce((acc, img) => {
             <h2 class="category-title">{section} <span class="image-count">({sectionImages.length})</span></h2>
             <div class="gallery-grid">
               {sectionImages.map((image, idx) => (
-                <article class="gallery-item">
+                <article class="gallery-item card card-elevated">
                   <a href={image.guideLink} class="gallery-link">
                     <div class="image-wrapper">
                       <img 
@@ -241,13 +241,15 @@ const imagesBySection = images.reduce((acc, img) => {
   }
 
   .gallery-item {
+    /* Use design system card by classes on element */
     background-color: var(--color-surface-secondary);
-    border: 2px solid var(--color-surface-secondary);
+    border: 1px solid var(--color-border);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     display: flex;
     flex-direction: column;
+    padding: 0; /* media card: image edge-to-edge */
   }
 
   .gallery-link {
@@ -258,9 +260,9 @@ const imagesBySection = images.reduce((acc, img) => {
   }
 
   .gallery-item:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(254, 188, 8, 0.2);
+    border-color: var(--color-border-accent);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-primary);
   }
 
   .image-wrapper {
@@ -353,13 +355,15 @@ const imagesBySection = images.reduce((acc, img) => {
   }
 
   .contribute-box {
+    /* use card styles */
     background-color: var(--color-surface-secondary);
-    border: 2px solid var(--color-accent);
+    border: 1px solid var(--color-border);
     border-radius: var(--border-radius-lg);
     padding: var(--space-lg);
     text-align: center;
     max-width: 700px;
     margin: 0 auto;
+    box-shadow: var(--shadow-base);
   }
 
   .contribute-box h3 {
