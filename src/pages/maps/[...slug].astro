@@ -88,9 +88,56 @@ const { data } = entry;
         <p class="coordinates">
           {data.latitude.toFixed(4)}, {data.longitude.toFixed(4)}
         </p>
+        <div id="spot-map" class="spot-map"></div>
       </section>
     </div>
   </article>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+
+  <script type="application/json" id="spot-data" set:html={JSON.stringify({
+    latitude: data.latitude,
+    longitude: data.longitude,
+    title: data.title,
+    description: data.description || ''
+  })}></script>
+
+  <script>
+    function initSpotMap() {
+      if (!window.L) {
+        setTimeout(initSpotMap, 100);
+        return;
+      }
+
+      const dataElement = document.getElementById('spot-data');
+      if (!dataElement) return;
+
+      try {
+        const spot = JSON.parse(dataElement.textContent || '{}');
+        
+        // Initialize map centered on the spot
+        const map = L.map('spot-map').setView([spot.latitude, spot.longitude], 13);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Add marker for the spot
+        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+        marker.bindPopup(`<b>${spot.title}</b><br/>${spot.description}`).openPopup();
+      } catch (error) {
+        console.error('Failed to initialize spot map:', error);
+      }
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      initSpotMap();
+    } else {
+      document.addEventListener('DOMContentLoaded', initSpotMap);
+    }
+  </script>
 
   <style>
     .spot-article {
@@ -197,7 +244,15 @@ const { data } = entry;
       font-family: monospace;
       font-size: 1rem;
       color: #94a3b8;
-      margin: 0;
+      margin: 0 0 1rem 0;
+    }
+
+    .spot-map {
+      width: 100%;
+      height: 400px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #334155;
     }
 
     @media (max-width: 640px) {
@@ -220,5 +275,3 @@ const { data } = entry;
     }
   </style>
 </Layout>
-
-
