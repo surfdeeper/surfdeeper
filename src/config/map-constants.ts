@@ -65,7 +65,7 @@ export const MAP_THEMES: Record<string, MapTheme> = {
 };
 
 // Default themes for different map types
-export const DEFAULT_THEME_HOMEPAGE = 'esri-ocean';
-export const DEFAULT_THEME_SPOT = 'esri-ocean';
-export const DEFAULT_THEME_FULL_MAP = 'esri-ocean';
+export const DEFAULT_THEME_HOMEPAGE = 'esri-imagery';
+export const DEFAULT_THEME_SPOT = 'esri-imagery';
+export const DEFAULT_THEME_FULL_MAP = 'esri-imagery';
 
