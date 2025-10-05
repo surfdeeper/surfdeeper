@@ -33,12 +33,9 @@ function initMap() {
     }
   }
 
-  if (markers.length > 0) {
-    const group = L.featureGroup(markers);
-    map.fitBounds(group.getBounds().pad(0.2));
-  } else {
-    map.setView([20, 0], 2);
-  }
+  // Set view to show entire Santa Cruz to Bolinas coastline
+  // Center approximately between Santa Cruz (36.97°N, -122.03°W) and Bolinas (37.91°N, -122.69°W)
+  map.setView([37.44, -122.36], 9);
 }
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
