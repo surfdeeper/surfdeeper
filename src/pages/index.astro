@@ -3,10 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import { execSync } from 'child_process';
 
 // Fetch recent git commits during build
-let recentCommits: Array<{ hash: string; date: string; message: string }> = [];
+let recentCommits: Array<{ hash: string; date: string; message: string; url: string }> = [];
 try {
   const gitLog = execSync(
-    'git log -10 --pretty=format:"%h|%ai|%s"',
+    'git log -5 --pretty=format:"%h|%ai|%s"',
     { encoding: 'utf-8' }
   );
   recentCommits = gitLog.split('\n').map(line => {
@@ -18,7 +18,8 @@ try {
         day: 'numeric',
         year: 'numeric'
       }),
-      message
+      message,
+      url: `https://github.com/surfdeeper/surfdeeper/commit/${hash}`
     };
   });
 } catch (error) {
@@ -58,7 +59,9 @@ try {
           {recentCommits.map(commit => (
             <li class="update-item">
               <span class="update-date">{commit.date}</span>
-              <span class="update-message">{commit.message}</span>
+              <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-message">
+                {commit.message}
+              </a>
             </li>
           ))}
         </ul>
@@ -208,5 +211,13 @@ try {
     color: #00ff88;
     opacity: 0.9;
     line-height: 1.5;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    flex: 1;
+  }
+
+  .update-message:hover {
+    opacity: 1;
+    text-decoration: underline;
   }
 </style>
