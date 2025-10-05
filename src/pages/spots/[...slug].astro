@@ -20,20 +20,202 @@ const { data } = entry;
 
 <Layout title={data.title} description={data.description} editPath={`src/content/spots/${entry.slug}.md`}>
   <article class="spot-article">
-    <Content />
+    <h1>{data.title}</h1>
+    
+    <div class="spot-description">
+      <Content />
+    </div>
+
+    <div class="spot-details">
+      <section class="detail-section">
+        <h2>Skill Level</h2>
+        <div class="skill-levels">
+          {data.skillLevels.map((level: string) => (
+            <span class={`skill-badge skill-${level}`}>{level}</span>
+          ))}
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2>Wave Characteristics</h2>
+        <dl>
+          <dt>Type</dt>
+          <dd>{data.waveType}</dd>
+          <dt>Bottom</dt>
+          <dd>{data.bottom}</dd>
+          <dt>Best Size</dt>
+          <dd>{data.bestSize}</dd>
+          <dt>Swell Direction</dt>
+          <dd>{data.swellDirection}</dd>
+        </dl>
+      </section>
+
+      <section class="detail-section">
+        <h2>Best Conditions</h2>
+        <dl>
+          <dt>Tide</dt>
+          <dd>{data.bestTide}</dd>
+          <dt>Wind</dt>
+          <dd>{data.bestWind}</dd>
+          <dt>Season</dt>
+          <dd>{data.bestSeason}</dd>
+        </dl>
+      </section>
+
+      <section class="detail-section">
+        <h2>Hazards</h2>
+        <ul class="hazards-list">
+          {data.hazards.map((hazard: string) => <li>{hazard}</li>)}
+        </ul>
+      </section>
+
+      <section class="detail-section">
+        <h2>Access</h2>
+        <dl>
+          <dt>Parking</dt>
+          <dd>{data.parking}</dd>
+          {data.facilities && (
+            <>
+              <dt>Facilities</dt>
+              <dd>{data.facilities}</dd>
+            </>
+          )}
+        </dl>
+      </section>
+
+      <section class="detail-section">
+        <h2>Location</h2>
+        <p class="coordinates">
+          {data.latitude.toFixed(4)}, {data.longitude.toFixed(4)}
+        </p>
+      </section>
+    </div>
   </article>
 
   <style>
     .spot-article {
       max-width: 800px;
       margin: 0 auto;
+      padding: 2rem 1rem;
     }
 
-    .spot-article :global(img) {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 1.5rem auto;
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+
+    .spot-description {
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-left: 4px solid #0066cc;
+      border-radius: 4px;
+    }
+
+    .spot-details {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .detail-section {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .detail-section h2 {
+      font-size: 1.25rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: #0066cc;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 0.5rem;
+    }
+
+    .skill-levels {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .skill-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: capitalize;
+      font-size: 0.875rem;
+    }
+
+    .skill-beginner {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .skill-intermediate {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .skill-advanced {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0.75rem 1rem;
+      margin: 0;
+    }
+
+    dt {
+      font-weight: 600;
+      color: #555;
+    }
+
+    dd {
+      margin: 0;
+      color: #333;
+    }
+
+    .hazards-list {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+
+    .hazards-list li {
+      margin-bottom: 0.5rem;
+      color: #721c24;
+    }
+
+    .coordinates {
+      font-family: monospace;
+      font-size: 1rem;
+      color: #555;
+      margin: 0;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      dl {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+      }
+
+      dt {
+        margin-top: 0.5rem;
+      }
+
+      .spot-article {
+        padding: 1rem;
+      }
     }
   </style>
 </Layout>

@@ -3,32 +3,17 @@ title: Ocean Beach, San Francisco
 description: Powerful San Francisco beach break, advanced surfers only
 latitude: 37.7598
 longitude: -122.5109
+skillLevels: ['advanced']
+waveType: Beach break
+bottom: Sand
+bestSize: 4-8 feet
+bestTide: Mid
+bestWind: E offshore
+bestSeason: Year-round
+swellDirection: W-NW
+hazards: ['Strong rip currents', 'Great white sharks', 'Cold water (50-55°F)', 'Heavy closeouts', 'Water quality issues after rain']
+parking: Multiple parking areas along Great Highway (free)
+facilities: Limited facilities
 ---
 
-## Overview
-San Francisco's premier surf spot with powerful, hollow waves and challenging conditions. One of the most dangerous beach breaks in California.
-
-## Wave Characteristics
-- **Type**: Beach break
-- **Direction**: W-NW swells
-- **Bottom**: Sand
-- **Best Size**: 4-8 feet
-
-## Conditions
-- **Best Tide**: Mid
-- **Best Wind**: E offshore
-- **Season**: Year-round
-
-## Skill Level
-- Advanced
-
-## Hazards
-- Strong rip currents
-- Great white sharks
-- Cold water (50-55°F)
-- Heavy closeouts
-- Water quality issues after rain
-
-## Access
-- Multiple parking areas along Great Highway (free)
-- Limited facilities
+San Francisco's premier surf spot with powerful, hollow waves and challenging conditions. One of the most dangerous beach breaks in California, suitable only for advanced surfers with strong ocean experience.
