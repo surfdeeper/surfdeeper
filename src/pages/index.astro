@@ -18,7 +18,10 @@ try {
       date: new Date(date).toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric',
-        year: 'numeric'
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
       }),
       message,
       url: `https://github.com/surfdeeper/surfdeeper/commit/${hash}`
@@ -101,7 +104,10 @@ try {
             date: new Date(gitDate).toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric',
-              year: 'numeric'
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
             }),
             timestamp,
             hierarchy
@@ -320,7 +326,7 @@ try {
     font-size: 0.875rem;
     white-space: nowrap;
     flex-shrink: 0;
-    min-width: 100px;
+    min-width: 160px;
   }
 
   .update-message {
