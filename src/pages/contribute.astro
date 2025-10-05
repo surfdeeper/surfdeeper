@@ -3,38 +3,59 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Contribute - Surf Deeper" description="How to contribute guides and spots using our content system: folders, sections, ordering, and Markdown formatting.">
+
   <header class="page-header">
     <h1>Contribute</h1>
     <p class="page-subtitle">Share your knowledge, help the community</p>
+    <div style="margin: 1.5rem 0;">
+      <a href="https://github.com/surfdeeper/surfdeeper" target="_blank" style="display: flex; align-items: center; gap: 1rem; justify-content: center;">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" width="48" height="48" style="background: #fff; border-radius: 50%; padding: 4px;" />
+        <span style="font-size: 1.25rem; font-weight: 700; color: #00ff88;">github.com/surfdeeper/surfdeeper</span>
+      </a>
+    </div>
   </header>
 
-  <section class="contribution-types">
-    <h2>How You Can Contribute</h2>
-    <div class="contribution-grid">
-      <div class="contribution-card">
-        <h3>Guides</h3>
-        <p>Write Markdown articles in our `guides` collection.</p>
-        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/guides" target="_blank" class="contribute-link">Guides folder</a>
-      </div>
 
-      <div class="contribution-card">
-        <h3>Sections</h3>
-        <p>Lightly manage sections for Guides.</p>
-        <a href="https://github.com/surfdeeper/surfdeeper/blob/main/src/content/guides/_sections.json" target="_blank" class="contribute-link">Sections config</a>
+  <section class="github-contribution">
+    <h2>Contributing Made Easy</h2>
+    <p>Follow these simple steps to start contributing, even if you're new to coding!</p>
+    <div class="contribution-steps">
+      <div class="step-card">
+        <h3>1. Download VS Code</h3>
+        <p><a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a> is a free code editor for Windows, Mac, and Linux.</p>
       </div>
-
-      <div class="contribution-card">
-        <h3>Spots</h3>
-        <p>Optional for now — brief Markdown spot profiles.</p>
-        <a href="https://github.com/surfdeeper/surfdeeper/tree/main/spots" target="_blank" class="contribute-link">Spots folder</a>
+      <div class="step-card">
+        <h3>2. Sign Up for GitHub</h3>
+        <p><a href="https://github.com/" target="_blank">Create a free account</a> to contribute and track your changes.</p>
       </div>
-
-      <div class="contribution-card">
-        <h3>Fix Pin Locations</h3>
-        <p>Drag pins on the map to correct spot locations.</p>
-        <a href="/maps" class="contribute-link">View Spots Map</a>
+      <div class="step-card">
+        <h3>3. Set Up Copilot</h3>
+        <p>In VS Code, go to <b>Extensions</b> and install <a href="https://marketplace.visualstudio.com/items?itemName=GitHub.copilot" target="_blank">GitHub Copilot</a>. Sign in with your GitHub account.</p>
+      </div>
+      <div class="step-card">
+        <h3>4. Fork & Clone the Repo</h3>
+        <p>
+          <a href="https://github.com/surfdeeper/surfdeeper" target="_blank">Go to the repo</a> and click <b>Fork</b>.<br>
+          Then, copy your repo link and run:<br>
+          <span class="code-block">git clone https://github.com/YOUR-USERNAME/surfdeeper.git</span>
+        </p>
+      </div>
+      <div class="step-card">
+        <h3>5. Add/Edit Guides & Spots</h3>
+        <p>Edit or add Markdown files in <code>src/content/guides/</code> or <code>src/content/spots/</code>. Copilot will help you write!</p>
+      </div>
+      <div class="step-card">
+        <h3>6. Commit & Push</h3>
+        <p>In the terminal, run:<br><span class="code-block">git add .<br>git commit -m "Add new guide/spot"<br>git push origin main</span></p>
+      </div>
+      <div class="step-card">
+        <h3>7. Make a Pull Request</h3>
+        <p>Go to your fork on GitHub, click <b>Compare & pull request</b>, add a description, and submit!</p>
       </div>
     </div>
+    <p style="margin-top:2rem; text-align:center;">
+      <a href="https://github.com/surfdeeper/surfdeeper" target="_blank" class="contribute-link" style="font-size:1.2rem;">Visit the Project Repo</a>
+    </p>
   </section>
 
   <section class="article">
@@ -60,7 +81,6 @@ import Layout from '../layouts/Layout.astro';
       <li>Sections = folder names; display labels and order live in <a href="https://github.com/surfdeeper/surfdeeper/blob/main/src/content/guides/_sections.json" target="_blank">_sections.json</a></li>
       <li>Sorting: by <code>order</code>, then by <code>title</code></li>
     </ul>
-
     <p>Schema lives in <a href="https://github.com/surfdeeper/surfdeeper/blob/main/src/content/config.ts" target="_blank">content config</a>. Browse existing files in the <a href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/guides" target="_blank">guides folder</a> and copy the closest example.</p>
   </section>
 
