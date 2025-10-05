@@ -55,22 +55,24 @@ const canonicalURL = `${Astro.site}${path}`;
     </nav>
 
     <main>
-      {editUrl && (
-        <div class="edit-prompt" role="complementary" aria-label="Suggest an edit">
-          <span>See anything to improve? Help the community by suggesting an edit.</span>
-          <a class="edit-link-button" href={editUrl} target="_blank" rel="noopener noreferrer">Edit this page on GitHub</a>
-        </div>
-      )}
-
       <slot />
-
-      {editUrl && (
-        <div class="edit-prompt" role="complementary" aria-label="Suggest an edit">
-          <span>Knowledge gets better together. Found a mistake or have tips?</span>
-          <a class="edit-link-button" href={editUrl} target="_blank" rel="noopener noreferrer">Suggest an edit</a>
-        </div>
-      )}
     </main>
+
+    {editUrl && (
+      <a 
+        class="edit-page-button" 
+        href={editUrl} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        aria-label="Edit this page on GitHub"
+        title="Edit this page"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+      </a>
+    )}
 
     <footer class="main-footer">
       <div class="footer-container">
@@ -379,37 +381,47 @@ const canonicalURL = `${Astro.site}${path}`;
     .main-nav { --nav-logo-height: 72px; }
   }
 
-  /* Edit prompt */
-  .edit-prompt {
+  /* Edit page button */
+  .edit-page-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
     background-color: #1e293b;
     border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    margin: 0 0 1.5rem;
+    color: #00ff88;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0.7;
   }
 
-  .edit-prompt span {
-    color: #00ff88;
-    opacity: 0.95;
-  }
-
-  .edit-link-button {
-    display: inline-block;
+  .edit-page-button:hover {
+    opacity: 1;
     background-color: #00ff88;
     color: #0f172a;
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-    white-space: nowrap;
+    border-color: #00ff88;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 255, 136, 0.4);
   }
 
-  .edit-link-button:hover {
-    background-color: #00cc6a;
+  .edit-page-button:focus-visible {
+    outline: 2px dashed #00ff88;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .edit-page-button {
+      bottom: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+    }
   }
 </style>
