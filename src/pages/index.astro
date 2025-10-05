@@ -155,36 +155,40 @@ try {
       <p><strong>Free and open source</strong> — Built by surfers, for surfers. <a href="/contribute">Contribute your knowledge</a> to help others learn and progress.</p>
     </div>
 
-    {recentlyUpdated.length > 0 && (
-      <div class="updates-section">
-        <h2>Recently Updated Guides</h2>
-        <ul class="updates-list">
-          {recentlyUpdated.map(page => (
-            <li class="update-item">
-              <span class="update-date">{page.date}</span>
-              <a href={page.url} class="update-message">
-                <span class="page-hierarchy">{page.hierarchy}</span>
-                <span class="page-title">{page.title}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+    {(recentlyUpdated.length > 0 || recentCommits.length > 0) && (
+      <div class="updates-grid">
+        {recentlyUpdated.length > 0 && (
+          <div class="updates-section">
+            <h2>Recently Updated Guides</h2>
+            <ul class="updates-list">
+              {recentlyUpdated.map(page => (
+                <li class="update-item">
+                  <span class="update-date">{page.date}</span>
+                  <a href={page.url} class="update-message">
+                    <span class="page-hierarchy">{page.hierarchy}</span>
+                    <span class="page-title">{page.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-    {recentCommits.length > 0 && (
-      <div class="updates-section">
-        <h2>Recent Git Commits</h2>
-        <ul class="updates-list">
-          {recentCommits.map(commit => (
-            <li class="update-item">
-              <span class="update-date">{commit.date}</span>
-              <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-message">
-                {commit.message}
-              </a>
-            </li>
-          ))}
-        </ul>
+        {recentCommits.length > 0 && (
+          <div class="updates-section">
+            <h2>Recent Git Commits</h2>
+            <ul class="updates-list">
+              {recentCommits.map(commit => (
+                <li class="update-item">
+                  <span class="update-date">{commit.date}</span>
+                  <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-message">
+                    {commit.message}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     )}
 
@@ -287,8 +291,20 @@ try {
     text-underline-offset: 3px;
   }
 
-  .updates-section {
+  .updates-grid {
     margin-top: 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .updates-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .updates-section {
     background-color: #1e293b;
     border: 2px solid #334155;
     border-radius: 8px;
@@ -310,10 +326,10 @@ try {
 
   .update-item {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.25rem;
     padding: 0.75rem 0;
     border-bottom: 1px solid #334155;
-    align-items: baseline;
   }
 
   .update-item:last-child {
@@ -322,11 +338,9 @@ try {
 
   .update-date {
     color: #00ff88;
-    opacity: 0.7;
-    font-size: 0.875rem;
+    opacity: 0.6;
+    font-size: 0.75rem;
     white-space: nowrap;
-    flex-shrink: 0;
-    min-width: 160px;
   }
 
   .update-message {
@@ -335,7 +349,6 @@ try {
     line-height: 1.5;
     text-decoration: none;
     transition: opacity 0.2s ease;
-    flex: 1;
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
