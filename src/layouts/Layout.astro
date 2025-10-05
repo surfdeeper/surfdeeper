@@ -95,6 +95,18 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             </ul>
           </div>
         </div>
+        <div class="footer-disclaimer">
+          <h4>⚠️ Disclaimer</h4>
+          <p>
+            <strong>FOR ENTERTAINMENT AND INFORMATIONAL PURPOSES ONLY.</strong> 
+            Surfing is an inherently dangerous activity that carries significant risk of injury or death. 
+            Before attempting any surfing activity, consult with your physician and ensure you are in proper physical condition. 
+            All activities should be performed under adult supervision and guidance from qualified experts. 
+            By using this website, you acknowledge that you assume all risks and waive any claims against Surf Deeper, 
+            its contributors, and affiliates for any injuries, damages, or losses that may occur. 
+            This website provides no warranties or guarantees of any kind. Use at your own risk.
+          </p>
+        </div>
         <div class="footer-bottom">
           <p>&copy; 2024 Surf Deeper. Community-driven surf knowledge.</p>
         </div>
@@ -275,6 +287,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     color: #00cc6a;
   }
 
+  .footer-disclaimer {
+    background-color: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .footer-disclaimer h4 {
+    color: #00ff88;
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .footer-disclaimer p {
+    color: #94a3b8;
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .footer-disclaimer strong {
+    color: #00ff88;
+    font-weight: 700;
+  }
+
   .footer-bottom {
     border-top: 1px solid #334155;
     padding-top: 1rem;
@@ -285,6 +325,35 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     color: #94a3b8;
     margin: 0;
     font-size: 0.9rem;
+  }
+
+  /* Leaflet Map Dark Theme - Prevent white flicker on tile load */
+  :global(.leaflet-container) {
+    background-color: #1a1f2e !important;
+  }
+
+  :global(.leaflet-tile-pane) {
+    background-color: #1a1f2e !important;
+  }
+
+  :global(.leaflet-tile-container) {
+    background-color: #1a1f2e !important;
+  }
+
+  :global(.leaflet-tile) {
+    background-color: #1a1f2e !important;
+  }
+
+  :global(.dark-tiles) {
+    background-color: #1a1f2e !important;
+  }
+
+  :global(.leaflet-pane) {
+    background-color: transparent;
+  }
+
+  :global(.leaflet-map-pane) {
+    background-color: #1a1f2e;
   }
 
   /* Responsive Design */
