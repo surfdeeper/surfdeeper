@@ -1,0 +1,418 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import sections from '../content/guides/_sections.json';
+
+interface GalleryImage {
+  src: string;
+  alt: string;
+  caption: string;
+  guideTitle: string;
+  guideLink: string;
+  section: string;
+  context?: string;
+}
+
+// Get all guides
+const allGuides = await getCollection('guides');
+
+const images: GalleryImage[] = [];
+
+// Regular expression to match markdown images: ![alt text](image-path)
+const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+
+// Regular expression to match headings before images (for context)
+const headingRegex = /^#{1,6}\s+(.+)$/gm;
+
+for (const guide of allGuides) {
+  // Skip index pages
+  if (guide.slug.endsWith('/index') || !guide.slug.includes('/')) {
+    continue;
+  }
+
+  const guideLink = `/guide/${guide.slug}`;
+  const guideTitle = guide.data.title;
+  const sectionSlug = guide.slug.split('/')[0];
+  const sectionData = sections[sectionSlug as keyof typeof sections];
+  const sectionLabel = sectionData?.label || sectionSlug;
+
+  // Get the raw markdown body
+  const body = guide.body;
+  
+  // Extract all headings with their positions
+  const headings: { text: string; position: number }[] = [];
+  let headingMatch;
+  while ((headingMatch = headingRegex.exec(body)) !== null) {
+    headings.push({
+      text: headingMatch[1],
+      position: headingMatch.index
+    });
+  }
+
+  // Extract all images
+  let match;
+  while ((match = imageRegex.exec(body)) !== null) {
+    const alt = match[1];
+    const src = match[2];
+    const imagePosition = match.index;
+
+    // Find the closest heading before this image
+    let closestHeading = '';
+    for (let i = headings.length - 1; i >= 0; i--) {
+      if (headings[i].position < imagePosition) {
+        closestHeading = headings[i].text;
+        break;
+      }
+    }
+
+    // Create caption: use alt text if available, otherwise use article title
+    let caption = alt || guideTitle;
+    
+    // Add context if we found a heading
+    let context = closestHeading ? `${closestHeading}` : undefined;
+
+    images.push({
+      src,
+      alt: alt || guideTitle,
+      caption,
+      guideTitle,
+      guideLink,
+      section: sectionLabel,
+      context
+    });
+  }
+}
+
+// Group images by section
+const imagesBySection = images.reduce((acc, img) => {
+  if (!acc[img.section]) {
+    acc[img.section] = [];
+  }
+  acc[img.section].push(img);
+  return acc;
+}, {} as Record<string, GalleryImage[]>);
+---
+
+<Layout 
+  title="Gallery - Surf Deeper" 
+  description="Visual guide to surfing concepts, wave types, and techniques. Explore diagrams and illustrations for better understanding."
+>
+  <div class="gallery-container">
+    <header class="gallery-header">
+      <h1>Gallery</h1>
+      <p class="gallery-intro">
+        All images from the surf guides in one place. 
+        Click any image to jump to the full guide where it appears.
+        {images.length > 0 && (
+          <span class="total-count"> — {images.length} total image{images.length !== 1 ? 's' : ''}</span>
+        )}
+      </p>
+    </header>
+
+    {images.length === 0 ? (
+      <div class="no-images">
+        <p>No images found in the guides yet. <a href="/contribute">Contribute</a> guides with images!</p>
+      </div>
+    ) : (
+      Object.entries(imagesBySection)
+        .sort(([, a], [, b]) => b.length - a.length) // Sort by number of images descending
+        .map(([section, sectionImages]) => (
+          <section class="gallery-category">
+            <h2 class="category-title">{section} <span class="image-count">({sectionImages.length})</span></h2>
+            <div class="gallery-grid">
+              {sectionImages.map((image, idx) => (
+                <article class="gallery-item">
+                  <a href={image.guideLink} class="gallery-link">
+                    <div class="image-wrapper">
+                      <img 
+                        src={image.src} 
+                        alt={image.alt}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="image-details">
+                      <div class="image-caption">
+                        {image.context && (
+                          <div class="image-context">{image.context}</div>
+                        )}
+                        <div class="image-title">{image.caption}</div>
+                      </div>
+                      <div class="image-meta">
+                        <span class="guide-reference">from: {image.guideTitle}</span>
+                      </div>
+                      <span class="view-guide-hint">View Guide →</span>
+                    </div>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))
+    )}
+
+    <section class="contribute-section">
+      <div class="contribute-box">
+        <h3>📸 Add Your Own</h3>
+        <p>
+          Have diagrams, illustrations, or photos that could help other surfers? 
+          <a href="/contribute">Contribute to the gallery</a> and share your knowledge with the community.
+        </p>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .gallery-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .gallery-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+  }
+
+  .gallery-header h1 {
+    color: #00ff88;
+    font-size: 2.5rem;
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+  }
+
+  .gallery-intro {
+    color: #00ff88;
+    opacity: 0.9;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .total-count {
+    opacity: 0.7;
+    font-size: 0.95rem;
+  }
+
+  .no-images {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #00ff88;
+    opacity: 0.8;
+    font-size: 1.1rem;
+  }
+
+  .no-images a {
+    color: #00ff88;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .gallery-category {
+    margin-bottom: 4rem;
+  }
+
+  .category-title {
+    color: #00ff88;
+    font-size: 1.8rem;
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
+    padding-left: 0.5rem;
+    border-left: 4px solid #00ff88;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .image-count {
+    font-size: 1rem;
+    opacity: 0.6;
+    font-weight: 400;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .gallery-item {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gallery-link {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .gallery-item:hover {
+    border-color: #00ff88;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.2);
+  }
+
+  .image-wrapper {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    background-color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover .image-wrapper img {
+    transform: scale(1.05);
+  }
+
+  .image-details {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .image-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .image-context {
+    color: #00ff88;
+    font-size: 0.8rem;
+    opacity: 0.6;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .image-title {
+    color: #00ff88;
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .image-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .guide-reference {
+    color: #00ff88;
+    opacity: 0.7;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  .view-guide-hint {
+    color: #00ff88;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    margin-top: auto;
+  }
+
+  .gallery-item:hover .view-guide-hint {
+    opacity: 1;
+  }
+
+  .contribute-section {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 2px solid rgba(0, 255, 136, 0.3);
+  }
+
+  .contribute-box {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 2px solid #00ff88;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .contribute-box h3 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+  }
+
+  .contribute-box p {
+    color: #00ff88;
+    opacity: 0.9;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .contribute-box a {
+    color: #00ff88;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+  }
+
+  .contribute-box a:hover {
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .gallery-header h1 {
+      font-size: 2rem;
+    }
+
+    .gallery-intro {
+      font-size: 1rem;
+    }
+
+    .category-title {
+      font-size: 1.5rem;
+    }
+
+    .contribute-box {
+      padding: 1.5rem;
+    }
+  }
+</style>
+</Layout>
+
