@@ -5,6 +5,9 @@ export interface Props {
 }
 
 const { title, description = "Surf deeper. Learn more. Share what you know." } = Astro.props;
+
+// Canonical URL - ensures Google knows the preferred URL
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!DOCTYPE html>
@@ -15,6 +18,7 @@ const { title, description = "Surf deeper. Learn more. Share what you know." } =
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"></script>
