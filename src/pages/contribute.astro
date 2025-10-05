@@ -28,7 +28,27 @@ import Layout from '../layouts/Layout.astro';
         <p>Optional for now — brief Markdown spot profiles.</p>
         <a href="https://github.com/surfdeeper/surfdeeper/tree/main/spots" target="_blank" class="contribute-link">Spots folder</a>
       </div>
+
+      <div class="contribution-card">
+        <h3>Fix Pin Locations</h3>
+        <p>Drag pins on the map to correct spot locations.</p>
+        <a href="/spots" class="contribute-link">View Spots Map</a>
+      </div>
     </div>
+  </section>
+
+  <section class="article">
+    <h2>Update Spot Coordinates</h2>
+    <p>If you notice a spot's pin is in the wrong location on the map:</p>
+    <ol>
+      <li>Go to the <a href="/spots">Spots page</a></li>
+      <li>Click on the spot marker to open the popup</li>
+      <li>Click "📍 Pin in wrong location?"</li>
+      <li>Drag the pin to the correct location</li>
+      <li>Click "Done - Show Instructions" to get the new coordinates</li>
+      <li>Follow the GitHub link to submit your correction</li>
+    </ol>
+    <p>The coordinates are stored in the frontmatter of each spot's markdown file at <code>src/content/spots/</code>.</p>
   </section>
 
   <section class="article">
