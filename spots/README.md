@@ -14,7 +14,3 @@ This directory contains community-contributed surf spots. Each spot has its own 
 2. Follow the template structure used in existing guides
 3. Include local knowledge and honest assessments
 4. Submit a pull request for review
-
-## Current Spots
-
-- [Linda Mar Beach, Pacifica](linda-mar.md) - Popular Bay Area beach break
