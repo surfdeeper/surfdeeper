@@ -1,0 +1,40 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntryBySlug } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('spots');
+  return entries.map((e) => ({ params: { slug: e.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntryBySlug('spots', slug);
+
+if (!entry) {
+  throw Astro.redirect('/spots');
+}
+
+const { Content } = await entry.render();
+const { data } = entry;
+---
+
+<Layout title={data.title} description={data.description} editPath={`src/content/spots/${entry.slug}.md`}>
+  <article class="spot-article">
+    <Content />
+  </article>
+
+  <style>
+    .spot-article {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .spot-article :global(img) {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 1.5rem auto;
+    }
+  </style>
+</Layout>
+
