@@ -23,7 +23,7 @@ const editUrl = editPath ? editBase + editPath : null;
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"></script>
-    <script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -41,7 +41,6 @@ const editUrl = editPath ? editBase + editPath : null;
         </a>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
-          <li><a href="/about">About</a></li>
           <li><a href="/guides">Guides</a></li>
           <li><a href="/spots">Spots</a></li>
           <li><a href="/contribute">Contribute</a></li>
@@ -78,7 +77,6 @@ const editUrl = editPath ? editBase + editPath : null;
             <h4>🌊 Ride the Wave</h4>
             <ul>
               <li><a href="/">Home</a></li>
-              <li><a href="/about">About</a></li>
               <li><a href="/guides">Guides</a></li>
               <li><a href="/spots">Spots</a></li>
               <li><a href="/contribute">Contribute</a></li>

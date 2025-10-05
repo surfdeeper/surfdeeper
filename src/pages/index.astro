@@ -2,87 +2,123 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Surf Deeper" description="Surf deeper. Learn more. Share what you know. A community-driven hub for surfers of all levels.">
+<Layout title="Surf Deeper" description="Open source surfing guide for skills and spots. Community-driven knowledge for surfers of all levels.">
+  <header class="hero">
+    <h1>Surf Deeper</h1>
+    <p class="tagline">Open source surfing guide for skills and spots</p>
+  </header>
 
-      <section class="about">
-        <h2>About</h2>
-        <p>Explore the ocean, master the waves, and share your knowledge.</p>
-        <p>Coming soon: a community-driven hub for surfers of all levels — from first waves to advanced lines. Learn techniques, discover surf spots, and contribute your own guides.</p>
-      </section>
+  <section class="content">
+    <div class="content-grid">
+      <div class="content-card">
+        <h2>🏄 Skills</h2>
+        <p>Step-by-step technique guides from paddling basics to advanced maneuvers. Learn at your own pace with clear, detailed instructions.</p>
+        <a href="/guides" class="cta-link">Browse Guides →</a>
+      </div>
+      
+      <div class="content-card">
+        <h2>🗺️ Spots</h2>
+        <p>Discover surf breaks with maps, conditions, local insights, and hazards contributed by the community.</p>
+        <a href="/spots" class="cta-link">Explore Spots →</a>
+      </div>
+    </div>
 
-      <section class="features">
-        <h2>What You'll Find Here:</h2>
-        <ul>
-          <li><strong>Technique Library:</strong> Step-by-step tips, from paddling efficiently to riding the pocket.</li>
-          <li><strong>Spots:</strong> Maps, local insights, tide charts, and hazards contributed by the community.</li>
-          <li><strong>Open Contribution:</strong> Share your own tips, maps, and stories with fellow surfers.</li>
-        </ul>
-      </section>
-
-      <section class="why-different">
-        <h2>Why It's Different:</h2>
-        <ul>
-          <li>Techniques broken down with nuance and clarity, so you can improve safely</li>
-          <li>Open-source, free, and community-driven</li>
-          <li>Focused on learning and sharing, not profit</li>
-        </ul>
-      </section>
+    <div class="about-box">
+      <p><strong>Free and open source</strong> — Built by surfers, for surfers. <a href="/contribute">Contribute your knowledge</a> to help others learn and progress.</p>
+    </div>
+  </section>
 </Layout>
 
 <style>
-  
-  
-  section {
-    margin-bottom: 2.5rem;
-  }
-  
-  h2 {
-    color: #00ff88;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #00ff88;
-    padding-bottom: 0.5rem;
-  }
-  
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  li {
-    margin-bottom: 0.75rem;
-    color: #00ff88;
-  }
-  
-  
-  strong {
-    color: #00ff88;
-  }
-  
-  p {
-    margin-bottom: 1rem;
-    color: #00ff88;
+  .hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
   }
 
-  .pullquote {
-    margin-top: 3rem;
+  .hero h1 {
+    color: #00ff88;
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .tagline {
+    color: #00ff88;
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .content-card {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 2rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .content-card:hover {
+    border-color: #00ff88;
+  }
+
+  .content-card h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+  }
+
+  .content-card p {
+    color: #00ff88;
+    opacity: 0.9;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+  }
+
+  .cta-link {
+    color: #00ff88;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+  }
+
+  .cta-link:hover {
+    opacity: 0.8;
+  }
+
+  .about-box {
     background-color: #1e293b;
     border: 2px solid #334155;
     border-radius: 8px;
     padding: 1.5rem;
+    text-align: center;
   }
 
-  .pullquote blockquote {
-    margin: 0 0 0.75rem 0;
-    padding-left: 1rem;
-    border-left: 4px solid #00ff88;
-  }
-
-  .pullquote p {
+  .about-box p {
     color: #00ff88;
+    margin: 0;
+    opacity: 0.9;
   }
 
-  .pullquote-cta a {
+  .about-box strong {
+    color: #00ff88;
+    opacity: 1;
+  }
+
+  .about-box a {
     color: #00ff88;
     text-decoration: underline;
     text-underline-offset: 3px;
