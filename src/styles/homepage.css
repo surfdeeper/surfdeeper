@@ -32,7 +32,7 @@
 /* Marquee ticker */
 .marquee-container {
   background: linear-gradient(90deg, #132635 0%, #111a22 50%, #132635 100%);
-  border-bottom: 1px solid #132635;
+  border-bottom: 2px solid #febc08;
   padding: 0.75rem 0;
   overflow: hidden;
 }

@@ -123,8 +123,8 @@
 }
 
 .spot-item {
-  background-color: #111a22;
-  border: 1px solid #111a22;
+  background-color: #132635;
+  border: 1px solid #132635;
   border-radius: 8px;
   transition: all 0.2s ease;
 }
@@ -287,7 +287,7 @@
 
 .done-dragging-btn {
   background-color: #febc08;
-  color: #132635;
+  color: #111a22;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -317,7 +317,7 @@
 }
 
 .contribution-modal-content {
-  background-color: #111a22;
+  background-color: #132635;
   border: 2px solid #febc08;
   border-radius: 8px;
   padding: 2rem;
@@ -362,8 +362,8 @@
 }
 
 .contribution-modal-content .code-block {
-  background-color: #132635;
-  border: 1px solid #111a22;
+  background-color: #111a22;
+  border: 1px solid #132635;
   border-radius: 4px;
   padding: 1rem;
   margin: 1rem 0;
@@ -374,7 +374,7 @@
 
 .close-modal-btn {
   background-color: #febc08;
-  color: #132635;
+  color: #111a22;
   border: none;
   padding: 0.5rem 1.5rem;
   border-radius: 4px;
