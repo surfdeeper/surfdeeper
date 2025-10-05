@@ -21,107 +21,119 @@ const serializedSpot = serializeSpot(entry);
 ---
 
 <Layout title={data.title} description={data.description} editPath={`src/content/spots/${entry.slug}.md`}>
-  <article class="spot-article">
-    <h1>{data.title}</h1>
-    
-    <div class="spot-description">
-      <Content />
-    </div>
+  <div class="spot-page-wrapper">
+    <div class="three-column-layout">
+      <!-- Main Content -->
+      <section class="content">
+        <article class="spot-article">
+          <h1>{data.title}</h1>
 
-    <div class="spot-details">
-      <section class="detail-section">
-        <h2>Skill Level</h2>
-        <div class="skill-levels">
-          {data.skillLevels.map((level: string) => (
-            <span class={`skill-badge skill-${level}`}>{level}</span>
-          ))}
-        </div>
-      </section>
-
-      <section class="detail-section">
-        <h2>Wave Characteristics</h2>
-        <dl>
-          <dt>Type</dt>
-          <dd>{data.waveType}</dd>
-          <dt>Bottom</dt>
-          <dd>{data.bottom}</dd>
-          <dt>Best Size</dt>
-          <dd>{data.bestSize}</dd>
-          <dt>Swell Direction</dt>
-          <dd>{data.swellDirection}</dd>
-        </dl>
-      </section>
-
-      <section class="detail-section">
-        <h2>Best Conditions</h2>
-        <dl>
-          <dt>Tide</dt>
-          <dd>{data.bestTide}</dd>
-          <dt>Wind</dt>
-          <dd>{data.bestWind}</dd>
-          <dt>Season</dt>
-          <dd>{data.bestSeason}</dd>
-        </dl>
-      </section>
-
-      <section class="detail-section">
-        <h2>Hazards</h2>
-        <ul class="hazards-list">
-          {data.hazards.map((hazard: string) => <li>{hazard}</li>)}
-        </ul>
-      </section>
-
-      <section class="detail-section">
-        <h2>Access</h2>
-        <dl>
-          <dt>Parking</dt>
-          <dd>{data.parking}</dd>
-          {data.facilities && (
-            <>
-              <dt>Facilities</dt>
-              <dd>{data.facilities}</dd>
-            </>
-          )}
-        </dl>
-      </section>
-
-      <section class="detail-section">
-        <h2>Current Conditions</h2>
-        <div id="conditions-loading" class="conditions-loading">Loading conditions...</div>
-        <div id="conditions-data" class="conditions-data" style="display: none;">
-          <div class="conditions-grid">
-            <div class="condition-item">
-              <div class="condition-label">Swell</div>
-              <div class="condition-value" id="swell-height">--</div>
-              <div class="condition-meta" id="swell-meta">--</div>
+          <div class="conditions-section">
+            <h2>🌊 Current Conditions</h2>
+            <div id="conditions-loading" class="conditions-loading">Loading conditions...</div>
+            <div id="conditions-data" class="conditions-data" style="display: none;">
+              <div class="conditions-horizontal">
+                <div class="condition-item">
+                  <div class="condition-label">Swell</div>
+                  <div class="condition-value" id="swell-height">--</div>
+                  <div class="condition-meta" id="swell-meta">--</div>
+                </div>
+                <div class="condition-item">
+                  <div class="condition-label">Wind</div>
+                  <div class="condition-value" id="wind-speed">--</div>
+                  <div class="condition-meta" id="wind-direction">--</div>
+                </div>
+                <div class="condition-item">
+                  <div class="condition-label">Wave Height</div>
+                  <div class="condition-value" id="wave-height">--</div>
+                  <div class="condition-meta" id="wave-period">--</div>
+                </div>
+              </div>
+              <div class="conditions-updated" id="conditions-updated">--</div>
             </div>
-            <div class="condition-item">
-              <div class="condition-label">Wind</div>
-              <div class="condition-value" id="wind-speed">--</div>
-              <div class="condition-meta" id="wind-direction">--</div>
-            </div>
-            <div class="condition-item">
-              <div class="condition-label">Wave Height</div>
-              <div class="condition-value" id="wave-height">--</div>
-              <div class="condition-meta" id="wave-period">--</div>
+            <div id="conditions-error" class="conditions-error" style="display: none;">
+              Unable to load current conditions
             </div>
           </div>
-          <div class="conditions-updated" id="conditions-updated">--</div>
-        </div>
-        <div id="conditions-error" class="conditions-error" style="display: none;">
-          Unable to load current conditions
-        </div>
+          
+          <div class="spot-description">
+            <Content />
+          </div>
+
+          <div class="main-map-section">
+            <h2>📍 Location</h2>
+            <div id="spot-map" class="spot-map"></div>
+          </div>
+        </article>
       </section>
 
-      <section class="detail-section">
-        <h2>Location</h2>
-        <p class="coordinates">
-          {data.latitude.toFixed(4)}, {data.longitude.toFixed(4)}
-        </p>
-        <div id="spot-map" class="spot-map"></div>
-      </section>
+      <!-- Right Sidebar -->
+      <aside class="right-sidebar">
+        <div class="sidebar-section">
+          <h3>🏄 Skill Level</h3>
+          <div class="skill-levels">
+            {data.skillLevels.map((level: string) => (
+              <span class={`skill-badge skill-${level}`}>{level}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>🌊 Wave Characteristics</h3>
+          <dl>
+            <dt>Type</dt>
+            <dd>{data.waveType}</dd>
+            <dt>Bottom</dt>
+            <dd>{data.bottom}</dd>
+            <dt>Best Size</dt>
+            <dd>{data.bestSize}</dd>
+            <dt>Swell Direction</dt>
+            <dd>{data.swellDirection}</dd>
+          </dl>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>✨ Best Conditions</h3>
+          <dl>
+            <dt>Tide</dt>
+            <dd>{data.bestTide}</dd>
+            <dt>Wind</dt>
+            <dd>{data.bestWind}</dd>
+            <dt>Season</dt>
+            <dd>{data.bestSeason}</dd>
+          </dl>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>⚠️ Hazards</h3>
+          <ul class="hazards-list">
+            {data.hazards.map((hazard: string) => <li>{hazard}</li>)}
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>🅿️ Access</h3>
+          <dl>
+            <dt>Parking</dt>
+            <dd>{data.parking}</dd>
+            {data.facilities && (
+              <>
+                <dt>Facilities</dt>
+                <dd>{data.facilities}</dd>
+              </>
+            )}
+          </dl>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>📍 Coordinates</h3>
+          <p class="coordinates">
+            {data.latitude.toFixed(4)}, {data.longitude.toFixed(4)}
+          </p>
+        </div>
+      </aside>
     </div>
-  </article>
+  </div>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
@@ -221,10 +233,231 @@ const serializedSpot = serializeSpot(entry);
   </script>
 
   <style>
-    .spot-article {
-      max-width: 800px;
+    /* Override main padding for spot pages */
+    :global(body:has(.spot-page-wrapper)) {
+      overflow-x: hidden;
+    }
+
+    :global(body:has(.spot-page-wrapper) main) {
+      max-width: 100%;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .spot-page-wrapper {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .spot-page-wrapper * {
+      box-sizing: border-box;
+    }
+
+    /* Two Column Layout */
+    .three-column-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Mobile: Stack everything vertically */
+    .right-sidebar {
+      display: none;
+    }
+
+    .content {
+      width: 100%;
       margin: 0 auto;
-      padding: 2rem 1rem;
+      padding: 0 1rem 2rem;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 767px) {
+      .content {
+        padding: 0 1rem 1.5rem;
+      }
+    }
+
+    /* Large Desktop: Two Column Layout */
+    @media (min-width: 900px) {
+      .three-column-layout {
+        grid-template-columns: 1fr 300px;
+        gap: 2rem;
+        max-width: calc(100vw - 4rem);
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 2rem;
+        box-sizing: border-box;
+      }
+
+      .content {
+        width: 100%;
+        padding: 2rem 0 2rem;
+        min-width: 0;
+        order: 1;
+      }
+
+      .right-sidebar {
+        display: block;
+        min-width: 0;
+        order: 2;
+      }
+    }
+
+    /* Extra Large Desktop: Wider sidebar */
+    @media (min-width: 1800px) {
+      .three-column-layout {
+        grid-template-columns: 1fr 350px;
+        max-width: 1600px;
+      }
+    }
+
+    /* Sidebar Styles */
+    .right-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+
+    .sidebar-section {
+      background-color: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: border-color 0.3s ease;
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+
+    .sidebar-section:hover {
+      border-color: #00ff88;
+    }
+
+    .sidebar-section h3 {
+      color: #00ff88;
+      font-size: 1.1rem;
+      margin: 0 0 1rem 0;
+      font-weight: 600;
+    }
+
+    /* Main map in content area */
+    .main-map-section {
+      margin-top: 2rem;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .main-map-section:hover {
+      border-color: #00ff88;
+    }
+
+    .main-map-section h2 {
+      font-size: 1.5rem;
+      margin: 0 0 1rem 0;
+      color: #00ff88;
+    }
+
+    .spot-map {
+      width: 100%;
+      height: 500px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #334155;
+      background-color: #1a1f2e;
+    }
+
+    /* Conditions Section */
+    .conditions-section {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .conditions-section:hover {
+      border-color: #00ff88;
+    }
+
+    .conditions-section h2 {
+      font-size: 1.5rem;
+      margin: 0 0 1rem 0;
+      color: #00ff88;
+    }
+
+    .conditions-loading,
+    .conditions-error {
+      color: #94a3b8;
+      font-style: italic;
+      padding: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .conditions-error {
+      color: #f87171;
+    }
+
+    .conditions-horizontal {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .condition-item {
+      text-align: center;
+      padding: 1rem;
+      background: #0f172a;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      transition: border-color 0.2s ease;
+    }
+
+    .condition-item:hover {
+      border-color: #00ff88;
+    }
+
+    .condition-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .condition-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #00ff88;
+      margin-bottom: 0.25rem;
+    }
+
+    .condition-meta {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .conditions-updated {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #334155;
+    }
+
+    /* Main Content Styles */
+    .spot-article {
+      width: 100%;
+      box-sizing: border-box;
     }
 
     h1 {
@@ -236,33 +469,12 @@ const serializedSpot = serializeSpot(entry);
     .spot-description {
       font-size: 1.125rem;
       line-height: 1.6;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       padding: 1.5rem;
       background: #1e293b;
       border-left: 4px solid #00ff88;
       border-radius: 4px;
       color: #cbd5e1;
-    }
-
-    .spot-details {
-      display: grid;
-      gap: 2rem;
-    }
-
-    .detail-section {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 1.5rem;
-    }
-
-    .detail-section h2 {
-      font-size: 1.25rem;
-      margin-top: 0;
-      margin-bottom: 1rem;
-      color: #00ff88;
-      border-bottom: 2px solid #334155;
-      padding-bottom: 0.5rem;
     }
 
     .skill-levels {
@@ -296,96 +508,66 @@ const serializedSpot = serializeSpot(entry);
 
     dl {
       display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 0.75rem 1rem;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
       margin: 0;
+      font-size: 0.9rem;
     }
 
     dt {
       font-weight: 600;
-      color: #94a3b8;
+      color: #00ff88;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.8;
     }
 
     dd {
-      margin: 0;
+      margin: 0 0 0.75rem 0;
       color: #cbd5e1;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #334155;
+    }
+
+    dd:last-of-type {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
     }
 
     .hazards-list {
       margin: 0;
-      padding-left: 1.5rem;
+      padding-left: 1.25rem;
       color: #cbd5e1;
+      font-size: 0.9rem;
     }
 
     .hazards-list li {
       margin-bottom: 0.5rem;
     }
 
+    .hazards-list li:last-child {
+      margin-bottom: 0;
+    }
+
     .coordinates {
       font-family: monospace;
-      font-size: 1rem;
-      color: #94a3b8;
-      margin: 0 0 1rem 0;
-    }
-
-    .spot-map {
-      width: 100%;
-      height: 400px;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 2px solid #334155;
-      background-color: #1a1f2e;
-    }
-
-    .conditions-loading,
-    .conditions-error {
-      color: #94a3b8;
-      font-style: italic;
-      padding: 1rem 0;
-    }
-
-    .conditions-error {
-      color: #f87171;
-    }
-
-    .conditions-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .condition-item {
-      text-align: center;
-    }
-
-    .condition-label {
-      font-size: 0.875rem;
-      color: #94a3b8;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .condition-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #00ff88;
-      margin-bottom: 0.25rem;
-    }
-
-    .condition-meta {
-      font-size: 0.875rem;
+      font-size: 0.95rem;
       color: #cbd5e1;
+      margin: 0;
+      text-align: center;
+      padding: 0.75rem;
+      background: #0f172a;
+      border-radius: 6px;
+      border: 1px solid #334155;
     }
 
-    .conditions-updated {
-      text-align: center;
-      font-size: 0.75rem;
-      color: #64748b;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #334155;
+    @media (max-width: 768px) {
+      .conditions-horizontal {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
     }
 
     @media (max-width: 640px) {
@@ -393,26 +575,33 @@ const serializedSpot = serializeSpot(entry);
         font-size: 2rem;
       }
 
-      dl {
-        grid-template-columns: 1fr;
-        gap: 0.25rem;
-      }
-
-      dt {
-        margin-top: 0.5rem;
-      }
-
       .spot-article {
-        padding: 1rem;
-      }
-
-      .conditions-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        padding: 0;
       }
 
       .condition-value {
         font-size: 1.5rem;
+      }
+
+      .conditions-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .conditions-section h2 {
+        font-size: 1.25rem;
+      }
+
+      .spot-map {
+        height: 350px;
+      }
+
+      .main-map-section {
+        padding: 1rem;
+      }
+
+      .main-map-section h2 {
+        font-size: 1.25rem;
       }
     }
   </style>
