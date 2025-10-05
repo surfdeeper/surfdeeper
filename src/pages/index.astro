@@ -4,6 +4,7 @@ import { execSync } from 'child_process';
 import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
 import { getCollection } from 'astro:content';
+import sections from '../content/guides/_sections.json';
 
 // Get all surf spots for the map preview
 const spots = await getCollection('spots');
@@ -145,7 +146,15 @@ try {
       <div class="content-card">
         <h2>🏄 Skills</h2>
         <p>Step-by-step technique guides from paddling basics to advanced maneuvers. Learn at your own pace with clear, detailed instructions.</p>
-        <a href="/guide" class="cta-link">Browse Guides →</a>
+        <ul class="section-links">
+          {Object.entries(sections)
+            .sort(([, a], [, b]) => a.order - b.order)
+            .map(([slug, section]) => (
+              <li><a href={`/guide/${slug}`}>{section.label}</a></li>
+            ))
+          }
+        </ul>
+        <a href="/guide" class="cta-link">Browse All Guides →</a>
       </div>
       
       <div class="content-card">
@@ -336,6 +345,40 @@ try {
     opacity: 0.9;
     margin: 0 0 1.5rem 0;
     line-height: 1.6;
+  }
+
+  .section-links {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .section-links li {
+    color: #00ff88;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+    opacity: 0.9;
+  }
+
+  .section-links li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #00cc6a;
+    font-weight: bold;
+  }
+
+  .section-links li a {
+    color: #00ff88;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .section-links li a:hover {
+    color: #00cc6a;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .cta-link {

@@ -8,7 +8,13 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const entry = await getEntryBySlug('guides', slug);
+const slugStr = String(slug);
+let entry = await getEntryBySlug('guides', slugStr);
+
+// If direct slug not found, try section/index pattern
+if (!entry && !slugStr.includes('/')) {
+  entry = await getEntryBySlug('guides', `${slugStr}/index`);
+}
 
 if (!entry) {
   throw Astro.redirect('/guide');
@@ -16,11 +22,47 @@ if (!entry) {
 
 const { Content } = await entry.render();
 const { data } = entry;
+
+// Check if this is a section landing page
+// Astro normalizes folder/index.md to just folder as the slug
+const isSectionPage = entry.slug.endsWith('/index') || !entry.slug.includes('/');
+let sectionGuides: any[] = [];
+
+if (isSectionPage) {
+  // Get all guides in this section
+  const allGuides = await getCollection('guides');
+  const sectionName = entry.slug.replace('/index', '');
+  sectionGuides = allGuides
+    .filter(guide => {
+      const guideSection = guide.slug.split('/')[0];
+      // Include guides in this section, but exclude the index page itself
+      return guideSection === sectionName && guide.slug !== entry.slug && guide.slug.includes('/');
+    })
+    .sort((a, b) => 
+      (a.data.order ?? 999) - (b.data.order ?? 999) || a.data.title.localeCompare(b.data.title)
+    );
+}
 ---
 
 <Layout title={data.title} description={data.description} editPath={`src/content/guides/${entry.slug}.md`}>
   <article class="guide-article">
     <Content />
+    
+    {isSectionPage && sectionGuides.length > 0 && (
+      <section class="section-guides">
+        <h2>Guides in this section</h2>
+        <ul class="guides-list">
+          {sectionGuides.map((guide) => (
+            <li>
+              <a href={`/guide/${guide.slug}`}>{guide.data.title}</a>
+              {guide.data.description && (
+                <p class="guide-description">{guide.data.description}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
   </article>
 
   <style>
@@ -34,6 +76,63 @@ const { data } = entry;
       height: auto;
       display: block;
       margin: 1.5rem auto;
+    }
+
+    .section-guides {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid #334155;
+    }
+
+    .section-guides h2 {
+      color: #00ff88;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .guides-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .guides-list li {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .guides-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #00cc6a;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .guides-list li a {
+      color: #00ff88;
+      text-decoration: underline;
+      text-decoration-color: #00cc6a;
+      text-underline-offset: 3px;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .guides-list li a:hover {
+      color: #00cc6a;
+      text-decoration-color: #00ff88;
+    }
+
+    .guide-description {
+      color: #00ff88;
+      opacity: 0.8;
+      margin: 0.5rem 0 0 0;
+      line-height: 1.5;
+      font-size: 0.95rem;
     }
   </style>
 </Layout>
