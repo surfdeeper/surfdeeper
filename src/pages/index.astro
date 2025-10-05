@@ -511,16 +511,27 @@ try {
       return;
     }
 
-    // Build ticker message
+    // Build ticker message with data visualization
+    // Import visualization helpers
+    const vizModule = await import('../utils/condition-viz.ts');
+    const { formatSpotForMarquee } = vizModule;
+    
     const messages = spotConditions.map(spot => {
       const waveHeightFt = metersToFeet(spot.waveHeight).toFixed(1);
-      const swellHeightFt = metersToFeet(spot.swellHeight).toFixed(1);
-      const windSpeedMph = kmhToMph(spot.windSpeed).toFixed(0);
+      const windSpeedMph = kmhToMph(spot.windSpeed);
       const windDir = degreesToCardinal(spot.windDirection);
       const swellDir = degreesToCardinal(spot.swellDirection);
-      const period = spot.swellPeriod.toFixed(0);
+      const period = spot.swellPeriod;
       
-      return `<a href="/maps/${spot.slug}" style="color: #00ff88; text-decoration: none; border-bottom: 1px dotted #00ff88;">${spot.name}</a>: ${waveHeightFt}ft @ ${period}s ${swellDir} • Wind ${windSpeedMph}mph ${windDir}`;
+      return formatSpotForMarquee(
+        spot.name,
+        spot.slug,
+        waveHeightFt,
+        period,
+        swellDir,
+        windSpeedMph,
+        windDir
+      );
     }).join(' • ');
 
     // Add update time with user's timezone

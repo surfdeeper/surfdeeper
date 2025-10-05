@@ -135,8 +135,15 @@ const serializedSpot = serializeSpot(entry);
     import { 
       fetchMarineConditions, 
       degreesToCardinal, 
-      metersToFeet 
+      metersToFeet,
+      kmhToMph
     } from '../../utils/marine-weather';
+    import { 
+      getWindRating, 
+      getSwellPeriodRating,
+      createWindProgressBar,
+      createSwellPeriodIndicator
+    } from '../../utils/condition-viz';
     import { getTheme, addThemeSwitcherToMap } from '../../utils/map-theme-switcher';
 
     async function loadConditions() {
@@ -152,17 +159,36 @@ const serializedSpot = serializeSpot(entry);
           return;
         }
 
-        // Update UI
+        // Update UI with data visualization
         const swellFt = metersToFeet(conditions.swellHeight).toFixed(1);
         const waveFt = metersToFeet(conditions.waveHeight).toFixed(1);
-        const windMph = (conditions.windSpeed * 0.621371).toFixed(0);
+        const windMph = kmhToMph(conditions.windSpeed);
+        const windRating = getWindRating(windMph);
+        const swellPeriodRating = getSwellPeriodRating(conditions.swellPeriod);
 
+        // Swell display with color-coded period
         document.getElementById('swell-height')!.textContent = `${swellFt} ft`;
-        document.getElementById('swell-meta')!.textContent = 
-          `${conditions.swellPeriod.toFixed(0)}s @ ${degreesToCardinal(conditions.swellDirection)}`;
+        const swellMetaEl = document.getElementById('swell-meta')!;
+        swellMetaEl.innerHTML = 
+          `<span style="color: ${swellPeriodRating.color}; font-weight: 600;">${conditions.swellPeriod.toFixed(0)}s</span> ` +
+          `<span style="font-size: 0.9em;">${swellPeriodRating.emoji}</span> ` +
+          `@ ${degreesToCardinal(conditions.swellDirection)}`;
         
-        document.getElementById('wind-speed')!.textContent = `${windMph} mph`;
-        document.getElementById('wind-direction')!.textContent = degreesToCardinal(conditions.windDirection);
+        // Wind display with progress bar and rating
+        const windSpeedEl = document.getElementById('wind-speed')!;
+        windSpeedEl.innerHTML = 
+          `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
+            <div>${Math.round(windMph)} mph</div>
+            <div style="width: 100%; max-width: 120px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden;">
+              <div style="width: ${windRating.percentage}%; height: 100%; background: ${windRating.color}; transition: width 0.3s ease;"></div>
+            </div>
+            <div style="font-size: 0.75rem; color: ${windRating.color}; font-weight: 600;">
+              ${windRating.emoji} ${windRating.label} (${windRating.percentage}%)
+            </div>
+          </div>`;
+        
+        const windDirEl = document.getElementById('wind-direction')!;
+        windDirEl.textContent = degreesToCardinal(conditions.windDirection);
         
         document.getElementById('wave-height')!.textContent = `${waveFt} ft`;
         document.getElementById('wave-period')!.textContent = `${conditions.wavePeriod.toFixed(0)}s period`;
@@ -357,6 +383,9 @@ const serializedSpot = serializeSpot(entry);
 
     .condition-item {
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .condition-label {
@@ -371,12 +400,18 @@ const serializedSpot = serializeSpot(entry);
       font-size: 1.75rem;
       font-weight: 700;
       color: #00ff88;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
+      width: 100%;
     }
 
     .condition-meta {
       font-size: 0.875rem;
       color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      flex-wrap: wrap;
     }
 
     .conditions-updated {
