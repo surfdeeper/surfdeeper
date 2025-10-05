@@ -86,6 +86,34 @@ const serializedSpot = serializeSpot(entry);
       </section>
 
       <section class="detail-section">
+        <h2>Current Conditions</h2>
+        <div id="conditions-loading" class="conditions-loading">Loading conditions...</div>
+        <div id="conditions-data" class="conditions-data" style="display: none;">
+          <div class="conditions-grid">
+            <div class="condition-item">
+              <div class="condition-label">Swell</div>
+              <div class="condition-value" id="swell-height">--</div>
+              <div class="condition-meta" id="swell-meta">--</div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-label">Wind</div>
+              <div class="condition-value" id="wind-speed">--</div>
+              <div class="condition-meta" id="wind-direction">--</div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-label">Wave Height</div>
+              <div class="condition-value" id="wave-height">--</div>
+              <div class="condition-meta" id="wave-period">--</div>
+            </div>
+          </div>
+          <div class="conditions-updated" id="conditions-updated">--</div>
+        </div>
+        <div id="conditions-error" class="conditions-error" style="display: none;">
+          Unable to load current conditions
+        </div>
+      </section>
+
+      <section class="detail-section">
         <h2>Location</h2>
         <p class="coordinates">
           {data.latitude.toFixed(4)}, {data.longitude.toFixed(4)}
@@ -104,6 +132,54 @@ const serializedSpot = serializeSpot(entry);
     import { MAP_DEFAULTS } from '../../config/map-constants';
     import { createBaseMap, waitForLeaflet, createMarkerWithPopup } from '../../utils/leaflet-setup';
     import { getSpotDataFromElement } from '../../utils/spot-data';
+    import { 
+      fetchMarineConditions, 
+      degreesToCardinal, 
+      metersToFeet 
+    } from '../../utils/marine-weather';
+
+    async function loadConditions() {
+      const spot = getSpotDataFromElement('spot-data');
+      if (!spot) return;
+
+      try {
+        const conditions = await fetchMarineConditions(spot.latitude, spot.longitude);
+        
+        if (!conditions) {
+          document.getElementById('conditions-loading')!.style.display = 'none';
+          document.getElementById('conditions-error')!.style.display = 'block';
+          return;
+        }
+
+        // Update UI
+        const swellFt = metersToFeet(conditions.swellHeight).toFixed(1);
+        const waveFt = metersToFeet(conditions.waveHeight).toFixed(1);
+        const windMph = (conditions.windSpeed * 0.621371).toFixed(0);
+
+        document.getElementById('swell-height')!.textContent = `${swellFt} ft`;
+        document.getElementById('swell-meta')!.textContent = 
+          `${conditions.swellPeriod.toFixed(0)}s @ ${degreesToCardinal(conditions.swellDirection)}`;
+        
+        document.getElementById('wind-speed')!.textContent = `${windMph} mph`;
+        document.getElementById('wind-direction')!.textContent = degreesToCardinal(conditions.windDirection);
+        
+        document.getElementById('wave-height')!.textContent = `${waveFt} ft`;
+        document.getElementById('wave-period')!.textContent = `${conditions.wavePeriod.toFixed(0)}s period`;
+
+        const time = new Date(conditions.timestamp).toLocaleTimeString('en-US', { 
+          hour: 'numeric', 
+          minute: '2-digit' 
+        });
+        document.getElementById('conditions-updated')!.textContent = `Updated ${time}`;
+
+        document.getElementById('conditions-loading')!.style.display = 'none';
+        document.getElementById('conditions-data')!.style.display = 'block';
+      } catch (error) {
+        console.error('Error loading conditions:', error);
+        document.getElementById('conditions-loading')!.style.display = 'none';
+        document.getElementById('conditions-error')!.style.display = 'block';
+      }
+    }
 
     function initSpotMap() {
       waitForLeaflet(() => {
@@ -124,10 +200,15 @@ const serializedSpot = serializeSpot(entry);
       });
     }
 
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    function init() {
+      loadConditions();
       initSpotMap();
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      init();
     } else {
-      document.addEventListener('DOMContentLoaded', initSpotMap);
+      document.addEventListener('DOMContentLoaded', init);
     }
   </script>
 
@@ -247,6 +328,57 @@ const serializedSpot = serializeSpot(entry);
       border: 2px solid #334155;
     }
 
+    .conditions-loading,
+    .conditions-error {
+      color: #94a3b8;
+      font-style: italic;
+      padding: 1rem 0;
+    }
+
+    .conditions-error {
+      color: #f87171;
+    }
+
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .condition-item {
+      text-align: center;
+    }
+
+    .condition-label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .condition-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #00ff88;
+      margin-bottom: 0.25rem;
+    }
+
+    .condition-meta {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+    }
+
+    .conditions-updated {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #334155;
+    }
+
     @media (max-width: 640px) {
       h1 {
         font-size: 2rem;
@@ -263,6 +395,15 @@ const serializedSpot = serializeSpot(entry);
 
       .spot-article {
         padding: 1rem;
+      }
+
+      .conditions-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .condition-value {
+        font-size: 1.5rem;
       }
     }
   </style>
