@@ -66,16 +66,25 @@ const serializedSpots = serializeSpots(spots);
 ></script>
 
 <script>
-  import { MAP_DEFAULTS } from '../config/map-constants';
-  import { createBaseMap, waitForLeaflet } from '../utils/leaflet-setup';
+  import { MAP_DEFAULTS, DEFAULT_THEME_FULL_MAP } from '../config/map-constants';
+  import { createBaseMap, waitForLeaflet, getStoredTheme } from '../utils/leaflet-setup';
   import { getSpotsDataFromElement } from '../utils/spot-data';
   import { createPopupContent, showContributionInstructions, setupMarkerInteractions } from '../scripts/spot-guides-helpers';
+  import { getTheme, addThemeSwitcherToMap } from '../utils/map-theme-switcher';
 
   function initMap() {
     waitForLeaflet(() => {
       const spots = getSpotsDataFromElement('spots-data');
-      const map = createBaseMap('map', MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM);
+      
+      // Get the user's preferred theme or use default
+      const currentThemeId = getStoredTheme(DEFAULT_THEME_FULL_MAP);
+      const theme = getTheme(currentThemeId, DEFAULT_THEME_FULL_MAP);
+      
+      const map = createBaseMap('map', MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM, theme);
       if (!map) return;
+
+      // Add theme switcher control
+      addThemeSwitcherToMap(map, DEFAULT_THEME_FULL_MAP, 'topright');
 
       const L = (window as any).L;
       for (const spot of spots) {

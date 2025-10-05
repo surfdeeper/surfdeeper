@@ -129,14 +129,15 @@ const serializedSpot = serializeSpot(entry);
   <script type="application/json" id="spot-data" set:html={JSON.stringify(serializedSpot)}></script>
   
   <script>
-    import { MAP_DEFAULTS } from '../../config/map-constants';
-    import { createBaseMap, waitForLeaflet, createMarkerWithPopup } from '../../utils/leaflet-setup';
+    import { MAP_DEFAULTS, DEFAULT_THEME_SPOT } from '../../config/map-constants';
+    import { createBaseMap, waitForLeaflet, createMarkerWithPopup, getStoredTheme } from '../../utils/leaflet-setup';
     import { getSpotDataFromElement } from '../../utils/spot-data';
     import { 
       fetchMarineConditions, 
       degreesToCardinal, 
       metersToFeet 
     } from '../../utils/marine-weather';
+    import { getTheme, addThemeSwitcherToMap } from '../../utils/map-theme-switcher';
 
     async function loadConditions() {
       const spot = getSpotDataFromElement('spot-data');
@@ -186,8 +187,15 @@ const serializedSpot = serializeSpot(entry);
         const spot = getSpotDataFromElement('spot-data');
         if (!spot) return;
 
-        const map = createBaseMap('spot-map', [spot.latitude, spot.longitude], MAP_DEFAULTS.SPOT_ZOOM);
+        // Get the user's preferred theme or use default
+        const currentThemeId = getStoredTheme(DEFAULT_THEME_SPOT);
+        const theme = getTheme(currentThemeId, DEFAULT_THEME_SPOT);
+
+        const map = createBaseMap('spot-map', [spot.latitude, spot.longitude], MAP_DEFAULTS.SPOT_ZOOM, theme);
         if (!map) return;
+
+        // Add theme switcher control
+        addThemeSwitcherToMap(map, DEFAULT_THEME_SPOT, 'topright');
 
         createMarkerWithPopup(
           map,
@@ -326,6 +334,7 @@ const serializedSpot = serializeSpot(entry);
       border-radius: 8px;
       overflow: hidden;
       border: 2px solid #334155;
+      background-color: #1a1f2e;
     }
 
     .conditions-loading,

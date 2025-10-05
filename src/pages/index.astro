@@ -212,9 +212,21 @@ try {
   })))}
 ></script>
 
-<script is:inline>
+<script>
+  import { DEFAULT_THEME_HOMEPAGE } from '../config/map-constants';
+  import { getStoredTheme } from '../utils/leaflet-setup';
+  import { getTheme, addThemeSwitcherToMap } from '../utils/map-theme-switcher';
+
+  interface SpotData {
+    title: string;
+    description: string;
+    latitude: number;
+    longitude: number;
+    slug: string;
+  }
+
   function initMapPreview() {
-    if (!window.L) {
+    if (!(window as any).L) {
       requestAnimationFrame(initMapPreview);
       return;
     }
@@ -222,7 +234,7 @@ try {
     const dataElement = document.getElementById('spots-data');
     if (!dataElement) return;
     
-    let spots = [];
+    let spots: SpotData[] = [];
     try {
       const json = dataElement.textContent || '[]';
       spots = JSON.parse(json);
@@ -231,20 +243,34 @@ try {
       return;
     }
 
-    const map = window.L.map('map-preview', {
+    // Get the user's preferred theme or use default
+    const currentThemeId = getStoredTheme(DEFAULT_THEME_HOMEPAGE);
+    const theme = getTheme(currentThemeId, DEFAULT_THEME_HOMEPAGE);
+
+    const L = (window as any).L;
+    const map = L.map('map-preview', {
       scrollWheelZoom: false,
       dragging: true,
       zoomControl: true,
+      backgroundColor: '#1a1f2e'
     });
     
-    const tiles = window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // Add tiles with the selected theme
+    const tiles = L.tileLayer(theme.url, {
+      attribution: theme.attribution,
+      maxZoom: theme.maxZoom,
+      className: 'map-tiles',
+      ...(theme.subdomains ? { subdomains: theme.subdomains } : {})
     });
     tiles.addTo(map);
+    map._tileLayer = tiles;
+
+    // Add theme switcher control
+    addThemeSwitcherToMap(map, DEFAULT_THEME_HOMEPAGE, 'topright');
 
     for (const spot of spots) {
       if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
-        const marker = window.L.marker([spot.latitude, spot.longitude]).addTo(map);
+        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
         const popup = `
           <div style="font-family: inherit;">
             <b>${spot.title}</b>
