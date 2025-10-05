@@ -1,7 +1,6 @@
-// src/scripts/surf-ticker.js
 // Surf conditions ticker logic extracted from index.astro
 
-async function fetchMarineConditions(latitude, longitude) {
+async function fetchMarineConditions(latitude: number, longitude: number) {
   try {
     const marineUrl = new URL('https://marine-api.open-meteo.com/v1/marine');
     marineUrl.searchParams.set('latitude', latitude.toString());
@@ -55,17 +54,17 @@ async function fetchMarineConditions(latitude, longitude) {
   }
 }
 
-function degreesToCardinal(degrees) {
+function degreesToCardinal(degrees: number) {
   const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
   const index = Math.round(degrees / 22.5) % 16;
   return directions[index];
 }
 
-function metersToFeet(meters) {
+function metersToFeet(meters: number) {
   return meters * 3.28084;
 }
 
-function kmhToMph(kmh) {
+function kmhToMph(kmh: number) {
   return kmh * 0.621371;
 }
 
@@ -137,7 +136,7 @@ function getRandomSaying() {
   return surfSayings[Math.floor(Math.random() * surfSayings.length)];
 }
 
-function calculateDistance(lat1, lon1, lat2, lon2) {
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   // Haversine formula for distance between two points
   const R = 6371; // Radius of Earth in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -165,7 +164,7 @@ async function updateSurfTicker() {
 
   // Try to get user's location to find closest spot
   try {
-    const position = await new Promise((resolve, reject) => {
+    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         timeout: 5000,
         maximumAge: 600000 // Cache for 10 minutes
@@ -193,7 +192,7 @@ async function updateSurfTicker() {
   const conditions = await fetchMarineConditions(closestSpot.lat, closestSpot.lon);
   
   if (!conditions) {
-    tickerContent.innerHTML = getRandomSaying() + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + getRandomSaying();
+    (tickerContent as HTMLElement).innerHTML = getRandomSaying() + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + getRandomSaying();
     initMarqueeAnimation();
     return;
   }
@@ -215,14 +214,14 @@ async function updateSurfTicker() {
   const fullMessage = `${surfReport}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${saying1}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${saying2}`;
   
   // Duplicate content for seamless scrolling
-  tickerContent.innerHTML = fullMessage + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + fullMessage;
+  (tickerContent as HTMLElement).innerHTML = fullMessage + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + fullMessage;
   
   // Restart marquee animation after content update
   initMarqueeAnimation();
 }
 
 // JavaScript-based marquee animation for mobile compatibility
-let animationFrameId = null;
+let animationFrameId: number | null = null;
 
 function initMarqueeAnimation() {
   const tickerContent = document.getElementById('ticker-content');
@@ -245,7 +244,7 @@ function initMarqueeAnimation() {
   
   function animate() {
     // Get the width of the content
-    const contentWidth = tickerContent.offsetWidth;
+    const contentWidth = (tickerContent as HTMLElement).offsetWidth;
     
     // Move the content
     position -= speed;
@@ -256,7 +255,7 @@ function initMarqueeAnimation() {
     }
     
     // Apply transform
-    tickerContent.style.transform = `translateX(${position}px)`;
+    (tickerContent as HTMLElement).style.transform = `translateX(${position}px)`;
     
     // Continue animation
     animationFrameId = requestAnimationFrame(animate);

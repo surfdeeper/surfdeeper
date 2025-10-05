@@ -271,9 +271,20 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
   }
 </script>
 
+<script>
+  import { updateSurfTicker } from '../scripts/surf-ticker';
 
+  // Initialize surf ticker
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    updateSurfTicker();
+  } else {
+    document.addEventListener('DOMContentLoaded', updateSurfTicker);
+  }
 
-<script src="/js/surf-ticker.js" type="module" defer></script>
+  // Refresh every 15 minutes
+  setInterval(updateSurfTicker, 15 * 60 * 1000);
+</script>
+
 
 <style>
   /* Override main padding for homepage */
