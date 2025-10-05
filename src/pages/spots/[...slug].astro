@@ -12,7 +12,7 @@ const { slug } = Astro.params;
 const entry = await getEntryBySlug('spots', slug);
 
 if (!entry) {
-  throw Astro.redirect('/maps');
+  throw Astro.redirect('/spots');
 }
 
 const { Content } = await entry.render();

@@ -118,13 +118,13 @@ try {
               hierarchy = `Guide > ${categoryFormatted}`;
             }
           }
-        } else if (filePath.includes('content/spots/')) {
+          } else if (filePath.includes('content/spots/')) {
           const match = filePath.match(/content\/spots\/([^/]+)\.md$/);
           if (match) {
             const slug = match[1];
-            url = `/maps/${slug}`;
+            url = `/spots/${slug}`;
             title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            hierarchy = 'Map';
+            hierarchy = 'Spot';
           }
         }
         
@@ -348,7 +348,7 @@ try {
               <b>${spot.title}</b>
               ${spot.description ? `<br/>${spot.description}` : ''}
               <div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(0, 255, 136, 0.2);">
-                <a href="/maps/${spot.slug}" style="display: inline-block; color: #0f172a; background-color: #00ff88; font-size: 0.95rem; font-weight: 600; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; text-align: center;">View Spot →</a>
+                <a href="/spots/${spot.slug}" style="display: inline-block; color: #0f172a; background-color: #00ff88; font-size: 0.95rem; font-weight: 600; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; text-align: center;">View Spot →</a>
               </div>
             </div>
           `;
@@ -520,7 +520,7 @@ try {
       const swellDir = degreesToCardinal(spot.swellDirection);
       const period = spot.swellPeriod.toFixed(0);
       
-      return `<a href="/maps/${spot.slug}" style="color: #00ff88; text-decoration: none; border-bottom: 1px dotted #00ff88;">${spot.name}</a>: ${waveHeightFt}ft @ ${period}s ${swellDir} • Wind ${windSpeedMph}mph ${windDir}`;
+      return `<a href="/spots/${spot.slug}" style="color: #00ff88; text-decoration: none; border-bottom: 1px dotted #00ff88;">${spot.name}</a>: ${waveHeightFt}ft @ ${period}s ${swellDir} • Wind ${windSpeedMph}mph ${windDir}`;
     }).join(' • ');
 
     // Add update time with user's timezone

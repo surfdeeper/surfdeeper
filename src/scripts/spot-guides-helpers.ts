@@ -27,7 +27,7 @@ export function createPopupContent(spot: any, marker: any, isDragging = false): 
       <b>${spot.title}</b>
       ${spot.description ? `<br/>${spot.description}` : ''}
       <div class="popup-actions">
-        <a href="/maps/${spot.slug}" class="view-spot-link">View Spot →</a>
+        <a href="/spots/${spot.slug}" class="view-spot-link">View Spot →</a>
         <a href="#" class="edit-location-link" data-slug="${spot.slug}">📍 Pin in wrong location?</a>
       </div>
     </div>

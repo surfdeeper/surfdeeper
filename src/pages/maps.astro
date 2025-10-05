@@ -34,7 +34,7 @@ const serializedSpots = serializeSpots(spots);
         <ul class="spots-list">
           {spots.map((spot) => (
             <li class="spot-item">
-              <a href={`/maps/${spot.slug}`} class="spot-link">
+              <a href={`/spots/${spot.slug}`} class="spot-link">
                 <h3>{spot.data.title}</h3>
                 {spot.data.description && <p class="spot-excerpt">{spot.data.description}</p>}
                 <div class="spot-meta">
