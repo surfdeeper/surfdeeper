@@ -34,6 +34,7 @@ interface UpdatedPage {
   url: string;
   date: string;
   timestamp: number;
+  hierarchy: string;
 }
 
 let recentlyUpdated: UpdatedPage[] = [];
@@ -69,9 +70,10 @@ try {
       if (gitDate) {
         const timestamp = new Date(gitDate).getTime();
         
-        // Extract title and create URL
+        // Extract title, hierarchy, and create URL
         let url = '';
         let title = '';
+        let hierarchy = '';
         
         if (filePath.includes('content/guides/')) {
           const match = filePath.match(/content\/guides\/([^/]+)\/([^/]+)\.md$/);
@@ -79,6 +81,8 @@ try {
             const [, category, slug] = match;
             url = `/guide/${category}/${slug}`;
             title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const categoryFormatted = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            hierarchy = `Guide > ${categoryFormatted}`;
           }
         } else if (filePath.includes('content/spots/')) {
           const match = filePath.match(/content\/spots\/([^/]+)\.md$/);
@@ -86,6 +90,7 @@ try {
             const slug = match[1];
             url = `/maps/${slug}`;
             title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            hierarchy = 'Map';
           }
         }
         
@@ -98,7 +103,8 @@ try {
               day: 'numeric',
               year: 'numeric'
             }),
-            timestamp
+            timestamp,
+            hierarchy
           });
         }
       }
@@ -145,13 +151,14 @@ try {
 
     {recentlyUpdated.length > 0 && (
       <div class="updates-section">
-        <h2>Recently Updated Pages</h2>
+        <h2>Recently Updated Guides</h2>
         <ul class="updates-list">
           {recentlyUpdated.map(page => (
             <li class="update-item">
               <span class="update-date">{page.date}</span>
               <a href={page.url} class="update-message">
-                {page.title}
+                <span class="page-hierarchy">{page.hierarchy}</span>
+                <span class="page-title">{page.title}</span>
               </a>
             </li>
           ))}
@@ -323,10 +330,25 @@ try {
     text-decoration: none;
     transition: opacity 0.2s ease;
     flex: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
   }
 
   .update-message:hover {
     opacity: 1;
     text-decoration: underline;
+  }
+
+  .page-hierarchy {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .page-title {
+    font-size: 0.95rem;
   }
 </style>
