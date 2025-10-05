@@ -108,11 +108,19 @@ function initMap() {
         if (editLink) {
           editLink.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             // Enable dragging
             marker.dragging.enable();
+            // Prevent popup from closing on drag
+            marker.getPopup().options.closeOnClick = false;
+            marker.getPopup().options.autoClose = false;
+            marker.getPopup().options.closeButton = false;
             // Update popup to show coordinates
             marker.setPopupContent(createPopupContent(spot, marker, true));
-            marker.openPopup();
+            // Ensure popup stays open
+            if (!marker.isPopupOpen()) {
+              marker.openPopup();
+            }
           });
         }
         
@@ -126,8 +134,14 @@ function initMap() {
             );
             // Disable dragging
             marker.dragging.disable();
+            // Restore normal popup behavior
+            marker.getPopup().options.closeOnClick = true;
+            marker.getPopup().options.autoClose = true;
+            marker.getPopup().options.closeButton = true;
             // Reset popup
             marker.setPopupContent(createPopupContent(spot, marker, false));
+            // Close the popup since they're done
+            marker.closePopup();
           });
         }
       });
