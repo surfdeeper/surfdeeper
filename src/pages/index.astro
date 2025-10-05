@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { execSync } from 'child_process';
+import { readdirSync, statSync } from 'fs';
+import { join } from 'path';
 
 // Fetch recent git commits during build
 let recentCommits: Array<{ hash: string; date: string; message: string; url: string }> = [];
@@ -24,6 +26,95 @@ try {
   });
 } catch (error) {
   console.warn('Could not fetch git log:', error);
+}
+
+// Fetch recently updated pages
+interface UpdatedPage {
+  title: string;
+  url: string;
+  date: string;
+  timestamp: number;
+}
+
+let recentlyUpdated: UpdatedPage[] = [];
+try {
+  const contentPath = 'src/content';
+  const allFiles: string[] = [];
+  
+  // Recursively find all markdown files
+  function findMarkdownFiles(dir: string, baseDir: string = dir) {
+    const entries = readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        findMarkdownFiles(fullPath, baseDir);
+      } else if (entry.name.endsWith('.md') && entry.name !== 'README.md') {
+        allFiles.push(fullPath);
+      }
+    }
+  }
+  
+  findMarkdownFiles(contentPath);
+  
+  // Get last modified date for each file from git
+  const filesWithDates: UpdatedPage[] = [];
+  
+  for (const filePath of allFiles) {
+    try {
+      const gitDate = execSync(
+        `git log -1 --format="%ai" -- "${filePath}"`,
+        { encoding: 'utf-8' }
+      ).trim();
+      
+      if (gitDate) {
+        const timestamp = new Date(gitDate).getTime();
+        
+        // Extract title and create URL
+        let url = '';
+        let title = '';
+        
+        if (filePath.includes('content/guides/')) {
+          const match = filePath.match(/content\/guides\/([^/]+)\/([^/]+)\.md$/);
+          if (match) {
+            const [, category, slug] = match;
+            url = `/guide/${category}/${slug}`;
+            title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          }
+        } else if (filePath.includes('content/spots/')) {
+          const match = filePath.match(/content\/spots\/([^/]+)\.md$/);
+          if (match) {
+            const slug = match[1];
+            url = `/maps/${slug}`;
+            title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          }
+        }
+        
+        if (url && title) {
+          filesWithDates.push({
+            title,
+            url,
+            date: new Date(gitDate).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            }),
+            timestamp
+          });
+        }
+      }
+    } catch (err) {
+      // Skip files not in git yet
+      continue;
+    }
+  }
+  
+  // Sort by timestamp (most recent first) and take top 5
+  recentlyUpdated = filesWithDates
+    .sort((a, b) => b.timestamp - a.timestamp)
+    .slice(0, 5);
+    
+} catch (error) {
+  console.warn('Could not fetch recently updated pages:', error);
 }
 ---
 
@@ -61,6 +152,22 @@ try {
               <span class="update-date">{commit.date}</span>
               <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-message">
                 {commit.message}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {recentlyUpdated.length > 0 && (
+      <div class="updates-section">
+        <h2>Recently Updated Pages</h2>
+        <ul class="updates-list">
+          {recentlyUpdated.map(page => (
+            <li class="update-item">
+              <span class="update-date">{page.date}</span>
+              <a href={page.url} class="update-message">
+                {page.title}
               </a>
             </li>
           ))}
