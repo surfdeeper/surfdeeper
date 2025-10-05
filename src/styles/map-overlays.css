@@ -1,0 +1,182 @@
+/**
+ * Styles for map overlays and controls
+ */
+
+/* Arrow icons */
+.wind-arrow-icon,
+.swell-arrow-icon {
+  background: transparent !important;
+  border: none !important;
+  transition: transform 0.3s ease;
+}
+
+.wind-arrow-icon:hover,
+.swell-arrow-icon:hover {
+  transform: scale(1.1);
+  z-index: 1000 !important;
+}
+
+/* Legend */
+.map-legend {
+  background: rgba(15, 23, 42, 0.95);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid #334155;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  line-height: 1.5;
+  min-width: 160px;
+}
+
+.legend-title {
+  font-weight: 700;
+  color: #00ff88;
+  margin-bottom: 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.legend-item span {
+  display: inline-block;
+  width: 20px;
+  height: 12px;
+  margin-right: 8px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Layer Control */
+.layer-control {
+  background: rgba(15, 23, 42, 0.95);
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #334155;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  min-width: 140px;
+}
+
+.layer-control-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.layer-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.layer-toggle label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+}
+
+.layer-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  margin-right: 8px;
+  cursor: pointer;
+  accent-color: #00ff88;
+}
+
+.toggle-label {
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.layer-toggle:hover .toggle-label {
+  color: #00ff88;
+}
+
+/* Popup styling */
+.leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #cbd5e1 !important;
+  border-radius: 8px !important;
+  border: 2px solid #334155 !important;
+  backdrop-filter: blur(8px);
+}
+
+.leaflet-popup-content {
+  margin: 12px !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
+
+.leaflet-popup-content strong {
+  color: #00ff88 !important;
+  font-size: 14px !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 2px solid #334155 !important;
+  border-top: none !important;
+  border-left: none !important;
+}
+
+/* Loading overlay */
+.conditions-overlay-loading {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.95);
+  color: #00ff88;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid #334155;
+  z-index: 1000;
+  font-size: 13px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .map-legend,
+  .layer-control {
+    font-size: 11px;
+    padding: 8px 12px;
+  }
+
+  .legend-title {
+    font-size: 12px;
+  }
+
+  .legend-item {
+    font-size: 11px;
+  }
+
+  .toggle-label {
+    font-size: 12px;
+  }
+}
+

@@ -124,6 +124,7 @@ const serializedSpot = serializeSpot(entry);
   </article>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="/src/styles/map-overlays.css" />
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
 
   <script type="application/json" id="spot-data" set:html={JSON.stringify(serializedSpot)}></script>
@@ -137,6 +138,11 @@ const serializedSpot = serializeSpot(entry);
       degreesToCardinal, 
       metersToFeet 
     } from '../../utils/marine-weather';
+    import {
+      createConditionsGrid,
+      createLegend,
+      addLayerControls
+    } from '../../utils/map-overlays';
 
     async function loadConditions() {
       const spot = getSpotDataFromElement('spot-data');
@@ -181,8 +187,8 @@ const serializedSpot = serializeSpot(entry);
       }
     }
 
-    function initSpotMap() {
-      waitForLeaflet(() => {
+    async function initSpotMap() {
+      waitForLeaflet(async () => {
         const spot = getSpotDataFromElement('spot-data');
         if (!spot) return;
 
@@ -197,6 +203,45 @@ const serializedSpot = serializeSpot(entry);
           spot.description,
           true
         );
+
+        // Add loading indicator
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'conditions-overlay-loading';
+        loadingDiv.textContent = 'Loading conditions...';
+        document.getElementById('spot-map')?.appendChild(loadingDiv);
+
+        try {
+          // Create grid of condition markers (3x3 grid, 0.1 degree spacing)
+          const { wind: windMarkers, swell: swellMarkers } = await createConditionsGrid(
+            spot.latitude,
+            spot.longitude,
+            3,
+            0.08
+          );
+
+          // Create layer groups
+          const windLayer = (window as any).L.layerGroup(windMarkers);
+          const swellLayer = (window as any).L.layerGroup(swellMarkers);
+
+          // Create legends
+          const windLegend = createLegend('wind');
+          const swellLegend = createLegend('swell');
+
+          // Add layers to map
+          windLayer.addTo(map);
+          swellLayer.addTo(map);
+          windLegend.addTo(map);
+          swellLegend.addTo(map);
+
+          // Add layer controls
+          addLayerControls(map, windLayer, swellLayer, windLegend, swellLegend);
+
+          loadingDiv.remove();
+        } catch (error) {
+          console.error('Failed to load map overlays:', error);
+          loadingDiv.textContent = 'Failed to load overlays';
+          setTimeout(() => loadingDiv.remove(), 3000);
+        }
       });
     }
 
