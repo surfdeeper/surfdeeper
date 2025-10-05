@@ -57,6 +57,7 @@ const serializedSpots = serializeSpots(spots);
  
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<link rel="stylesheet" href="/src/styles/map-overlays.css" />
 <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
 
 <script
@@ -70,9 +71,14 @@ const serializedSpots = serializeSpots(spots);
   import { createBaseMap, waitForLeaflet } from '../utils/leaflet-setup';
   import { getSpotsDataFromElement } from '../utils/spot-data';
   import { createPopupContent, showContributionInstructions, setupMarkerInteractions } from '../scripts/spot-guides-helpers';
+  import {
+    createConditionsGrid,
+    createLegend,
+    addLayerControls
+  } from '../utils/map-overlays';
 
-  function initMap() {
-    waitForLeaflet(() => {
+  async function initMap() {
+    waitForLeaflet(async () => {
       const spots = getSpotsDataFromElement('spots-data');
       const map = createBaseMap('map', MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM);
       if (!map) return;
@@ -86,6 +92,36 @@ const serializedSpots = serializeSpots(spots);
           marker.spotData = spot;
           setupMarkerInteractions(marker, spot, createPopupContent, showContributionInstructions);
         }
+      }
+
+      // Add conditions overlays
+      try {
+        // Create a larger grid for the overview map (5x5 grid, 0.15 degree spacing)
+        const { wind: windMarkers, swell: swellMarkers } = await createConditionsGrid(
+          MAP_DEFAULTS.CENTER[0],
+          MAP_DEFAULTS.CENTER[1],
+          5,
+          0.15
+        );
+
+        // Create layer groups
+        const windLayer = L.layerGroup(windMarkers);
+        const swellLayer = L.layerGroup(swellMarkers);
+
+        // Create legends
+        const windLegend = createLegend('wind');
+        const swellLegend = createLegend('swell');
+
+        // Add layers to map
+        windLayer.addTo(map);
+        swellLayer.addTo(map);
+        windLegend.addTo(map);
+        swellLegend.addTo(map);
+
+        // Add layer controls
+        addLayerControls(map, windLayer, swellLayer, windLegend, swellLegend);
+      } catch (error) {
+        console.error('Failed to load map overlays:', error);
       }
     });
   }
