@@ -5,12 +5,14 @@ import sections from '../content/guides/_sections.json';
 
 const entries = await getCollection('guides');
 
+type EntryType = typeof entries[number];
+
 // Group by first path segment (supports nested folders later)
 const grouped = entries.reduce((acc, e) => {
   const [section] = e.slug.split('/');
   (acc[section] ||= []).push(e);
   return acc;
-}, {} as Record<string, typeof entries>);
+}, {} as Record<string, EntryType[]>);
 
 for (const key of Object.keys(grouped)) {
   grouped[key].sort((a, b) =>
@@ -35,7 +37,7 @@ for (const key of Object.keys(grouped)) {
               <h3>{sections[section]?.label ?? section}</h3>
               <ul>
                 {items.map((e) => (
-                  <li><a href={`/guides/${e.slug}`}>{e.data.title}</a></li>
+                  <li><a href={`/guide/${e.slug}`}>{e.data.title}</a></li>
                 ))}
               </ul>
             </div>
@@ -135,3 +137,4 @@ for (const key of Object.keys(grouped)) {
     .cta-button:hover { background-color: #00cc6a; }
   </style>
 </Layout>
+

@@ -41,7 +41,7 @@ Scooting back moves weight off the nose to prevent pearling.
 - Steer the nose using push/pull hand pressure
 - Left turn: pull left, push right rail; right turn: pull right, push left rail
 - Start angling as soon as you feel lift
-- See also: [Angling Down the Line](/guides/angling-down-the-line) and [Cobra Pose](/guides/cobra-pose)
+- See also: [Angling Down the Line](/guide/angling-down-the-line) and [Cobra Pose](/guide/cobra-pose)
 
 ## Hold Onto Your Board
 Holding on during wipeouts is the safest choice in most cases.

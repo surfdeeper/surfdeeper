@@ -29,7 +29,7 @@ order: 4
 - Calm under stress and post-set recovery time
 
 ## Related Reading
-- [Stroke Rate vs Stroke Length](/guides/stroke-rate-vs-stroke-length)
-- [Swimming for Surfers](/guides/swimming-for-surfers)
+- [Stroke Rate vs Stroke Length](/guide/stroke-rate-vs-stroke-length)
+- [Swimming for Surfers](/guide/swimming-for-surfers)
 
 

@@ -10,7 +10,7 @@ order: 3
 Longboards need precise weight distribution. The cobra pose is your fine-tuning control: it helps prevent pearling while keeping speed and angle.
 
 ## Why Longboards Need Special Techniques
-- More prone to [pearling](/guides/avoid-pearling)
+- More prone to [pearling](/guide/avoid-pearling)
 - Slower response window — more time to adjust and to err
 - Require deliberate weight distribution to maintain control
 
@@ -55,7 +55,7 @@ Longboards need precise weight distribution. The cobra pose is your fine-tuning 
 - Basic cobra reps on small waves; focus on low stance and control
 - Rail control drills while in cobra
 - Transition drills: upright → cobra (turn) → upright
-- Angling drill: use cobra while [angling down the line](/guides/angling-down-the-line)
+- Angling drill: use cobra while [angling down the line](/guide/angling-down-the-line)
 
 ## Pro Tips
 - Get lower than you think

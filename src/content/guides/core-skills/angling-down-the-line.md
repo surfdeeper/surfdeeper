@@ -31,7 +31,7 @@ Angling down the line isn’t just going sideways — it’s reading the wave’
 - Let board length work for you
 
 ## Longboard Control: The Cobra Pose
-The [cobra pose](/guides/cobra-pose) adds fine control and prevents pearling while maintaining angle. Use it to:
+The [cobra pose](/guide/cobra-pose) adds fine control and prevents pearling while maintaining angle. Use it to:
 - Prevent pearling by keeping weight centered
 - Direct the board with precise rail pressure
 - Maintain balance during direction changes

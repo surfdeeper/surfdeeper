@@ -14,7 +14,7 @@ order: 1
 - Relaxation over struggle
 - Balance and streamline
 - Efficient, long strokes
-- See: [Total Immersion](/guides/total-immersion)
+- See: [Total Immersion](/guide/total-immersion)
 
 ## Swim Smooth Insights
 - Stroke mechanics
@@ -42,6 +42,6 @@ order: 1
 - Balance stroke rate vs stroke length; find personal efficiency zone
 - SWOLF is often misleading for surfers; prioritize sustainable pacing
 - Practical metrics: RPE, breath cadence, repeatable pace, calm nasal-breathing
-- See also: [Stroke Rate vs Stroke Length](/guides/stroke-rate-vs-stroke-length) and [Swimming Metrics for Surfers](/guides/swimming-metrics-for-surfers)
+- See also: [Stroke Rate vs Stroke Length](/guide/stroke-rate-vs-stroke-length) and [Swimming Metrics for Surfers](/guide/swimming-metrics-for-surfers)
 
 

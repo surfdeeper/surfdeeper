@@ -40,9 +40,9 @@ Cruise most of the time at RPE 3–5 so you can spike to 7–8 only when chasing
 - Improved decision‑making when sets arrive — less panic, more presence
 
 ## Connect the Dots
-- [Swimming for Surfers](/guides/swimming-for-surfers) — foundations of relaxed, efficient movement
-- [Stroke Rate vs Stroke Length](/guides/stroke-rate-vs-stroke-length) — finding your sustainable rhythm
-- [Paddling](/guides/paddling) — translate pool skills to the board
+- [Swimming for Surfers](/guide/swimming-for-surfers) — foundations of relaxed, efficient movement
+- [Stroke Rate vs Stroke Length](/guide/stroke-rate-vs-stroke-length) — finding your sustainable rhythm
+- [Paddling](/guide/paddling) — translate pool skills to the board
 - [Total Immersion](https://www.totalimmersion.net) — drills and balance/streamline concepts
 - [Swim Smooth](https://www.swimsmooth.com) — stroke styles, rhythm, and training ideas
 

@@ -11,7 +11,7 @@ const { slug } = Astro.params;
 const entry = await getEntryBySlug('guides', slug);
 
 if (!entry) {
-  throw Astro.redirect('/guides');
+  throw Astro.redirect('/guide');
 }
 
 const { Content } = await entry.render();

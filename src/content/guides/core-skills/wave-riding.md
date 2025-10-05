@@ -19,7 +19,7 @@ Wave riding isn’t a checklist of maneuvers. It’s a relationship with the wav
 ## Staying in the Pocket
 - The pocket is the steep, powerful part of the wave
 - Manage position actively; it’s always moving
-- When you’re too far ahead, cue a [cutback](/guides/cutbacks) before you reach the flats
+- When you're too far ahead, cue a [cutback](/guide/cutbacks) before you reach the flats
 
 ## Cutbacks: Pocket Management
 - Start while you still have energy
