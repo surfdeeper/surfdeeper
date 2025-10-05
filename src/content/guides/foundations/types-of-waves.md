@@ -23,11 +23,13 @@ Perfect for beginners and for understanding gradual energy release.
 ![Spilling wave diagram showing the energy release pattern](/spilling-wave.png)
 
 ## Plunging Waves
-**Description:** waves that curl sharply, creating a “tube” before crashing
+**Description:** waves that curl sharply, creating a "tube" before crashing
 
 **Characteristics:** intense, fast‑moving, highly dynamic
 
 **Visual cue:** a hollow curl, often sought by advanced surfers
+
+![Plunging wave diagram showing the powerful curl and tube formation](/plunging-wave.png)
 
 ## Collapsing Waves
 **Description:** waves that lose their shape abruptly, collapsing without much forward travel
