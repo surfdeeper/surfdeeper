@@ -12,7 +12,9 @@ const editBase = 'https://github.com/surfdeeper/surfdeeper/edit/main/';
 const editUrl = editPath ? editBase + editPath : null;
 
 // Canonical URL - ensures Google knows the preferred URL
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+// Build it explicitly to avoid any issues with www subdomain
+const path = Astro.url.pathname === '/' ? '' : Astro.url.pathname.replace(/\/$/, '');
+const canonicalURL = `${Astro.site}${path}`;
 ---
 
 <!DOCTYPE html>
