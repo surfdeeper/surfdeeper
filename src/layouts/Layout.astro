@@ -7,14 +7,9 @@ export interface Props {
 
 const { title, description = "Surf deeper. Learn more. Share what you know.", editPath } = Astro.props;
 
-// Compute a default edit path for static pages based on the current route
-const pathname = Astro.url.pathname;
-let cleaned = pathname.replace(/\/$/, "");
-if (cleaned === "" || cleaned === "/") cleaned = "/index";
-const inferredPath = `src/pages${cleaned}.astro`;
-const effectivePath = editPath ?? inferredPath;
+// Only show edit links when editPath is explicitly provided
 const editBase = 'https://github.com/surfdeeper/surfdeeper/edit/main/';
-const editUrl = editBase + effectivePath;
+const editUrl = editPath ? editBase + editPath : null;
 ---
 
 <!DOCTYPE html>
@@ -55,17 +50,21 @@ const editUrl = editBase + effectivePath;
     </nav>
 
     <main>
-      <div class="edit-prompt" role="complementary" aria-label="Suggest an edit">
-        <span>See anything to improve? Help the community by suggesting an edit.</span>
-        <a class="edit-link-button" href={editUrl} target="_blank" rel="noopener noreferrer">Edit this page on GitHub</a>
-      </div>
+      {editUrl && (
+        <div class="edit-prompt" role="complementary" aria-label="Suggest an edit">
+          <span>See anything to improve? Help the community by suggesting an edit.</span>
+          <a class="edit-link-button" href={editUrl} target="_blank" rel="noopener noreferrer">Edit this page on GitHub</a>
+        </div>
+      )}
 
       <slot />
 
-      <div class="edit-prompt" role="complementary" aria-label="Suggest an edit">
-        <span>Knowledge gets better together. Found a mistake or have tips?</span>
-        <a class="edit-link-button" href={editUrl} target="_blank" rel="noopener noreferrer">Suggest an edit</a>
-      </div>
+      {editUrl && (
+        <div class="edit-prompt" role="complementary" aria-label="Suggest an edit">
+          <span>Knowledge gets better together. Found a mistake or have tips?</span>
+          <a class="edit-link-button" href={editUrl} target="_blank" rel="noopener noreferrer">Suggest an edit</a>
+        </div>
+      )}
     </main>
 
     <footer class="main-footer">
