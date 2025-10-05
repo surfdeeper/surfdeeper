@@ -39,11 +39,13 @@ Perfect for beginners and for understanding gradual energy release.
 **Visual cue:** a chaotic splash rather than a graceful curl
 
 ## Surging Waves
-**Description:** waves that don’t break traditionally but surge up the shore with strong momentum
+**Description:** waves that don't break traditionally but surge up the shore with strong momentum
 
 **Characteristics:** fast, shallow, powerful
 
 **Visual cue:** a wall of water pushing directly onto the beach
+
+![Surging wave diagram showing the wave pushing up the shore](/surging-wave.png)
 
 ## Seeing Waves Beyond the Ocean
 Understanding wave types is both practical and perspective‑shifting. Wave patterns echo in hurricanes, galaxies, and human systems. Observing waves hones our sense of rhythm, change, and motion.
