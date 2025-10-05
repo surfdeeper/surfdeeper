@@ -61,6 +61,26 @@
   margin-top: 0.75rem;
   padding-top: 0.5rem;
   border-top: 1px solid rgba(0, 255, 136, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.view-spot-link {
+  display: inline-block;
+  color: #0f172a;
+  background-color: #00ff88;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.view-spot-link:hover {
+  background-color: #00cc6a;
 }
 
 .edit-location-link {
@@ -70,6 +90,7 @@
   text-decoration: none;
   padding: 0.25rem 0;
   transition: opacity 0.2s ease;
+  text-align: center;
 }
 
 .edit-location-link:hover {
