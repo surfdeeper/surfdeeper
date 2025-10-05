@@ -1,11 +1,12 @@
 ---
 import MapLayout from '../layouts/MapLayout.astro';
 import { getCollection } from 'astro:content';
+import { serializeSpots } from '../utils/spot-data';
 
 import '../styles/spot-guides.css';
-import spotGuidesScript from '../scripts/spot-guides.js?url';
 
 const spots = await getCollection('spots');
+const serializedSpots = serializeSpots(spots);
 ---
 
 <MapLayout title="Spots - Surf Deeper" description="Discover surf spots with maps, local insights, tide charts, and hazards contributed by the community.">
@@ -56,19 +57,70 @@ const spots = await getCollection('spots');
  
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
 
 <script
   type="application/json"
   id="spots-data"
-  set:html={JSON.stringify(spots.map((s) => ({
-    title: s.data.title,
-    description: s.data.description || '',
-    latitude: s.data.latitude,
-    longitude: s.data.longitude,
-    slug: s.slug,
-  })))}
+  set:html={JSON.stringify(serializedSpots)}
 ></script>
-<script src={spotGuidesScript} defer></script>
+
+<script>
+  import { MAP_DEFAULTS } from '../config/map-constants';
+  import { createBaseMap, waitForLeaflet } from '../utils/leaflet-setup';
+  import { getSpotsDataFromElement } from '../utils/spot-data';
+  import { createPopupContent, showContributionInstructions, setupMarkerInteractions } from '../scripts/spot-guides-helpers';
+
+  function initMap() {
+    waitForLeaflet(() => {
+      const spots = getSpotsDataFromElement('spots-data');
+      const map = createBaseMap('map', MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM);
+      if (!map) return;
+
+      const L = (window as any).L;
+      for (const spot of spots) {
+        if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
+          const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+          const popup = createPopupContent(spot, marker, false);
+          marker.bindPopup(popup);
+          marker.spotData = spot;
+          setupMarkerInteractions(marker, spot, createPopupContent, showContributionInstructions);
+        }
+      }
+    });
+  }
+
+  function initViewToggle() {
+    const toggleBtn = document.getElementById('view-toggle');
+    const mapView = document.getElementById('map-view');
+    const directoryView = document.getElementById('directory-view');
+    
+    if (!toggleBtn || !mapView || !directoryView) return;
+    
+    toggleBtn.addEventListener('click', () => {
+      const isMapActive = mapView.classList.contains('active');
+      
+      if (isMapActive) {
+        mapView.classList.remove('active');
+        directoryView.classList.add('active');
+        toggleBtn.classList.add('directory-active');
+      } else {
+        directoryView.classList.remove('active');
+        mapView.classList.add('active');
+        toggleBtn.classList.remove('directory-active');
+      }
+    });
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initMap();
+    initViewToggle();
+  } else {
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      initViewToggle();
+    });
+  }
+</script>
 
 

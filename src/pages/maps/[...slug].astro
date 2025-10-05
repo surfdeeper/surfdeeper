@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, getEntryBySlug } from 'astro:content';
+import { serializeSpot } from '../../utils/spot-data';
 
 export async function getStaticPaths() {
   const entries = await getCollection('spots');
@@ -16,6 +17,7 @@ if (!entry) {
 
 const { Content } = await entry.render();
 const { data } = entry;
+const serializedSpot = serializeSpot(entry);
 ---
 
 <Layout title={data.title} description={data.description} editPath={`src/content/spots/${entry.slug}.md`}>
@@ -94,42 +96,32 @@ const { data } = entry;
   </article>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
 
-  <script type="application/json" id="spot-data" set:html={JSON.stringify({
-    latitude: data.latitude,
-    longitude: data.longitude,
-    title: data.title,
-    description: data.description || ''
-  })}></script>
-
+  <script type="application/json" id="spot-data" set:html={JSON.stringify(serializedSpot)}></script>
+  
   <script>
+    import { MAP_DEFAULTS } from '../../config/map-constants';
+    import { createBaseMap, waitForLeaflet, createMarkerWithPopup } from '../../utils/leaflet-setup';
+    import { getSpotDataFromElement } from '../../utils/spot-data';
+
     function initSpotMap() {
-      if (!window.L) {
-        setTimeout(initSpotMap, 100);
-        return;
-      }
+      waitForLeaflet(() => {
+        const spot = getSpotDataFromElement('spot-data');
+        if (!spot) return;
 
-      const dataElement = document.getElementById('spot-data');
-      if (!dataElement) return;
+        const map = createBaseMap('spot-map', [spot.latitude, spot.longitude], MAP_DEFAULTS.SPOT_ZOOM);
+        if (!map) return;
 
-      try {
-        const spot = JSON.parse(dataElement.textContent || '{}');
-        
-        // Initialize map centered on the spot
-        const map = L.map('spot-map').setView([spot.latitude, spot.longitude], 13);
-        
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-        
-        // Add marker for the spot
-        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
-        marker.bindPopup(`<b>${spot.title}</b><br/>${spot.description}`).openPopup();
-      } catch (error) {
-        console.error('Failed to initialize spot map:', error);
-      }
+        createMarkerWithPopup(
+          map,
+          spot.latitude,
+          spot.longitude,
+          spot.title,
+          spot.description,
+          true
+        );
+      });
     }
 
     if (document.readyState === 'complete' || document.readyState === 'interactive') {

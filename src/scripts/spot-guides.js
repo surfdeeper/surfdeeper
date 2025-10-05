@@ -1,13 +1,9 @@
+import { MAP_DEFAULTS } from '../config/map-constants';
+import { createBaseMap, waitForLeaflet } from '../utils/leaflet-setup';
+import { getSpotsDataFromElement } from '../utils/spot-data';
+
 function getSpotsFromJson() {
-  const dataElement = document.getElementById('spots-data');
-  if (!dataElement) return [];
-  try {
-    const json = dataElement.textContent || '[]';
-    return JSON.parse(json);
-  } catch (error) {
-    console.error('Failed to parse spots JSON:', error);
-    return [];
-  }
+  return getSpotsDataFromElement('spots-data');
 }
 
 function createPopupContent(spot, marker, isDragging = false) {
@@ -79,88 +75,79 @@ longitude: ${newLng}
 }
 
 function initMap() {
-  if (!window.L) {
-    requestAnimationFrame(initMap);
-    return;
-  }
+  waitForLeaflet(() => {
+    const spots = getSpotsFromJson();
+    const map = createBaseMap('map', MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM);
+    if (!map) return;
 
-  const spots = getSpotsFromJson();
-  const map = L.map('map');
-  const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  });
-  tiles.addTo(map);
-
-  const markers = [];
-  for (const spot of spots) {
-    if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
-      const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
-      const popup = createPopupContent(spot, marker, false);
-      marker.bindPopup(popup);
-      
-      // Store spot data on marker for later use
-      marker.spotData = spot;
-      
-      // Listen for popup open events to attach event listeners
-      marker.on('popupopen', () => {
-        const editLink = document.querySelector(`.edit-location-link[data-slug="${spot.slug}"]`);
-        const doneBtn = document.querySelector(`.done-dragging-btn[data-slug="${spot.slug}"]`);
+    const L = window.L;
+    const markers = [];
+    for (const spot of spots) {
+      if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
+        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+        const popup = createPopupContent(spot, marker, false);
+        marker.bindPopup(popup);
         
-        if (editLink) {
-          editLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // Enable dragging
-            marker.dragging.enable();
-            // Prevent popup from closing on drag
-            marker.getPopup().options.closeOnClick = false;
-            marker.getPopup().options.autoClose = false;
-            marker.getPopup().options.closeButton = false;
-            // Update popup to show coordinates
+        // Store spot data on marker for later use
+        marker.spotData = spot;
+        
+        // Listen for popup open events to attach event listeners
+        marker.on('popupopen', () => {
+          const editLink = document.querySelector(`.edit-location-link[data-slug="${spot.slug}"]`);
+          const doneBtn = document.querySelector(`.done-dragging-btn[data-slug="${spot.slug}"]`);
+          
+          if (editLink) {
+            editLink.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              // Enable dragging
+              marker.dragging.enable();
+              // Prevent popup from closing on drag
+              marker.getPopup().options.closeOnClick = false;
+              marker.getPopup().options.autoClose = false;
+              marker.getPopup().options.closeButton = false;
+              // Update popup to show coordinates
+              marker.setPopupContent(createPopupContent(spot, marker, true));
+              // Ensure popup stays open
+              if (!marker.isPopupOpen()) {
+                marker.openPopup();
+              }
+            });
+          }
+          
+          if (doneBtn) {
+            doneBtn.addEventListener('click', () => {
+              const position = marker.getLatLng();
+              showContributionInstructions(
+                spot,
+                position.lat.toFixed(4),
+                position.lng.toFixed(4)
+              );
+              // Disable dragging
+              marker.dragging.disable();
+              // Restore normal popup behavior
+              marker.getPopup().options.closeOnClick = true;
+              marker.getPopup().options.autoClose = true;
+              marker.getPopup().options.closeButton = true;
+              // Reset popup
+              marker.setPopupContent(createPopupContent(spot, marker, false));
+              // Close the popup since they're done
+              marker.closePopup();
+            });
+          }
+        });
+        
+        // Update coordinates in popup while dragging
+        marker.on('drag', () => {
+          if (marker.isPopupOpen()) {
             marker.setPopupContent(createPopupContent(spot, marker, true));
-            // Ensure popup stays open
-            if (!marker.isPopupOpen()) {
-              marker.openPopup();
-            }
-          });
-        }
+          }
+        });
         
-        if (doneBtn) {
-          doneBtn.addEventListener('click', () => {
-            const position = marker.getLatLng();
-            showContributionInstructions(
-              spot,
-              position.lat.toFixed(4),
-              position.lng.toFixed(4)
-            );
-            // Disable dragging
-            marker.dragging.disable();
-            // Restore normal popup behavior
-            marker.getPopup().options.closeOnClick = true;
-            marker.getPopup().options.autoClose = true;
-            marker.getPopup().options.closeButton = true;
-            // Reset popup
-            marker.setPopupContent(createPopupContent(spot, marker, false));
-            // Close the popup since they're done
-            marker.closePopup();
-          });
-        }
-      });
-      
-      // Update coordinates in popup while dragging
-      marker.on('drag', () => {
-        if (marker.isPopupOpen()) {
-          marker.setPopupContent(createPopupContent(spot, marker, true));
-        }
-      });
-      
-      markers.push(marker);
+        markers.push(marker);
+      }
     }
-  }
-
-  // Set view to show entire Santa Cruz to Bolinas coastline
-  // Center approximately between Santa Cruz (36.97°N, -122.03°W) and Bolinas (37.91°N, -122.69°W)
-  map.setView([37.44, -122.36], 9);
+  });
 }
 
 function initViewToggle() {
