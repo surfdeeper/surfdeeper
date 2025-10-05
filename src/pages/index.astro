@@ -143,6 +143,22 @@ try {
       <p><strong>Free and open source</strong> — Built by surfers, for surfers. <a href="/contribute">Contribute your knowledge</a> to help others learn and progress.</p>
     </div>
 
+    {recentlyUpdated.length > 0 && (
+      <div class="updates-section">
+        <h2>Recently Updated Pages</h2>
+        <ul class="updates-list">
+          {recentlyUpdated.map(page => (
+            <li class="update-item">
+              <span class="update-date">{page.date}</span>
+              <a href={page.url} class="update-message">
+                {page.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
     {recentCommits.length > 0 && (
       <div class="updates-section">
         <h2>Recent Git Commits</h2>
@@ -159,21 +175,7 @@ try {
       </div>
     )}
 
-    {recentlyUpdated.length > 0 && (
-      <div class="updates-section">
-        <h2>Recently Updated Pages</h2>
-        <ul class="updates-list">
-          {recentlyUpdated.map(page => (
-            <li class="update-item">
-              <span class="update-date">{page.date}</span>
-              <a href={page.url} class="update-message">
-                {page.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+    
   </section>
 </Layout>
 
