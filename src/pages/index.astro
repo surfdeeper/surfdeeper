@@ -90,7 +90,18 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
                     <span class="page-hierarchy">{page.hierarchy}</span>
                     <span class="page-title">{page.title}</span>
                   </a>
-                  <span class="update-date" data-timestamp={page.date}>{page.date}</span>
+                  <span class="update-date">
+                    {new Date(page.date).toLocaleString('en-US', {
+                      timeZone: 'America/Los_Angeles',
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true,
+                      timeZoneName: 'short'
+                    })}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -106,7 +117,18 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
                   <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-link commit-link">
                     {commit.message.length > 60 ? commit.message.substring(0, 60) + '...' : commit.message}
                   </a>
-                  <span class="update-date" data-timestamp={commit.isoDate}>{commit.date}</span>
+                  <span class="update-date">
+                    {new Date(commit.isoDate).toLocaleString('en-US', {
+                      timeZone: 'America/Los_Angeles',
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true,
+                      timeZoneName: 'short'
+                    })}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -249,47 +271,7 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
   }
 </script>
 
-<script is:inline>
-  // Format timestamps to user's local timezone
-  function formatTimestamps() {
-    const dateElements = document.querySelectorAll('.update-date[data-timestamp]');
-    
-    dateElements.forEach(element => {
-      const isoDate = element.getAttribute('data-timestamp');
-      if (!isoDate) return;
-      
-      try {
-        const date = new Date(isoDate);
-        
-        // Format the date in user's local timezone
-        const formattedDate = date.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-        
-        // Get the timezone abbreviation
-        const timezone = date.toLocaleTimeString('en-US', {
-          timeZoneName: 'short'
-        }).split(' ').pop();
-        
-        // Update the element with formatted date and timezone
-        element.textContent = `${formattedDate} ${timezone}`;
-      } catch (error) {
-        console.error('Error formatting date:', error);
-      }
-    });
-  }
 
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    formatTimestamps();
-  } else {
-    document.addEventListener('DOMContentLoaded', formatTimestamps);
-  }
-</script>
 
 <script is:inline>
   // Surf conditions ticker
