@@ -9,6 +9,30 @@ import sections from '../content/guides/_sections.json';
 // Get all surf spots for the map preview
 const spots = await getCollection('spots');
 
+// Get all guides and organize by section
+const allGuides = await getCollection('guides');
+const guidesBySection: Record<string, Array<{ slug: string; title: string; url: string }>> = {};
+
+// Group guides by their section (first part of slug)
+for (const guide of allGuides) {
+  const slugParts = guide.slug.split('/');
+  const section = slugParts[0];
+  const pageName = slugParts[1];
+  
+  // Skip index pages
+  if (pageName === 'index') continue;
+  
+  if (!guidesBySection[section]) {
+    guidesBySection[section] = [];
+  }
+  
+  guidesBySection[section].push({
+    slug: guide.slug,
+    title: guide.data.title,
+    url: `/guide/${guide.slug}`
+  });
+}
+
 // Fetch recent git commits during build
 let recentCommits: Array<{ hash: string; date: string; isoDate: string; message: string; url: string }> = [];
 try {
@@ -81,10 +105,18 @@ try {
           const match = filePath.match(/content\/guides\/([^/]+)\/([^/]+)\.md$/);
           if (match) {
             const [, category, slug] = match;
-            url = `/guide/${category}/${slug}`;
-            title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             const categoryFormatted = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            hierarchy = `Guide > ${categoryFormatted}`;
+            
+            // Handle index pages specially
+            if (slug === 'index') {
+              url = `/guide/${category}`;
+              title = categoryFormatted;
+              hierarchy = 'Guide';
+            } else {
+              url = `/guide/${category}/${slug}`;
+              title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              hierarchy = `Guide > ${categoryFormatted}`;
+            }
           }
         } else if (filePath.includes('content/spots/')) {
           const match = filePath.match(/content\/spots\/([^/]+)\.md$/);
@@ -123,27 +155,17 @@ try {
 ---
 
 <Layout title="Surf Deeper" description="Open source surfing guide for skills and spots. Community-driven knowledge for surfers of all levels.">
-  <header class="hero">
-    <h1>Surf Deeper</h1>
-    <p class="tagline">Open source surfing guide for skills and spots</p>
-  </header>
-
-  <section class="content">
-    <div class="main-content-grid">
-      <div class="guide-section">
-        <h2>🏄 Skills Guide</h2>
-        <p class="guide-description">Step-by-step technique guides from paddling basics to advanced maneuvers. Learn at your own pace with clear, detailed instructions.</p>
-        <ul class="section-links">
-          {Object.entries(sections)
-            .sort(([, a], [, b]) => a.order - b.order)
-            .map(([slug, section]) => (
-              <li><a href={`/guide/${slug}`}>{section.label}</a></li>
-            ))
-          }
-        </ul>
-        <a href="/guide" class="guide-view-all-link">Browse All Guides →</a>
+  <div class="homepage-wrapper">
+    <div class="marquee-container">
+      <div class="marquee" id="surf-ticker">
+        <span id="ticker-content">Loading surf conditions...</span>
       </div>
+    </div>
 
+    <div class="three-column-layout">
+      <!-- Main Content -->
+      <section class="content">
+    <div class="main-content-grid">
       <div class="map-preview-section">
         <h2>🗺️ Surf Spots</h2>
         <p class="map-preview-description">Explore surf breaks along the California coast</p>
@@ -151,24 +173,70 @@ try {
         <a href="/maps" class="map-view-all-link">View Full Interactive Map →</a>
       </div>
     </div>
+      </section>
 
-    <div class="about-box">
-      <p><strong>Free and open source</strong> — Built by surfers, for surfers. <a href="/contribute">Contribute your knowledge</a> to help others learn and progress.</p>
-    </div>
+      <!-- Left Sidebar -->
+      <aside class="left-sidebar">
+        <div class="sidebar-section">
+          <h3>🏄 Skills Guide</h3>
+          <ul class="sidebar-links nested-guide">
+            {Object.entries(sections)
+              .sort(([, a], [, b]) => a.order - b.order)
+              .map(([slug, section]) => {
+                const guides = guidesBySection[slug] || [];
+                const visibleGuides = guides.slice(0, 3);
+                const remainingCount = guides.length - 3;
+                
+                return (
+                  <li class="section-item">
+                    <a href={`/guide/${slug}`} class="section-link">{section.label}</a>
+                    {guides.length > 0 && (
+                      <ul class="nested-links">
+                        {visibleGuides.map(guide => (
+                          <li><a href={guide.url}>{guide.title}</a></li>
+                        ))}
+                        {remainingCount > 0 && (
+                          <li class="more-items">
+                            <a href={`/guide/${slug}`}>{remainingCount} more →</a>
+                          </li>
+                        )}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })
+            }
+          </ul>
+          <div style="margin-top: 1rem; text-align: center;">
+            <a href="/guide" style="color: #00ff88; text-decoration: none; font-size: 0.9rem;">Browse All →</a>
+          </div>
+        </div>
+      </aside>
 
-    {(recentlyUpdated.length > 0 || recentCommits.length > 0) && (
-      <div class="updates-grid">
+      <!-- Right Sidebar -->
+      <aside class="right-sidebar">
+        <div class="sidebar-section">
+          <h3>💡 About</h3>
+          <p style="color: #00ff88; opacity: 0.9; font-size: 0.9rem; line-height: 1.6; margin: 0;"><strong>Free and open source</strong> — Built by surfers, for surfers. <a href="/contribute" style="color: #00ff88; text-decoration: underline; text-underline-offset: 3px;">Contribute your knowledge</a> to help others learn and progress.</p>
+        </div>
+
+        <div class="sidebar-section surf-wisdom">
+          <h3>🧘 Surf Wisdom</h3>
+          <p class="wisdom-quote">"The best surfer out there is the one having the most fun."</p>
+          <p class="wisdom-quote">"You can't stop the waves, but you can learn to surf."</p>
+        </div>
+
         {recentlyUpdated.length > 0 && (
-          <div class="updates-section">
-            <h2>Recently Updated Guides</h2>
+          <div class="sidebar-section updates-section">
+            <h3>📝 Recently Updated</h3>
             <ul class="updates-list">
-              {recentlyUpdated.map(page => (
+              {recentlyUpdated.slice(0, 4).map(page => (
                 <li class="update-item">
-                  <span class="update-date" data-timestamp={page.date}>{page.date}</span>
-                  <a href={page.url} class="update-message">
+                  <a href={page.url} class="update-link">
                     <span class="page-hierarchy">{page.hierarchy}</span>
                     <span class="page-title">{page.title}</span>
                   </a>
+                  <span class="update-date" data-timestamp={page.date}>{page.date}</span>
                 </li>
               ))}
             </ul>
@@ -176,25 +244,23 @@ try {
         )}
 
         {recentCommits.length > 0 && (
-          <div class="updates-section">
-            <h2>Recent Git Commits</h2>
+          <div class="sidebar-section updates-section">
+            <h3>🔨 Recent Commits</h3>
             <ul class="updates-list">
-              {recentCommits.map(commit => (
+              {recentCommits.slice(0, 3).map(commit => (
                 <li class="update-item">
-                  <span class="update-date" data-timestamp={commit.isoDate}>{commit.date}</span>
-                  <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-message">
-                    {commit.message}
+                  <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-link commit-link">
+                    {commit.message.length > 60 ? commit.message.substring(0, 60) + '...' : commit.message}
                   </a>
+                  <span class="update-date" data-timestamp={commit.isoDate}>{commit.date}</span>
                 </li>
               ))}
             </ul>
           </div>
         )}
-      </div>
-    )}
-
-    
-  </section>
+      </aside>
+    </div>
+  </div>
 </Layout>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
@@ -231,6 +297,9 @@ try {
       return;
     }
 
+    const mapContainer = document.getElementById('map-preview');
+    if (!mapContainer) return;
+    
     const dataElement = document.getElementById('spots-data');
     if (!dataElement) return;
     
@@ -248,44 +317,53 @@ try {
     const theme = getTheme(currentThemeId, DEFAULT_THEME_HOMEPAGE);
 
     const L = (window as any).L;
-    const map = L.map('map-preview', {
-      scrollWheelZoom: false,
-      dragging: true,
-      zoomControl: true,
-      backgroundColor: '#1a1f2e'
-    });
     
-    // Add tiles with the selected theme
-    const tiles = L.tileLayer(theme.url, {
-      attribution: theme.attribution,
-      maxZoom: theme.maxZoom,
-      className: 'map-tiles',
-      ...(theme.subdomains ? { subdomains: theme.subdomains } : {})
-    });
-    tiles.addTo(map);
-    map._tileLayer = tiles;
+    // Initialize map after a brief delay to ensure container has proper dimensions
+    setTimeout(() => {
+      const map = L.map('map-preview', {
+        scrollWheelZoom: false,
+        dragging: true,
+        zoomControl: true,
+        backgroundColor: '#1a1f2e'
+      });
+      
+      // Add tiles with the selected theme
+      const tiles = L.tileLayer(theme.url, {
+        attribution: theme.attribution,
+        maxZoom: theme.maxZoom,
+        className: 'map-tiles',
+        ...(theme.subdomains ? { subdomains: theme.subdomains } : {})
+      });
+      tiles.addTo(map);
+      map._tileLayer = tiles;
 
-    // Add theme switcher control
-    addThemeSwitcherToMap(map, DEFAULT_THEME_HOMEPAGE, 'topright');
+      // Add theme switcher control
+      addThemeSwitcherToMap(map, DEFAULT_THEME_HOMEPAGE, 'topright');
 
-    for (const spot of spots) {
-      if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
-        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
-        const popup = `
-          <div style="font-family: inherit;">
-            <b>${spot.title}</b>
-            ${spot.description ? `<br/>${spot.description}` : ''}
-            <div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(0, 255, 136, 0.2);">
-              <a href="/maps/${spot.slug}" style="display: inline-block; color: #0f172a; background-color: #00ff88; font-size: 0.95rem; font-weight: 600; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; text-align: center;">View Spot →</a>
+      for (const spot of spots) {
+        if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
+          const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+          const popup = `
+            <div style="font-family: inherit;">
+              <b>${spot.title}</b>
+              ${spot.description ? `<br/>${spot.description}` : ''}
+              <div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(0, 255, 136, 0.2);">
+                <a href="/maps/${spot.slug}" style="display: inline-block; color: #0f172a; background-color: #00ff88; font-size: 0.95rem; font-weight: 600; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; text-align: center;">View Spot →</a>
+              </div>
             </div>
-          </div>
-        `;
-        marker.bindPopup(popup);
+          `;
+          marker.bindPopup(popup);
+        }
       }
-    }
 
-    // Set view to show entire Santa Cruz to Bolinas coastline
-    map.setView([37.44, -122.36], 9);
+      // Set view to show entire Santa Cruz to Bolinas coastline
+      map.setView([37.44, -122.36], 9);
+      
+      // Force map to recalculate size after initialization
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+    }, 50); // End of setTimeout for map initialization
   }
 
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -337,31 +415,232 @@ try {
   }
 </script>
 
+<script is:inline>
+  // Surf conditions ticker
+  async function fetchMarineConditions(latitude, longitude) {
+    try {
+      const marineUrl = new URL('https://marine-api.open-meteo.com/v1/marine');
+      marineUrl.searchParams.set('latitude', latitude.toString());
+      marineUrl.searchParams.set('longitude', longitude.toString());
+      marineUrl.searchParams.set('hourly', [
+        'wave_height',
+        'wave_period',
+        'wave_direction',
+        'swell_wave_height',
+        'swell_wave_period',
+        'swell_wave_direction'
+      ].join(','));
+      marineUrl.searchParams.set('forecast_days', '1');
+
+      const weatherUrl = new URL('https://api.open-meteo.com/v1/forecast');
+      weatherUrl.searchParams.set('latitude', latitude.toString());
+      weatherUrl.searchParams.set('longitude', longitude.toString());
+      weatherUrl.searchParams.set('hourly', 'wind_speed_10m,wind_direction_10m');
+      weatherUrl.searchParams.set('forecast_days', '1');
+
+      const [marineResponse, weatherResponse] = await Promise.all([
+        fetch(marineUrl.toString()),
+        fetch(weatherUrl.toString())
+      ]);
+
+      if (!marineResponse.ok || !weatherResponse.ok) {
+        throw new Error('API error');
+      }
+
+      const marineData = await marineResponse.json();
+      const weatherData = await weatherResponse.json();
+      
+      const marineHourly = marineData.hourly;
+      const weatherHourly = weatherData.hourly;
+      const idx = 0;
+
+      return {
+        waveHeight: marineHourly.wave_height[idx] || 0,
+        wavePeriod: marineHourly.wave_period[idx] || 0,
+        waveDirection: marineHourly.wave_direction[idx] || 0,
+        swellHeight: marineHourly.swell_wave_height[idx] || 0,
+        swellPeriod: marineHourly.swell_wave_period[idx] || 0,
+        swellDirection: marineHourly.swell_wave_direction[idx] || 0,
+        windSpeed: weatherHourly.wind_speed_10m[idx] || 0,
+        windDirection: weatherHourly.wind_direction_10m[idx] || 0,
+        timestamp: marineHourly.time[idx] || new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('Failed to fetch marine conditions:', error);
+      return null;
+    }
+  }
+
+  function degreesToCardinal(degrees) {
+    const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    const index = Math.round(degrees / 22.5) % 16;
+    return directions[index];
+  }
+
+  function metersToFeet(meters) {
+    return meters * 3.28084;
+  }
+
+  function kmhToMph(kmh) {
+    return kmh * 0.621371;
+  }
+
+  async function updateSurfTicker() {
+    const tickerContent = document.getElementById('ticker-content');
+    if (!tickerContent) return;
+
+    // Surf spots to check (using actual spots from the site)
+    const spots = [
+      { name: 'Ocean Beach', slug: 'ocean-beach', lat: 37.7699, lon: -122.5109 },
+      { name: 'Linda Mar', slug: 'linda-mar', lat: 37.5989, lon: -122.5001 },
+      { name: 'Pleasure Point', slug: 'pleasure-point', lat: 36.9651, lon: -121.9698 },
+      { name: 'Bolinas', slug: 'bolinas', lat: 37.9079, lon: -122.6859 }
+    ];
+
+    const spotConditions = [];
+    
+    for (const spot of spots) {
+      const conditions = await fetchMarineConditions(spot.lat, spot.lon);
+      if (conditions) {
+        spotConditions.push({ name: spot.name, slug: spot.slug, ...conditions });
+      }
+    }
+
+    if (spotConditions.length === 0) {
+      tickerContent.textContent = 'Unable to load surf conditions. Check back soon!';
+      return;
+    }
+
+    // Build ticker message
+    const messages = spotConditions.map(spot => {
+      const waveHeightFt = metersToFeet(spot.waveHeight).toFixed(1);
+      const swellHeightFt = metersToFeet(spot.swellHeight).toFixed(1);
+      const windSpeedMph = kmhToMph(spot.windSpeed).toFixed(0);
+      const windDir = degreesToCardinal(spot.windDirection);
+      const swellDir = degreesToCardinal(spot.swellDirection);
+      const period = spot.swellPeriod.toFixed(0);
+      
+      return `<a href="/maps/${spot.slug}" style="color: #00ff88; text-decoration: none; border-bottom: 1px dotted #00ff88;">${spot.name}</a>: ${waveHeightFt}ft @ ${period}s ${swellDir} • Wind ${windSpeedMph}mph ${windDir}`;
+    }).join(' • ');
+
+    // Add update time with user's timezone
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    const timezone = now.toLocaleTimeString('en-US', {
+      timeZoneName: 'short'
+    }).split(' ').pop();
+
+    const fullMessage = `${messages} • Last updated: ${timeString} ${timezone}`;
+    
+    // Duplicate content for seamless scrolling
+    tickerContent.innerHTML = fullMessage + ' • ' + fullMessage;
+  }
+
+  // Initial update
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    updateSurfTicker();
+  } else {
+    document.addEventListener('DOMContentLoaded', updateSurfTicker);
+  }
+
+  // Refresh every 15 minutes
+  setInterval(updateSurfTicker, 15 * 60 * 1000);
+</script>
+
 <style>
-  .hero {
-    text-align: center;
-    margin-bottom: 2rem;
+  /* Override main padding for homepage */
+  :global(body:has(.homepage-wrapper)) {
+    overflow-x: hidden;
+  }
+
+  :global(body:has(.homepage-wrapper) main) {
+    max-width: 100%;
     padding: 0;
+    overflow-x: hidden;
   }
 
-  .hero h1 {
-    color: #00ff88;
-    font-size: 3rem;
-    margin: 0 0 0.5rem 0;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+  .homepage-wrapper {
+    width: 100%;
+    overflow-x: hidden;
   }
 
-  .tagline {
+  .homepage-wrapper * {
+    box-sizing: border-box;
+  }
+
+  /* Marquee Styles - Visible on all screen sizes */
+  .marquee-container {
+    background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%);
+    border-bottom: 2px solid #00ff88;
+    padding: 0.75rem 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .marquee {
+    display: flex;
+    white-space: nowrap;
+  }
+
+  .marquee span {
     color: #00ff88;
-    font-size: 1.25rem;
-    opacity: 0.9;
-    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0 2rem;
+    display: inline-block;
+    animation: marquee-scroll 120s linear infinite;
+  }
+
+  .marquee span a {
+    transition: opacity 0.2s ease, border-bottom-color 0.2s ease;
+  }
+
+  .marquee span a:hover {
+    opacity: 0.8;
+    border-bottom-color: #00cc6a !important;
+  }
+
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Three Column Layout - Desktop Only */
+  .three-column-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Mobile: Stack everything vertically */
+  .left-sidebar,
+  .right-sidebar {
+    display: none;
   }
 
   .content {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
+    padding: 0 1rem 2rem;
+    box-sizing: border-box;
+  }
+  
+  @media (max-width: 767px) {
+    .content {
+      padding: 0 1rem 1.5rem;
+    }
   }
 
   /* Main Content Grid - Side by Side */
@@ -369,12 +648,66 @@ try {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 767px) {
+    .main-content-grid {
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
   }
 
+  /* Medium screens: Show current layout */
   @media (min-width: 768px) {
+    .content {
+      max-width: 1200px;
+      padding: 0 2rem 2rem;
+    }
+
     .main-content-grid {
       grid-template-columns: 1fr 1fr;
+      margin-bottom: 3rem;
+    }
+  }
+
+  /* Large Desktop: Three Column Layout */
+  @media (min-width: 1400px) {
+    .three-column-layout {
+      grid-template-columns: 250px 1fr 250px;
+      gap: 2rem;
+      max-width: calc(100vw - 4rem);
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 2rem;
+      box-sizing: border-box;
+    }
+
+    .content {
+      max-width: 100%;
+      padding: 2rem 0 2rem;
+      min-width: 0; /* Prevent overflow */
+      order: 2; /* Place content in the middle */
+    }
+
+    .left-sidebar {
+      display: block;
+      min-width: 0; /* Prevent overflow */
+      order: 1; /* Place left sidebar first */
+    }
+
+    .right-sidebar {
+      display: block;
+      min-width: 0; /* Prevent overflow */
+      order: 3; /* Place right sidebar last */
+    }
+  }
+
+  /* Extra Large Desktop: Wider sidebars */
+  @media (min-width: 1800px) {
+    .three-column-layout {
+      grid-template-columns: 300px 1fr 300px;
+      max-width: 1800px;
     }
   }
 
@@ -387,6 +720,7 @@ try {
     transition: border-color 0.3s ease;
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
 
   .guide-section:hover {
@@ -464,6 +798,14 @@ try {
     border-radius: 8px;
     padding: 1.5rem;
     text-align: center;
+    min-width: 0;
+    margin-bottom: 3rem;
+  }
+  
+  @media (max-width: 767px) {
+    .about-box {
+      margin-bottom: 2rem;
+    }
   }
 
   .about-box p {
@@ -483,31 +825,13 @@ try {
     text-underline-offset: 3px;
   }
 
-  .updates-grid {
-    margin-top: 3rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
+  /* Sidebar Updates Sections */
+  .sidebar-section.updates-section {
+    margin-bottom: 1.5rem;
   }
 
-  @media (min-width: 768px) {
-    .updates-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .updates-section {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 8px;
-    padding: 2rem;
-  }
-
-  .updates-section h2 {
-    color: #00ff88;
-    font-size: 1.5rem;
-    margin: 0 0 1.5rem 0;
-    text-align: center;
+  .sidebar-section.updates-section h3 {
+    margin-bottom: 1rem;
   }
 
   .updates-list {
@@ -516,51 +840,65 @@ try {
     margin: 0;
   }
 
-  .update-item {
+  /* Updates in sidebar */
+  .sidebar-section .update-item {
+    margin-bottom: 1rem;
+    padding-left: 0;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #334155;
   }
 
-  .update-item:last-child {
-    border-bottom: none;
+  .sidebar-section .update-item:last-child {
+    margin-bottom: 0;
   }
 
-  .update-date {
-    color: #00ff88;
-    opacity: 0.6;
-    font-size: 0.75rem;
-    white-space: nowrap;
+  .sidebar-section .update-item::before {
+    content: none; /* Remove the bullet point for update items */
   }
 
-  .update-message {
-    color: #00ff88;
-    opacity: 0.9;
-    line-height: 1.5;
+  .sidebar-section .update-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding-left: 0;
     text-decoration: none;
     transition: opacity 0.2s ease;
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
+    line-height: 1.3;
   }
 
-  .update-message:hover {
+  .sidebar-section .update-link:hover {
     opacity: 1;
     text-decoration: underline;
   }
 
-  .page-hierarchy {
-    font-size: 0.75rem;
-    opacity: 0.7;
+  .sidebar-section .page-hierarchy {
+    font-size: 0.7rem;
+    opacity: 0.6;
     font-weight: 500;
     letter-spacing: 0.02em;
-    white-space: nowrap;
+    color: #00ff88;
   }
 
-  .page-title {
-    font-size: 0.95rem;
+  .sidebar-section .page-title {
+    font-size: 0.85rem;
+    color: #00ff88;
+    opacity: 0.9;
+    line-height: 1.3;
+  }
+
+  .sidebar-section .commit-link {
+    font-size: 0.85rem;
+    color: #00ff88;
+    opacity: 0.9;
+    line-height: 1.3;
+  }
+
+  .sidebar-section .update-date {
+    color: #00ff88;
+    opacity: 0.5;
+    font-size: 0.65rem;
+    display: block;
   }
 
   /* Map Preview Section */
@@ -572,6 +910,7 @@ try {
     transition: border-color 0.3s ease;
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
 
   .map-preview-section:hover {
@@ -596,11 +935,11 @@ try {
   .map-preview-container {
     width: 100%;
     height: 400px;
+    min-height: 400px;
     border-radius: 8px;
     overflow: hidden;
     border: 2px solid #334155;
     margin-bottom: 1.5rem;
-    flex: 1;
   }
 
   .map-view-all-link {
@@ -619,7 +958,298 @@ try {
 
   @media (max-width: 768px) {
     .map-preview-container {
-      height: 300px;
+      height: 450px !important;
+      min-height: 450px !important;
+      /* Break out to full width */
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      border-radius: 0;
+    }
+    
+    /* Remove card styling on mobile so map stands alone */
+    .map-preview-section {
+      background-color: transparent;
+      border: none;
+      padding: 2rem 0;
+      overflow: visible;
+    }
+    
+    .map-preview-section:hover {
+      border-color: transparent;
+    }
+    
+    .map-preview-section h2 {
+      padding: 0 1rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .map-preview-section .map-preview-description {
+      padding: 0 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .map-preview-section .map-view-all-link {
+      padding: 0 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    /* Ensure map appears first on mobile */
+    .main-content-grid {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  /* Desktop: Remove card styling and make map fill space */
+  @media (min-width: 1400px) {
+    .map-preview-section {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      display: block;
+      width: 100%;
+    }
+
+    .map-preview-section:hover {
+      border-color: transparent;
+    }
+
+    .map-preview-section h2,
+    .map-preview-description,
+    .map-view-all-link {
+      display: none;
+    }
+
+    .map-preview-container {
+      width: 100%;
+      height: calc(100vh - 200px);
+      min-height: 600px;
+      margin-bottom: 0;
+      border-radius: 0;
+      border: none;
+    }
+
+    .content {
+      padding: 2rem 0 0 !important;
+      width: 100%;
+      flex: 1;
+    }
+
+    .main-content-grid {
+      gap: 0;
+      margin-bottom: 0;
+      width: 100%;
+      display: block;
+    }
+
+    .about-box {
+      margin-top: 2rem;
+      margin-left: 2rem;
+      margin-right: 2rem;
+    }
+  }
+
+  /* Sidebar Styles */
+  .left-sidebar,
+  .right-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .sidebar-section {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.3s ease;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .sidebar-section:hover {
+    border-color: #00ff88;
+  }
+
+  .sidebar-section h3 {
+    color: #00ff88;
+    font-size: 1.1rem;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+  }
+
+  .sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-links li {
+    margin-bottom: 0.75rem;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .sidebar-links li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #00ff88;
+    font-size: 0.9rem;
+  }
+
+  .sidebar-links li a {
+    color: #00ff88;
+    text-decoration: none;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    transition: all 0.2s ease;
+  }
+
+  .sidebar-links li a:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Nested Guide Styles */
+  .nested-guide .section-item {
+    margin-bottom: 1rem;
+  }
+
+  .nested-guide .section-link {
+    font-weight: 600;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .nested-links {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+    padding-left: 1rem;
+  }
+
+  /* Hide nested items on mobile */
+  @media (max-width: 1399px) {
+    .nested-links {
+      display: none;
+    }
+  }
+
+  .nested-links li {
+    margin-bottom: 0.4rem;
+    padding-left: 1rem;
+  }
+
+  .nested-links li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #00ff88;
+    opacity: 0.6;
+    font-size: 0.8rem;
+  }
+
+  .nested-links li a {
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+
+  .nested-links li a:hover {
+    opacity: 1;
+  }
+
+  .nested-links .more-items {
+    margin-top: 0.3rem;
+  }
+
+  .nested-links .more-items::before {
+    content: "⋯";
+    opacity: 0.5;
+  }
+
+  .nested-links .more-items a {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.8rem;
+  }
+
+  .nested-links .more-items a:hover {
+    opacity: 0.9;
+  }
+
+  /* Surf Wisdom Section */
+  .surf-wisdom {
+    margin-bottom: 1.5rem;
+  }
+
+  .surf-wisdom .wisdom-quote {
+    color: #00ff88;
+    opacity: 0.85;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.5;
+  }
+
+  .surf-wisdom .wisdom-quote:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Community Stats */
+  .community-stats {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .stat-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .stat-number {
+    color: #00ff88;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    color: #00ff88;
+    opacity: 0.8;
+    font-size: 0.85rem;
+  }
+
+  /* Retro Ad Section */
+  .retro-ad {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 2px solid #00ff88;
+    margin-bottom: 1.5rem;
+  }
+
+  .retro-ad p {
+    color: #00ff88;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  /* For users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee span {
+      animation: none;
     }
   }
 </style>
