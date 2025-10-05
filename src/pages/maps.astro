@@ -9,7 +9,48 @@ const spots = await getCollection('spots');
 ---
 
 <MapLayout title="Spots - Surf Deeper" description="Discover surf spots with maps, local insights, tide charts, and hazards contributed by the community.">
-  <div id="map"></div>
+  <button id="view-toggle" class="view-toggle" aria-label="Toggle between map and directory">
+    <span class="toggle-icon" id="toggle-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </span>
+  </button>
+
+  <div id="map-view" class="map-view active">
+    <div id="map"></div>
+  </div>
+
+  <div id="directory-view" class="directory-view">
+    <div class="directory-container">
+      <div class="directory-header">
+        <h1>Surf Spots Directory</h1>
+        <p class="directory-description">Browse all surf spots with detailed information</p>
+      </div>
+      <div class="directory-content">
+        <ul class="spots-list">
+          {spots.map((spot) => (
+            <li class="spot-item">
+              <a href={`/maps/${spot.slug}`} class="spot-link">
+                <h3>{spot.data.title}</h3>
+                {spot.data.description && <p class="spot-excerpt">{spot.data.description}</p>}
+                <div class="spot-meta">
+                  <span class="skill-levels">
+                    {spot.data.skillLevels.map((level: string) => (
+                      <span class={`skill-badge skill-${level}`}>{level}</span>
+                    ))}
+                  </span>
+                  <span class="wave-type">{spot.data.waveType}</span>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
 </MapLayout>
 
  

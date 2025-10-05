@@ -1,5 +1,29 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { execSync } from 'child_process';
+
+// Fetch recent git commits during build
+let recentCommits: Array<{ hash: string; date: string; message: string }> = [];
+try {
+  const gitLog = execSync(
+    'git log -10 --pretty=format:"%h|%ai|%s"',
+    { encoding: 'utf-8' }
+  );
+  recentCommits = gitLog.split('\n').map(line => {
+    const [hash, date, message] = line.split('|');
+    return {
+      hash,
+      date: new Date(date).toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
+      }),
+      message
+    };
+  });
+} catch (error) {
+  console.warn('Could not fetch git log:', error);
+}
 ---
 
 <Layout title="Surf Deeper" description="Open source surfing guide for skills and spots. Community-driven knowledge for surfers of all levels.">
@@ -26,6 +50,20 @@ import Layout from '../layouts/Layout.astro';
     <div class="about-box">
       <p><strong>Free and open source</strong> — Built by surfers, for surfers. <a href="/contribute">Contribute your knowledge</a> to help others learn and progress.</p>
     </div>
+
+    {recentCommits.length > 0 && (
+      <div class="updates-section">
+        <h2>Recent Updates</h2>
+        <ul class="updates-list">
+          {recentCommits.map(commit => (
+            <li class="update-item">
+              <span class="update-date">{commit.date}</span>
+              <span class="update-message">{commit.message}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
   </section>
 </Layout>
 
@@ -122,5 +160,53 @@ import Layout from '../layouts/Layout.astro';
     color: #00ff88;
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+
+  .updates-section {
+    margin-top: 3rem;
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 8px;
+    padding: 2rem;
+  }
+
+  .updates-section h2 {
+    color: #00ff88;
+    font-size: 1.5rem;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+  }
+
+  .updates-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .update-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #334155;
+    align-items: baseline;
+  }
+
+  .update-item:last-child {
+    border-bottom: none;
+  }
+
+  .update-date {
+    color: #00ff88;
+    opacity: 0.7;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 100px;
+  }
+
+  .update-message {
+    color: #00ff88;
+    opacity: 0.9;
+    line-height: 1.5;
   }
 </style>

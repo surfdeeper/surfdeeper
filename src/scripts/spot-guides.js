@@ -163,10 +163,38 @@ function initMap() {
   map.setView([37.44, -122.36], 9);
 }
 
+function initViewToggle() {
+  const toggleBtn = document.getElementById('view-toggle');
+  const mapView = document.getElementById('map-view');
+  const directoryView = document.getElementById('directory-view');
+  
+  if (!toggleBtn || !mapView || !directoryView) return;
+  
+  toggleBtn.addEventListener('click', () => {
+    const isMapActive = mapView.classList.contains('active');
+    
+    if (isMapActive) {
+      // Switch to directory view
+      mapView.classList.remove('active');
+      directoryView.classList.add('active');
+      toggleBtn.classList.add('directory-active');
+    } else {
+      // Switch to map view
+      directoryView.classList.remove('active');
+      mapView.classList.add('active');
+      toggleBtn.classList.remove('directory-active');
+    }
+  });
+}
+
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   initMap();
+  initViewToggle();
 } else {
-  document.addEventListener('DOMContentLoaded', initMap);
+  document.addEventListener('DOMContentLoaded', () => {
+    initMap();
+    initViewToggle();
+  });
 }
 
 
