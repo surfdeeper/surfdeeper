@@ -1,0 +1,238 @@
+/* Component Examples - How to Use the Design System */
+
+/* 
+BEFORE: Hard-coded colors everywhere
+.my-card {
+  background-color: #132635;
+  border: 1px solid #febc08;
+  color: #999999;
+}
+
+AFTER: Using design tokens
+.my-card {
+  background-color: var(--color-surface-secondary);
+  border: 1px solid var(--color-border-accent);
+  color: var(--color-text-primary);
+}
+
+OR BETTER: Using component classes
+<div class="card">...</div>
+*/
+
+/* Example: Spot Guide Cards */
+.spot-card {
+  /* Instead of: background-color: #132635; */
+  background-color: var(--color-surface-secondary);
+  
+  /* Instead of: border: 1px solid #132635; */
+  border: 1px solid var(--color-border);
+  
+  border-radius: var(--radius-base);
+  padding: var(--space-6);
+  transition: border-color var(--transition-base);
+}
+
+.spot-card:hover {
+  border-color: var(--color-border-accent);
+  box-shadow: var(--shadow-primary);
+  transform: translateY(-2px);
+}
+
+.spot-card-title {
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.spot-card-excerpt {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  opacity: 0.9;
+  margin: 0 0 var(--space-4) 0;
+}
+
+/* Example: Modal Components */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  padding: var(--space-4);
+}
+
+.modal-dialog {
+  background-color: var(--color-surface-secondary);
+  border: 2px solid var(--color-border-accent);
+  border-radius: var(--radius-base);
+  padding: var(--space-8);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  color: var(--color-primary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.modal-body {
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-6);
+}
+
+.modal-footer {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: flex-end;
+}
+
+/* Example: Navigation Improvements */
+.nav-item-active {
+  color: var(--color-primary) !important;
+  position: relative;
+}
+
+.nav-item-active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+/* Example: Map Markers with Design System */
+.map-marker {
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border: 2px solid var(--color-surface-primary);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-base);
+  transition: all var(--transition-base);
+}
+
+.map-marker:hover {
+  background-color: var(--color-primary-hover);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-primary);
+}
+
+.map-marker-label {
+  background-color: var(--color-surface-primary);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  box-shadow: var(--shadow-base);
+}
+
+/* Example: Form Components */
+.form-field {
+  margin-bottom: var(--space-4);
+}
+
+.form-field label {
+  display: block;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-2);
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  transition: border-color var(--transition-base);
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(254, 188, 8, 0.1);
+}
+
+/* Example: Alert/Status Components */
+.alert {
+  padding: var(--space-4);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-4);
+  border-left: 4px solid;
+}
+
+.alert-info {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.alert-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border-left-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.alert-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  border-left-color: var(--color-warning);
+  color: var(--color-warning);
+}
+
+.alert-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-left-color: var(--color-error);
+  color: var(--color-error);
+}
+
+/* MIGRATION GUIDE:
+
+1. Replace hard-coded colors:
+   - #111a22 → var(--color-surface-primary)
+   - #132635 → var(--color-surface-secondary)
+   - #febc08 → var(--color-primary)
+   - #e0a607 → var(--color-primary-hover)
+   - #999999 → var(--color-text-primary)
+
+2. Replace hard-coded spacing:
+   - 4px → var(--space-1)
+   - 8px → var(--space-2)
+   - 16px → var(--space-4)
+   - 32px → var(--space-8)
+
+3. Replace hard-coded font sizes:
+   - 12px → var(--font-size-xs)
+   - 14px → var(--font-size-sm)
+   - 16px → var(--font-size-base)
+   - 24px → var(--font-size-2xl)
+
+4. Use component classes where possible:
+   - .card instead of custom card styles
+   - .btn-primary instead of custom button styles
+   - .heading instead of custom heading styles
+
+5. Import the design system in your layout:
+   <link rel="stylesheet" href="/src/styles/design-system.css" />
+*/

@@ -96,6 +96,7 @@ const imagesBySection = images.reduce((acc, img) => {
 <Layout 
   title="Gallery - Surf Deeper" 
   description="Visual guide to surfing concepts, wave types, and techniques. Explore diagrams and illustrations for better understanding."
+  fullWidth={true}
 >
   <div class="gallery-container">
     <header class="gallery-header">
@@ -164,30 +165,28 @@ const imagesBySection = images.reduce((acc, img) => {
 
 <style>
   .gallery-container {
-    max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem 1rem;
   }
 
   .gallery-header {
     text-align: center;
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--color-accent);
   }
 
   .gallery-header h1 {
-    color: #00ff88;
-    font-size: 2.5rem;
-    margin: 0 0 1rem 0;
-    font-weight: 700;
+    color: var(--color-accent);
+    font-size: var(--font-size-3xl);
+    margin: 0 0 var(--space-sm) 0;
+    font-weight: var(--font-weight-bold);
   }
 
   .gallery-intro {
-    color: #00ff88;
+    color: var(--color-text-secondary);
     opacity: 0.9;
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
     max-width: 700px;
     margin: 0 auto;
   }
@@ -199,32 +198,26 @@ const imagesBySection = images.reduce((acc, img) => {
 
   .no-images {
     text-align: center;
-    padding: 3rem 1rem;
-    color: #00ff88;
+    padding: var(--space-2xl) var(--space-sm);
+    color: var(--color-text-secondary);
     opacity: 0.8;
-    font-size: 1.1rem;
-  }
-
-  .no-images a {
-    color: #00ff88;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    font-size: var(--font-size-lg);
   }
 
   .gallery-category {
-    margin-bottom: 4rem;
+    margin-bottom: var(--space-3xl);
   }
 
   .category-title {
-    color: #00ff88;
-    font-size: 1.8rem;
-    margin: 0 0 1.5rem 0;
-    font-weight: 600;
-    padding-left: 0.5rem;
-    border-left: 4px solid #00ff88;
+    color: var(--color-accent);
+    font-size: var(--font-size-2xl);
+    margin: 0 0 var(--space-md) 0;
+    font-weight: var(--font-weight-semibold);
+    padding-left: var(--space-sm);
+    border-left: 4px solid var(--color-accent);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
   }
 
   .image-count {
@@ -236,21 +229,21 @@ const imagesBySection = images.reduce((acc, img) => {
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
   }
 
   @media (max-width: 768px) {
     .gallery-grid {
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: var(--space-md);
     }
   }
 
   .gallery-item {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    border-radius: 12px;
+    background-color: var(--color-surface-secondary);
+    border: 2px solid var(--color-surface-secondary);
+    border-radius: var(--border-radius-lg);
     overflow: hidden;
     transition: all 0.3s ease;
     display: flex;
@@ -265,20 +258,20 @@ const imagesBySection = images.reduce((acc, img) => {
   }
 
   .gallery-item:hover {
-    border-color: #00ff88;
+    border-color: var(--color-accent);
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.2);
+    box-shadow: 0 8px 24px rgba(254, 188, 8, 0.2);
   }
 
   .image-wrapper {
     width: 100%;
     height: 250px;
     overflow: hidden;
-    background-color: #0f172a;
+    background-color: var(--color-surface-primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
+    padding: var(--space-sm);
   }
 
   .image-wrapper img {
@@ -294,34 +287,34 @@ const imagesBySection = images.reduce((acc, img) => {
   }
 
   .image-details {
-    padding: 1.5rem;
+    padding: var(--space-md);
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--space-sm);
   }
 
   .image-caption {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-xs);
   }
 
   .image-context {
-    color: #00ff88;
-    font-size: 0.8rem;
+    color: var(--color-accent);
+    font-size: var(--font-size-xs);
     opacity: 0.6;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
   .image-title {
-    color: #00ff88;
-    font-size: 1.1rem;
+    color: var(--color-accent);
+    font-size: var(--font-size-lg);
     margin: 0;
-    font-weight: 600;
-    line-height: 1.4;
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
   }
 
   .image-meta {
@@ -331,19 +324,19 @@ const imagesBySection = images.reduce((acc, img) => {
   }
 
   .guide-reference {
-    color: #00ff88;
+    color: var(--color-text-secondary);
     opacity: 0.7;
-    font-size: 0.85rem;
+    font-size: var(--font-size-sm);
     font-style: italic;
   }
 
   .view-guide-hint {
-    color: #00ff88;
-    font-size: 0.9rem;
-    font-weight: 600;
+    color: var(--color-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--space-xs);
     opacity: 0.7;
     transition: opacity 0.3s ease;
     margin-top: auto;
@@ -354,42 +347,34 @@ const imagesBySection = images.reduce((acc, img) => {
   }
 
   .contribute-section {
-    margin-top: 4rem;
-    padding-top: 3rem;
-    border-top: 2px solid rgba(0, 255, 136, 0.3);
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-2xl);
+    border-top: 2px solid var(--color-accent);
   }
 
   .contribute-box {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    border: 2px solid #00ff88;
-    border-radius: 12px;
-    padding: 2rem;
+    background-color: var(--color-surface-secondary);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
     text-align: center;
     max-width: 700px;
     margin: 0 auto;
   }
 
   .contribute-box h3 {
-    color: #00ff88;
-    font-size: 1.5rem;
-    margin: 0 0 1rem 0;
-    font-weight: 600;
+    color: var(--color-accent);
+    font-size: var(--font-size-2xl);
+    margin: 0 0 var(--space-sm) 0;
+    font-weight: var(--font-weight-semibold);
   }
 
   .contribute-box p {
-    color: #00ff88;
+    color: var(--color-text-secondary);
     opacity: 0.9;
-    font-size: 1.05rem;
-    line-height: 1.6;
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
     margin: 0;
-  }
-
-  .contribute-box a {
-    color: #00ff88;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    font-weight: 600;
-    transition: opacity 0.2s ease;
   }
 
   .contribute-box a:hover {
@@ -398,19 +383,19 @@ const imagesBySection = images.reduce((acc, img) => {
 
   @media (max-width: 768px) {
     .gallery-header h1 {
-      font-size: 2rem;
+      font-size: var(--font-size-2xl);
     }
 
     .gallery-intro {
-      font-size: 1rem;
+      font-size: var(--font-size-base);
     }
 
     .category-title {
-      font-size: 1.5rem;
+      font-size: var(--font-size-xl);
     }
 
     .contribute-box {
-      padding: 1.5rem;
+      padding: var(--space-md);
     }
   }
 </style>

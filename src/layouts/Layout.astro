@@ -5,9 +5,10 @@ export interface Props {
   title: string;
   description?: string;
   editPath?: string;
+  fullWidth?: boolean;
 }
 
-const { title, description = "Surf deeper. Learn more. Share what you know.", editPath } = Astro.props;
+const { title, description = "Surf deeper. Learn more. Share what you know.", editPath, fullWidth = false } = Astro.props;
 
 // Only show edit links when editPath is explicitly provided
 const editBase = 'https://github.com/surfdeeper/surfdeeper/edit/main/';
@@ -31,6 +32,7 @@ const canonicalURL = `${Astro.site}${path}`;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/design-system.css" />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"></script>
@@ -45,7 +47,7 @@ const canonicalURL = `${Astro.site}${path}`;
   <body>
     <Navigation />
 
-    <main>
+    <main class={fullWidth ? 'full-width' : ''}>
       <slot />
     </main>
 
@@ -65,7 +67,7 @@ const canonicalURL = `${Astro.site}${path}`;
       </a>
     )}
 
-    <footer class="main-footer">
+    <footer class="footer">
       <div class="footer-container">
         <div class="footer-logo">
           <img src="/logo-v2.png" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
@@ -113,12 +115,6 @@ const canonicalURL = `${Astro.site}${path}`;
 
 <style>
   body {
-    font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    background-color: #111a22;
-    color: #999999;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
@@ -127,58 +123,40 @@ const canonicalURL = `${Astro.site}${path}`;
     flex: 1;
     max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: var(--space-lg);
     width: 100%;
     box-sizing: border-box;
   }
 
-  /* Global link styles (apply to slotted content) */
-  :global(a) {
-    color: #febc08;
-    text-decoration: underline;
-    text-decoration-color: #febc08;
-    text-underline-offset: 3px;
-    transition: color 0.3s ease;
-  }
-
-  :global(a:hover) {
-    color: #e0a607;
-    text-decoration-color: #febc08;
-  }
-
-  :global(a:visited) {
-    color: #febc08;
-  }
-
-  :global(a:focus-visible) {
-    outline: 2px dashed #febc08;
-    outline-offset: 2px;
-    border-radius: 2px;
+  /* Full width pages like guides, gallery */
+  main.full-width {
+    max-width: 1200px;
+    padding: var(--space-lg) var(--space-md);
   }
 
 
 
   /* Footer Styles */
   .main-footer {
-    background-color: #132635;
-    border-top: 2px solid #febc08;
+    background-color: var(--color-surface-secondary);
+    border-top: 2px solid var(--color-accent);
     margin-top: auto;
   }
 
   .footer-container {
-    max-width: 1200px;
+    max-width: var(--size-max-width);
     margin: 0 auto;
-    padding: 2rem;
+    padding: var(--space-lg);
   }
 
   .footer-logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    color: #febc08;
-    font-weight: 700;
-    font-size: 1.25rem;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    color: var(--color-accent);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
   }
 
   .footer-logo .image-logo {
@@ -190,14 +168,14 @@ const canonicalURL = `${Astro.site}${path}`;
   .footer-links {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
   }
 
   .footer-section h4 {
-    color: #febc08;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-lg);
   }
 
   .footer-section ul {
@@ -207,45 +185,45 @@ const canonicalURL = `${Astro.site}${path}`;
   }
 
   .footer-section li {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
   }
 
   .footer-section a {
-    color: #999999;
+    color: var(--color-text-primary);
     text-decoration: none;
     transition: color 0.3s ease;
   }
 
   .footer-section a:hover {
-    color: #febc08;
+    color: var(--color-accent);
   }
 
   .footer-disclaimer {
-    background-color: #111a22;
-    border: 2px solid #132635;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    background-color: var(--color-surface-primary);
+    border: 2px solid var(--color-surface-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
   }
 
   .footer-disclaimer h4 {
-    color: #febc08;
-    margin: 0 0 0.75rem 0;
-    font-size: 1rem;
+    color: var(--color-accent);
+    margin: 0 0 var(--space-sm) 0;
+    font-size: var(--font-size-base);
     text-align: center;
   }
 
   .footer-disclaimer p {
-    color: #999999;
+    color: var(--color-text-primary);
     margin: 0;
-    font-size: 0.8rem;
-    line-height: 1.6;
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-relaxed);
     text-align: center;
   }
 
   .footer-disclaimer strong {
-    color: #febc08;
-    font-weight: 700;
+    color: var(--color-accent);
+    font-weight: var(--font-weight-bold);
   }
 
   .footer-bottom {
