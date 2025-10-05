@@ -6,5 +6,5 @@ order: 2
 
 # Gear
 
-todo
+Everything you need to know about surfboards, wetsuits, and essential equipment.
 

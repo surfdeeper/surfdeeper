@@ -6,5 +6,5 @@ order: 4
 
 # Paddling
 
-todo
+Improve your paddling technique, build endurance, and protect your shoulders.
 

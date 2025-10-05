@@ -6,5 +6,5 @@ order: 6
 
 # Intermediate
 
-todo
+Level up your surfing with advanced maneuvers and lineup positioning strategies.
 

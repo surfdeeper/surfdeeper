@@ -6,5 +6,5 @@ order: 3
 
 # Foundations
 
-todo
+Build a solid base with essential ocean knowledge and surfing fundamentals.
 

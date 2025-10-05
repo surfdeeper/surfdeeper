@@ -6,5 +6,5 @@ order: 8
 
 # Techniques
 
-todo
+Detailed breakdowns of specific surfing techniques and mechanics.
 

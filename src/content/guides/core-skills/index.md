@@ -6,5 +6,5 @@ order: 5
 
 # Core Skills
 
-todo
+Master the fundamental techniques that form the foundation of modern surfing.
 
