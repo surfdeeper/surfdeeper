@@ -20,6 +20,8 @@ Spirals are nature’s way of channeling energy efficiently. Waves curl, roll, a
 
 Perfect for beginners and for understanding gradual energy release.
 
+![Spilling wave diagram showing the energy release pattern](/spilling-wave.png)
+
 ## Plunging Waves
 **Description:** waves that curl sharply, creating a “tube” before crashing
 
