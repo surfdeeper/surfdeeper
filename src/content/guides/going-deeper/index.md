@@ -7,4 +7,3 @@ order: 7
 # Going Deeper
 
 Explore advanced concepts in wave selection, board design, and performance optimization.
-

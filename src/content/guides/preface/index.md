@@ -7,4 +7,3 @@ order: 1
 # Preface
 
 Start your surfing journey with essential safety knowledge and swimming fundamentals.
-

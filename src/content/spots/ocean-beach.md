@@ -3,7 +3,7 @@ title: Ocean Beach, San Francisco
 description: Powerful San Francisco beach break, advanced surfers only
 latitude: 37.7598
 longitude: -122.5109
-skillLevels: ['advanced']
+skillLevels: ["advanced"]
 waveType: Beach break
 bottom: Sand
 bestSize: 4-8 feet
@@ -11,7 +11,14 @@ bestTide: Mid
 bestWind: E offshore
 bestSeason: Year-round
 swellDirection: W-NW
-hazards: ['Strong rip currents', 'Great white sharks', 'Cold water (50-55°F)', 'Heavy closeouts', 'Water quality issues after rain']
+hazards:
+  [
+    "Strong rip currents",
+    "Great white sharks",
+    "Cold water (50-55°F)",
+    "Heavy closeouts",
+    "Water quality issues after rain",
+  ]
 parking: Multiple parking areas along Great Highway (free)
 facilities: Limited facilities
 ---

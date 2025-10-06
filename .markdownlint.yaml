@@ -1,0 +1,46 @@
+# Markdownlint configuration for SurfDeeper
+# This file defines rules for checking Markdown formatting consistency
+
+# Enable all default rules as baseline
+default: true
+
+# MD003: Header style - enforce ATX-style headers (# ## ###)
+MD003:
+  style: atx
+
+# MD007: Unordered list indentation - use 2 spaces for nested lists
+MD007:
+  indent: 2
+
+# MD013: Line length - DISABLED (no line length limit)
+# Allows long lines in our surf guides
+MD013: false
+
+# MD024: Multiple headers with same content - DISABLED
+# Allows duplicate headers (common in guides with similar sections)
+MD024: false
+
+# MD025: Multiple top-level headers - DISABLED
+# Allows multiple H1 headers (content has frontmatter title + H1)
+MD025: false
+
+# MD033: Inline HTML - allow specific HTML tags
+# Permits img, br, details, summary tags for enhanced content
+MD033:
+  allowed_elements:
+    - img
+    - br
+    - details
+    - summary
+
+# MD034: Bare URLs - DISABLED
+# Allows plain URLs without link formatting
+MD034: false
+
+# MD036: Emphasis used instead of header - DISABLED
+# Allows bold/italic text that might look like headers
+MD036: false
+
+# MD041: First line in file should be top-level header - DISABLED
+# Files don't need to start with a header
+MD041: false

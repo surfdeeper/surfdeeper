@@ -1,18 +1,34 @@
 ---
-import MapLayout from '../layouts/MapLayout.astro';
-import { getCollection } from 'astro:content';
-import { serializeSpots } from '../utils/spot-data';
+import MapLayout from "../layouts/MapLayout.astro";
+import { getCollection } from "astro:content";
+import { serializeSpots } from "../utils/spot-data";
 
-import '../styles/spot-guides.css';
+import "../styles/spot-guides.css";
 
-const spots = await getCollection('spots');
+const spots = await getCollection("spots");
 const serializedSpots = serializeSpots(spots);
 ---
 
-<MapLayout title="Spots - Surf Deeper" description="Discover surf spots with maps, local insights, tide charts, and hazards contributed by the community.">
-  <button id="view-toggle" class="view-toggle" aria-label="Toggle between map and directory">
+<MapLayout
+  title="Spots - Surf Deeper"
+  description="Discover surf spots with maps, local insights, tide charts, and hazards contributed by the community."
+>
+  <button
+    id="view-toggle"
+    class="view-toggle"
+    aria-label="Toggle between map and directory"
+  >
     <span class="toggle-icon" id="toggle-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -28,76 +44,111 @@ const serializedSpots = serializeSpots(spots);
     <div class="directory-container">
       <div class="directory-header">
         <h1>Surf Spots Directory</h1>
-        <p class="directory-description">Browse all surf spots with detailed information</p>
+        <p class="directory-description">
+          Browse all surf spots with detailed information
+        </p>
       </div>
       <div class="directory-content">
         <ul class="spots-list">
-          {spots.map((spot) => (
-            <li class="spot-item">
-              <a href={`/spots/${spot.slug}`} class="spot-link">
-                <h3>{spot.data.title}</h3>
-                {spot.data.description && <p class="spot-excerpt">{spot.data.description}</p>}
-                <div class="spot-meta">
-                  <span class="skill-levels">
-                    {spot.data.skillLevels.map((level: string) => (
-                      <span class={`skill-badge skill-${level}`}>{level}</span>
-                    ))}
-                  </span>
-                  <span class="wave-type">{spot.data.waveType}</span>
-                </div>
-              </a>
-            </li>
-          ))}
+          {
+            spots.map((spot) => (
+              <li class="spot-item">
+                <a href={`/spots/${spot.slug}`} class="spot-link">
+                  <h3>{spot.data.title}</h3>
+                  {spot.data.description && (
+                    <p class="spot-excerpt">{spot.data.description}</p>
+                  )}
+                  <div class="spot-meta">
+                    <span class="skill-levels">
+                      {spot.data.skillLevels.map((level: string) => (
+                        <span class={`skill-badge skill-${level}`}>
+                          {level}
+                        </span>
+                      ))}
+                    </span>
+                    <span class="wave-type">{spot.data.waveType}</span>
+                  </div>
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </div>
   </div>
 </MapLayout>
 
- 
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  crossorigin=""
+/>
+<script
+  is:inline
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  crossorigin=""
+  defer></script>
 
 <script
   type="application/json"
   id="spots-data"
   set:html={JSON.stringify(serializedSpots)}
-></script>
+/>
 
 <script>
-  import { MAP_DEFAULTS, DEFAULT_THEME_FULL_MAP } from '../config/map-constants';
-  import { createBaseMap, waitForLeaflet, getStoredTheme } from '../utils/leaflet-setup';
-  import { getSpotsDataFromElement } from '../utils/spot-data';
-  import { createPopupContent, showContributionInstructions, setupMarkerInteractions } from '../scripts/spot-guides-helpers';
-  import { getTheme, addThemeSwitcherToMap } from '../utils/map-theme-switcher';
+  import {
+    MAP_DEFAULTS,
+    DEFAULT_THEME_FULL_MAP,
+  } from "../config/map-constants";
+  import {
+    createBaseMap,
+    waitForLeaflet,
+    getStoredTheme,
+  } from "../utils/leaflet-setup";
+  import { getSpotsDataFromElement } from "../utils/spot-data";
+  import {
+    createPopupContent,
+    showContributionInstructions,
+    setupMarkerInteractions,
+  } from "../scripts/spot-guides-helpers";
+  import { getTheme, addThemeSwitcherToMap } from "../utils/map-theme-switcher";
 
   function initMap() {
     waitForLeaflet(() => {
-      const spots = getSpotsDataFromElement('spots-data');
-      
+      const spots = getSpotsDataFromElement("spots-data");
+
       // Get the user's preferred theme or use default
       const currentThemeId = getStoredTheme(DEFAULT_THEME_FULL_MAP);
       const theme = getTheme(currentThemeId, DEFAULT_THEME_FULL_MAP);
-      
-      const map = createBaseMap('map', MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM, theme);
+
+      const map = createBaseMap(
+        "map",
+        MAP_DEFAULTS.CENTER,
+        MAP_DEFAULTS.ZOOM,
+        theme,
+      );
       if (!map) return;
 
       // Add theme switcher control
-      addThemeSwitcherToMap(map, DEFAULT_THEME_FULL_MAP, 'topright');
+      addThemeSwitcherToMap(map, DEFAULT_THEME_FULL_MAP, "topright");
 
       const L = (window as any).L;
-      
+
       // Sort spots alphabetically for consistent numbering
-      const sortedSpots = [...spots].sort((a, b) => a.title.localeCompare(b.title));
-      
+      const sortedSpots = [...spots].sort((a, b) =>
+        a.title.localeCompare(b.title),
+      );
+
       sortedSpots.forEach((spot, index) => {
-        if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
+        if (
+          typeof spot.latitude === "number" &&
+          typeof spot.longitude === "number"
+        ) {
           const spotNumber = index + 1;
-          
+
           // Create numbered marker with floating label
           const icon = L.divIcon({
-            className: 'numbered-marker-with-label',
+            className: "numbered-marker-with-label",
             html: `
               <div class="marker-with-label">
                 <div class="marker-badge">${spotNumber}</div>
@@ -107,47 +158,57 @@ const serializedSpots = serializeSpots(spots);
             `,
             iconSize: [null, null],
             iconAnchor: [18, 32],
-            popupAnchor: [0, -32]
+            popupAnchor: [0, -32],
           });
-          
-          const marker = L.marker([spot.latitude, spot.longitude], { icon }).addTo(map);
+
+          const marker = L.marker([spot.latitude, spot.longitude], {
+            icon,
+          }).addTo(map);
           const popup = createPopupContent(spot, marker, false);
           marker.bindPopup(popup);
           marker.spotData = spot;
           marker.spotNumber = spotNumber;
-          setupMarkerInteractions(marker, spot, createPopupContent, showContributionInstructions);
+          setupMarkerInteractions(
+            marker,
+            spot,
+            createPopupContent,
+            showContributionInstructions,
+          );
         }
       });
     });
   }
 
   function initViewToggle() {
-    const toggleBtn = document.getElementById('view-toggle');
-    const mapView = document.getElementById('map-view');
-    const directoryView = document.getElementById('directory-view');
-    
+    const toggleBtn = document.getElementById("view-toggle");
+    const mapView = document.getElementById("map-view");
+    const directoryView = document.getElementById("directory-view");
+
     if (!toggleBtn || !mapView || !directoryView) return;
-    
-    toggleBtn.addEventListener('click', () => {
-      const isMapActive = mapView.classList.contains('active');
-      
+
+    toggleBtn.addEventListener("click", () => {
+      const isMapActive = mapView.classList.contains("active");
+
       if (isMapActive) {
-        mapView.classList.remove('active');
-        directoryView.classList.add('active');
-        toggleBtn.classList.add('directory-active');
+        mapView.classList.remove("active");
+        directoryView.classList.add("active");
+        toggleBtn.classList.add("directory-active");
       } else {
-        directoryView.classList.remove('active');
-        mapView.classList.add('active');
-        toggleBtn.classList.remove('directory-active');
+        directoryView.classList.remove("active");
+        mapView.classList.add("active");
+        toggleBtn.classList.remove("directory-active");
       }
     });
   }
 
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  if (
+    document.readyState === "complete" ||
+    document.readyState === "interactive"
+  ) {
     initMap();
     initViewToggle();
   } else {
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", () => {
       initMap();
       initViewToggle();
     });
@@ -179,7 +240,7 @@ const serializedSpots = serializeSpots(spots);
     justify-content: center;
     font-weight: var(--font-weight-bold);
     font-size: var(--font-size-xs);
-  box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm);
     border: 2px solid var(--color-surface-primary);
     transition: all 0.2s ease;
     flex-shrink: 0;
@@ -194,8 +255,8 @@ const serializedSpots = serializeSpots(spots);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
     white-space: nowrap;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid #febc0866;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #febc0866;
     backdrop-filter: blur(4px);
     z-index: var(--z-1);
   }
@@ -209,7 +270,7 @@ const serializedSpots = serializeSpots(spots);
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-top: 6px solid var(--color-surface-primary);
-  z-index: var(--z-2);
+    z-index: var(--z-2);
   }
 
   :global(.numbered-marker-with-label:hover .marker-badge) {
@@ -245,5 +306,3 @@ const serializedSpots = serializeSpots(spots);
     }
   }
 </style>
-
-

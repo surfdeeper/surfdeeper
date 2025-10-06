@@ -7,19 +7,21 @@ order: 1
 # Surf Gear Basics: What You Actually Need
 
 ## Wetsuits
+
 - Thickness by water temperature
 - Fit tips and flexibility
 
 ## Leashes
+
 - Length/thickness by board type
 - Inspect for wear regularly
 
 ## Wax & Traction
+
 - How to wax properly
 - Alternatives: traction pads, spray-on
 
 ## Boards for Beginners
+
 - Soft-top vs fiberglass
 - Longboard vs funboard
-
-

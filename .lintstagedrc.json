@@ -1,0 +1,9 @@
+{
+  "*.md": [
+    "prettier --write",
+    "node scripts/validate-links.js",
+    "markdownlint --fix"
+  ],
+  "*.{js,json}": ["prettier --write"],
+  "*.astro": ["prettier --write"]
+}
