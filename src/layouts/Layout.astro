@@ -1,5 +1,5 @@
 ---
-import Navigation from '../components/Navigation.astro';
+import Navigation from "../components/Navigation.astro";
 
 export interface Props {
   title: string;
@@ -8,19 +8,25 @@ export interface Props {
   fullWidth?: boolean;
 }
 
-const { title, description = "Surf deeper. Learn more. Share what you know.", editPath, fullWidth = false } = Astro.props;
+const {
+  title,
+  description = "Surf deeper. Learn more. Share what you know.",
+  editPath,
+  fullWidth = false,
+} = Astro.props;
 
 // Only show edit links when editPath is explicitly provided
-const editBase = 'https://github.com/surfdeeper/surfdeeper/edit/main/';
+const editBase = "https://github.com/surfdeeper/surfdeeper/edit/main/";
 const editUrl = editPath ? editBase + editPath : null;
 
 // Canonical URL - ensures Google knows the preferred URL
 // Build it explicitly to avoid any issues with www subdomain
-const path = Astro.url.pathname === '/' ? '' : Astro.url.pathname.replace(/\/$/, '');
+const path =
+  Astro.url.pathname === "/" ? "" : Astro.url.pathname.replace(/\/$/, "");
 const canonicalURL = `${Astro.site}${path}`;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -31,46 +37,71 @@ const canonicalURL = `${Astro.site}${path}`;
     <link rel="canonical" href={canonicalURL} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/src/styles/design-system.css" />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"
+    ></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'G-4EL168HRYZ');
+      gtag("config", "G-4EL168HRYZ");
     </script>
   </head>
   <body>
     <Navigation />
 
-    <main class={fullWidth ? 'full-width' : ''}>
+    <main class={fullWidth ? "full-width" : ""}>
       <slot />
     </main>
 
-    {editUrl && (
-      <a 
-        class="edit-page-button" 
-        href={editUrl} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        aria-label="Edit this page on GitHub"
-        title="Edit this page"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
-      </a>
-    )}
+    {
+      editUrl && (
+        <a
+          class="edit-page-button"
+          href={editUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Edit this page on GitHub"
+          title="Edit this page"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+        </a>
+      )
+    }
 
     <footer class="footer">
       <div class="footer-container">
         <div class="footer-logo">
-          <img src="/logo-v2.png" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
+          <img
+            src="/logo-v2.png"
+            alt="SurfDeeper logo"
+            class="image-logo"
+            width="180"
+            height="108"
+            onerror="this.onerror=null;this.src='/favicon.svg';"
+          />
           <span>Surf Deeper</span>
         </div>
         <div class="footer-links">
@@ -96,13 +127,16 @@ const canonicalURL = `${Astro.site}${path}`;
         <div class="footer-disclaimer">
           <h4>⚠️ Disclaimer</h4>
           <p>
-            <strong>FOR ENTERTAINMENT AND INFORMATIONAL PURPOSES ONLY.</strong> 
-            Surfing is an inherently dangerous activity that carries significant risk of injury or death. 
-            Before attempting any surfing activity, consult with your physician and ensure you are in proper physical condition. 
-            All activities should be performed under adult supervision and guidance from qualified experts. 
-            By using this website, you acknowledge that you assume all risks and waive any claims against Surf Deeper, 
-            its contributors, and affiliates for any injuries, damages, or losses that may occur. 
-            This website provides no warranties or guarantees of any kind. Use at your own risk.
+            <strong>FOR ENTERTAINMENT AND INFORMATIONAL PURPOSES ONLY.</strong>
+            Surfing is an inherently dangerous activity that carries significant
+            risk of injury or death. Before attempting any surfing activity, consult
+            with your physician and ensure you are in proper physical condition.
+            All activities should be performed under adult supervision and guidance
+            from qualified experts. By using this website, you acknowledge that you
+            assume all risks and waive any claims against Surf Deeper, its contributors,
+            and affiliates for any injuries, damages, or losses that may occur. This
+            website provides no warranties or guarantees of any kind. Use at your
+            own risk.
           </p>
         </div>
         <div class="footer-bottom">
@@ -133,8 +167,6 @@ const canonicalURL = `${Astro.site}${path}`;
     max-width: 1200px;
     padding: var(--space-lg) var(--space-md);
   }
-
-
 
   /* Footer Styles */
   .main-footer {

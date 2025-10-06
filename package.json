@@ -8,12 +8,28 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint:css": "stylelint \"src/**/*.{css,astro}\""
+    "lint:css": "stylelint \"src/**/*.{css,astro}\"",
+    "typecheck": "astro check",
+    "lint:links": "node scripts/validate-links.js",
+    "lint:md": "markdownlint src/content/**/*.md",
+    "lint": "npm run lint:links && npm run lint:md",
+    "fix:md": "markdownlint --fix src/content/**/*.md",
+    "fix": "npm run fix:md",
+    "format": "prettier --write \"**/*.{md,js,json}\" && prettier --write \"**/*.astro\"",
+    "format:check": "prettier --check \"**/*.{md,js,json}\" && prettier --check \"**/*.astro\"",
+    "precommit": "npm run lint"
   },
   "dependencies": {
-    "astro": "^4.0.0"
+    "@astrojs/check": "^0.9.4",
+    "astro": "^4.0.0",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.0",
+    "markdownlint-cli": "^0.37.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-astro": "^0.12.0",
     "postcss-html": "^1.7.0",
     "stylelint": "^16.9.0",
     "stylelint-config-standard": "^36.0.1",
