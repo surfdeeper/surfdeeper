@@ -1,0 +1,92 @@
+---
+interface Props {
+  recentCommits: Array<{
+    message: string;
+    url: string;
+    isoDate: string;
+  }>;
+}
+
+const { recentCommits } = Astro.props;
+---
+
+{
+  recentCommits.length > 0 && (
+    <div class="card updates-section">
+      <h3>🔨 Recent Commits</h3>
+      <ul class="updates-list">
+        {recentCommits.slice(0, 3).map((commit) => (
+          <li class="update-item">
+            <a
+              href={commit.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="update-link commit-link"
+            >
+              {commit.message.length > 60
+                ? commit.message.substring(0, 60) + "..."
+                : commit.message}
+            </a>
+            <span class="update-date">
+              {new Date(commit.isoDate).toLocaleString("en-US", {
+                timeZone: "America/Los_Angeles",
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+                timeZoneName: "short",
+              })}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  /* Lists - styling for updates */
+  .updates-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .update-item {
+    margin-bottom: 0.75rem;
+  }
+
+  .update-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .update-link {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+    display: block;
+  }
+
+  .update-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .commit-link {
+    font-size: var(--font-size-0-85);
+    color: var(--color-text-primary);
+    opacity: 0.8;
+  }
+
+  .update-date {
+    color: var(--color-text-primary);
+    opacity: 0.5;
+    font-size: var(--font-size-0-7);
+    margin-top: 0.25rem;
+  }
+</style>

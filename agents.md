@@ -1,4 +1,4 @@
-Always run nvm use / match node version to .nvmrc
+Always run nvm use / match node version to .nvmrc always run `npm run lint`, fix any errors, and format the code.
 
 # AI Agent Instructions for SurfDeeper
 

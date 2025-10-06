@@ -1,4 +1,9 @@
 ---
+import AboutWidget from "./widgets/AboutWidget.astro";
+import SurfWisdomWidget from "./widgets/SurfWisdomWidget.astro";
+import RecentUpdatesWidget from "./widgets/RecentUpdatesWidget.astro";
+import RecentCommitsWidget from "./widgets/RecentCommitsWidget.astro";
+
 interface Props {
   recentlyUpdated: Array<{
     title: string;
@@ -17,90 +22,10 @@ const { recentlyUpdated, recentCommits } = Astro.props;
 ---
 
 <aside class="right-sidebar">
-  <div class="card">
-    <h3>💡 About</h3>
-    <p class="about-text">
-      <strong>Free and open source</strong> — Built by surfers, for surfers.
-      <a href="/contribute">Contribute your knowledge</a> to help others learn and
-      progress.
-    </p>
-  </div>
-
-  <div class="card surf-wisdom">
-    <h3>🧘 Surf Wisdom</h3>
-    <p class="wisdom-quote">
-      "The best surfer out there is the one having the most fun."
-    </p>
-    <p class="wisdom-quote">
-      "You can't stop the waves, but you can learn to surf."
-    </p>
-  </div>
-
-  {
-    recentlyUpdated.length > 0 && (
-      <div class="card updates-section">
-        <h3>📝 Recently Updated</h3>
-        <ul class="updates-list">
-          {recentlyUpdated.slice(0, 4).map((page) => (
-            <li class="update-item">
-              <a href={page.url} class="update-link">
-                <span class="page-hierarchy">{page.hierarchy}</span>
-                <span class="page-title">{page.title}</span>
-              </a>
-              <span class="update-date">
-                {new Date(page.date).toLocaleString("en-US", {
-                  timeZone: "America/Los_Angeles",
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                  timeZoneName: "short",
-                })}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
-
-  {
-    recentCommits.length > 0 && (
-      <div class="card updates-section">
-        <h3>🔨 Recent Commits</h3>
-        <ul class="updates-list">
-          {recentCommits.slice(0, 3).map((commit) => (
-            <li class="update-item">
-              <a
-                href={commit.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="update-link commit-link"
-              >
-                {commit.message.length > 60
-                  ? commit.message.substring(0, 60) + "..."
-                  : commit.message}
-              </a>
-              <span class="update-date">
-                {new Date(commit.isoDate).toLocaleString("en-US", {
-                  timeZone: "America/Los_Angeles",
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                  timeZoneName: "short",
-                })}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
+  <AboutWidget />
+  <SurfWisdomWidget />
+  <RecentUpdatesWidget recentlyUpdated={recentlyUpdated} />
+  <RecentCommitsWidget recentCommits={recentCommits} />
 </aside>
 
 <style>
@@ -114,84 +39,5 @@ const { recentlyUpdated, recentCommits } = Astro.props;
       display: block;
       order: 3;
     }
-  }
-
-  .about-text {
-    color: var(--color-text-primary);
-    opacity: 0.9;
-    font-size: var(--font-size-sm);
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  .about-text a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  /* Lists - styling for updates */
-  .updates-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .update-item {
-    margin-bottom: 0.75rem;
-  }
-
-  .update-item:last-child {
-    margin-bottom: 0;
-  }
-
-  .update-link {
-    color: var(--color-text-primary);
-    text-decoration: none;
-    font-size: var(--font-size-sm);
-    opacity: 0.8;
-    transition: opacity var(--transition-fast);
-    display: block;
-  }
-
-  .update-link:hover {
-    opacity: 1;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  /* Update metadata */
-  .page-hierarchy {
-    font-size: var(--font-size-0-7);
-    opacity: 0.6;
-    color: var(--color-text-primary);
-  }
-
-  .page-title,
-  .commit-link {
-    font-size: var(--font-size-0-85);
-    color: var(--color-text-primary);
-    opacity: 0.8;
-  }
-
-  .update-date {
-    color: var(--color-text-primary);
-    opacity: 0.5;
-    font-size: var(--font-size-0-7);
-    margin-top: 0.25rem;
-  }
-
-  /* Wisdom quotes */
-  .wisdom-quote {
-    color: var(--color-text-primary);
-    opacity: 0.8;
-    font-size: var(--font-size-0-85);
-    font-style: italic;
-    line-height: 1.4;
-    margin-bottom: 0.5rem;
-  }
-
-  .wisdom-quote:last-child {
-    margin-bottom: 0;
   }
 </style>
