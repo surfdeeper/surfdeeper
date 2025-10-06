@@ -43,28 +43,47 @@ const { section } = Astro.props;
     display: none;
   }
 
+  /* Sidebar links: neutral text color with subtle hover */
+  .section-link,
+  .nested-links a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+    display: block;
+  }
+
+  .section-link:hover,
+  .nested-links a:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Preserve neutral color for visited state */
+  .section-link:visited,
+  .nested-links a:visited {
+    color: var(--color-text-primary);
+  }
+
   @media (min-width: 1200px) {
     .nested-links {
       display: block;
       list-style: none;
       padding: 0;
-      margin: 0.5rem 0 0 1rem;
+      margin: var(--space-2) 0 0 var(--space-4);
     }
 
     .nested-links li {
-      margin-bottom: 0.5rem;
-    }
-
-    .nested-links a {
-      font-size: var(--font-size-0-8);
-      opacity: 0.7;
+      margin-bottom: var(--space-2);
     }
 
     .nested-links .coming-soon-items {
       color: var(--color-accent);
       font-style: italic;
       opacity: 0.6;
-      font-size: var(--font-size-0-75);
+      font-size: var(--font-size-xs);
     }
   }
 </style>
