@@ -5,7 +5,12 @@
  * Approach: lowercase and strip all non a-z characters; if the result equals
  * "todo", then the content is considered a placeholder.
  */
-export function isPlaceholderTodo(markdown: string | undefined | null): boolean {
-  const normalized = (markdown ?? "").toLowerCase().replace(/[^a-z]/g, "").trim();
-  return  normalized === "todo" || normalized == 'comingsoon';
+export function isPlaceholderTodo(
+  markdown: string | undefined | null,
+): boolean {
+  const normalized = (markdown ?? "")
+    .toLowerCase()
+    .replace(/[^a-z]/g, "")
+    .trim();
+  return normalized === "todo" || normalized == "comingsoon";
 }

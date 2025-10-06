@@ -172,5 +172,11 @@ export async function loadHomepageData() {
     console.warn("Could not fetch recently updated pages:", error);
   }
 
-  return { spots, guidesBySection, comingSoonCountBySection, recentCommits, recentlyUpdated };
+  return {
+    spots,
+    guidesBySection,
+    comingSoonCountBySection,
+    recentCommits,
+    recentlyUpdated,
+  };
 }
