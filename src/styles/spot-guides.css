@@ -3,7 +3,7 @@
   position: fixed;
   bottom: var(--space-lg);
   right: var(--space-lg);
-  z-index: 1000;
+  z-index: var(--z-dropdown);
   background-color: var(--color-accent);
   color: var(--color-surface-primary);
   border: none;
@@ -15,13 +15,13 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(254, 188, 8, 0.4);
+  box-shadow: var(--shadow-primary);
 }
 
 .view-toggle:hover {
   background-color: var(--color-accent-hover);
   transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(254, 188, 8, 0.5);
+  box-shadow: var(--shadow-lg);
 }
 
 .view-toggle:active {
@@ -44,10 +44,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
 }
 
 .map-view.active {
@@ -58,10 +55,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: var(--color-surface-primary);
 }
 
@@ -71,10 +65,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: var(--color-surface-primary);
   overflow-y: auto;
 }
@@ -136,7 +127,7 @@
 
 .spot-item:hover {
   border-color: var(--color-accent);
-  box-shadow: 0 4px 12px rgba(254, 188, 8, 0.2);
+  box-shadow: var(--shadow-base);
   transform: translateY(-2px);
 }
 
@@ -184,18 +175,18 @@
 }
 
 .skill-beginner {
-  background: #d4edda;
-  color: #155724;
+  background: var(--color-mint-light);
+  color: var(--color-state-success-text);
 }
 
 .skill-intermediate {
   background: #fff3cd;
-  color: #856404;
+  color: var(--color-state-warning-text);
 }
 
 .skill-advanced {
   background: #f8d7da;
-  color: #721c24;
+  color: var(--color-state-danger-text);
 }
 
 .wave-type {
@@ -243,7 +234,7 @@
 .popup-actions {
   margin-top: var(--space-sm);
   padding-top: var(--space-sm);
-  border-top: 1px solid rgba(254, 188, 8, 0.2);
+  border-top: 1px solid #febc0833;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
@@ -284,7 +275,7 @@
 .coordinates {
   margin-top: var(--space-sm);
   padding: var(--space-sm);
-  background-color: rgba(254, 188, 8, 0.1);
+  background-color: var(--bg-accent-weak);
   border-radius: var(--border-radius-md);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
@@ -313,11 +304,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--overlay-scrim);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: var(--z-overlay-max);
   padding: var(--space-sm);
 }
 

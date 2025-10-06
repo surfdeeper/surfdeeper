@@ -48,11 +48,11 @@
   letter-spacing: 0.02em;
 }
 
-.marquee span a {
+.homepage-wrapper :where(.marquee span a) {
   transition: opacity 0.2s ease;
 }
 
-.marquee span a:hover {
+.homepage-wrapper :where(.marquee span a:hover) {
   opacity: 0.8;
 }
 
@@ -118,12 +118,7 @@
   }
 }
 
-/* Content sections - clean minimal styling */
-.sidebar-section,
-.about-box {
-  border-left: 2px solid var(--color-border);
-  padding: var(--space-4) 0 var(--space-4) var(--space-4);
-}
+/* duplicate cleaned above */
 
 .sidebar-section h3 {
   color: var(--color-accent);
@@ -229,21 +224,21 @@
   }
 
   .nested-links a {
-    font-size: var(--font-size-0_8);
+    font-size: var(--font-size-0-8);
     opacity: 0.7;
   }
 }
 
 /* Update metadata */
 .page-hierarchy {
-  font-size: var(--font-size-0_7);
+  font-size: var(--font-size-0-7);
   opacity: 0.6;
   color: var(--color-text-primary);
 }
 
 .page-title,
 .commit-link {
-  font-size: var(--font-size-0_85);
+  font-size: var(--font-size-0-85);
   color: var(--color-text-primary);
   opacity: 0.8;
 }
@@ -251,7 +246,7 @@
 .update-date {
   color: var(--color-text-primary);
   opacity: 0.5;
-  font-size: var(--font-size-0_7);
+  font-size: var(--font-size-0-7);
   margin-top: 0.25rem;
 }
 
@@ -259,7 +254,7 @@
 .wisdom-quote {
   color: var(--color-text-primary);
   opacity: 0.8;
-  font-size: var(--font-size-0_85);
+  font-size: var(--font-size-0-85);
   font-style: italic;
   line-height: 1.4;
   margin-bottom: 0.5rem;
@@ -296,7 +291,7 @@
 }
 
 :global(.marker-label-homepage) {
-  background: rgba(17, 26, 34, 0.9);
+  background: #111a22e6;
   color: var(--color-accent);
   padding: 4px 8px;
   border-radius: 3px;

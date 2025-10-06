@@ -5,15 +5,12 @@
   /* Color Palette */
   --color-primary: #febc08;          /* Golden yellow - main accent */
   --color-primary-hover: #e0a607;    /* Darker yellow for hover states */
-  
   --color-surface-primary: #111a22;   /* Dark blue - main backgrounds */
   --color-surface-secondary: #132635; /* Lighter blue - cards, elevated surfaces */
   --color-surface-tertiary: #1a2332;  /* Even lighter - subtle variations */
-  
   --color-text-primary: #999;      /* Main text color */
   --color-text-secondary: #666;    /* Muted text */
   --color-text-on-primary: #111a22;   /* Text on primary color backgrounds */
-  
   --color-border: #132635;            /* Default borders */
   --color-border-accent: var(--color-primary); /* Accent borders */
   
@@ -22,8 +19,10 @@
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-info: #3b82f6;
+
   /* Additional semantic colors used across pages */
   --color-accent-green: #0f8; /* #00ff88 */
+  --color-accent-green-hover: #0c6; /* #00cc66 */
   --color-surface-deep: #0f172a;
   --color-surface-dark: #1e293b;
   --color-text-muted: #94a3b8;
@@ -33,11 +32,21 @@
   --color-state-success-text: #155724;
   --color-state-warning-text: #856404;
   --color-state-danger-text: #721c24;
+  --color-mint-light: #d1fae5;
+
+  /* Weak/translucent backgrounds */
+  --bg-accent-weak: #febc081a;
+  --bg-info-weak: #3b82f61a;
+  --bg-success-weak: #22c55e1a;
+  --bg-warning-weak: #f59e0b1a;
+  --bg-error-weak: #ef44441a;
+
+  /* Overlay / Scrims */
+  --overlay-scrim: #000c; /* 80% black */
   
   /* Typography Scale */
   --font-family-primary: 'Roboto', sans-serif;
   --font-family-mono: 'Roboto Mono', monospace;
-  
   --font-size-xs: 0.75rem;   /* 12px */
   --font-size-sm: 0.875rem;  /* 14px */
   --font-size-base: 1rem;    /* 16px */
@@ -46,17 +55,16 @@
   --font-size-2xl: 1.5rem;   /* 24px */
   --font-size-3xl: 2rem;     /* 32px */
   --font-size-4xl: 2.5rem;   /* 40px */
+
   /* Extended sizes to satisfy existing design */
-  --font-size-0_7: 0.7rem;
-  --font-size-0_8: 0.8rem;
-  --font-size-0_85: 0.85rem;
-  --font-size-0_9: 0.9rem;
-  --font-size-0_95: 0.95rem;
-  --font-size-1_1: 1.1rem;
-  --font-size-1_2: 1.2rem;
-  --font-size-1_75: 1.75rem;
-  --font-size-2_5: 2.5rem; /* alias for consistency */
-  
+  --font-size-0-7: 0.7rem;
+  --font-size-0-8: 0.8rem;
+  --font-size-0-85: 0.85rem;
+  --font-size-0-9: 0.9rem;
+  --font-size-0-95: 0.95rem;
+  --font-size-1-1: 1.1rem;
+  --font-size-1-2: 1.2rem;
+  --font-size-1-75: 1.75rem;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -83,8 +91,11 @@
   /* Shadows */
   --shadow-sm: 0 1px 2px #0000001a; /* 10% */
   --shadow-base: 0 4px 12px #0000004d; /* 30% */
-  --shadow-lg: 0 6px 16px #00000066; /* 40% */
+  --shadow-lg: 0 6px 16px #0006; /* 40% */
   --shadow-primary: 0 6px 16px #febc0866; /* 40% */
+
+  /* Focus rings */
+  --focus-ring-primary: 0 0 0 3px #febc081a;
   
   /* Z-index Scale */
   --z-dropdown: 1000;
@@ -95,6 +106,8 @@
   --z-popover: 1060;
   --z-tooltip: 1070;
   --z-overlay-max: 10000;
+  --z-1: 1;
+  --z-2: 2;
   
   /* Transitions */
   --transition-fast: 0.15s ease;
@@ -208,6 +221,7 @@ html, body {
 }
 
 /* Elevated surface helpers */
+
 /* hover handled below */
 
 .btn-secondary {
@@ -370,7 +384,7 @@ a:focus-visible {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--overlay-scrim);
   display: flex;
   align-items: center;
   justify-content: center;

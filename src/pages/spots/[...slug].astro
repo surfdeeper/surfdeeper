@@ -294,7 +294,7 @@ const serializedSpot = serializeSpot(entry);
 
       .content {
         width: 100%;
-        padding: 2rem 0 2rem;
+        padding: 2rem 0;
         min-width: 0;
         order: 1;
       }
@@ -324,85 +324,85 @@ const serializedSpot = serializeSpot(entry);
     }
 
     .sidebar-section {
-      background-color: #1e293b;
-      border: 2px solid #334155;
-      border-radius: 8px;
-      padding: 1.5rem;
+      background-color: var(--color-surface-dark);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-base);
+      padding: var(--space-6);
       transition: border-color 0.3s ease;
       min-width: 0;
       overflow-wrap: break-word;
     }
 
     .sidebar-section:hover {
-      border-color: #00ff88;
+      border-color: var(--color-accent-green);
     }
 
     .sidebar-section h3 {
-      color: #00ff88;
-      font-size: 1.1rem;
-      margin: 0 0 1rem 0;
+      color: var(--color-accent-green);
+      font-size: var(--font-size-1-1);
+      margin: 0 0 1rem;
       font-weight: 600;
     }
 
     /* Main map in content area */
     .main-map-section {
-      margin-top: 2rem;
-      background: #1e293b;
-      border: 2px solid #334155;
-      border-radius: 8px;
-      padding: 1.5rem;
+      margin-top: var(--space-8);
+      background: var(--color-surface-dark);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-base);
+      padding: var(--space-6);
       transition: border-color 0.3s ease;
     }
 
     .main-map-section:hover {
-      border-color: #00ff88;
+      border-color: var(--color-accent-green);
     }
 
     .main-map-section h2 {
-      font-size: 1.5rem;
-      margin: 0 0 1rem 0;
-      color: #00ff88;
+      font-size: var(--font-size-2xl);
+      margin: 0 0 1rem;
+      color: var(--color-accent-green);
     }
 
     .spot-map {
       width: 100%;
       height: 500px;
-      border-radius: 8px;
+      border-radius: var(--radius-base);
       overflow: hidden;
-      border: 2px solid #334155;
-      background-color: #1a1f2e;
+      border: 2px solid var(--color-border);
+      background-color: var(--color-surface-deep);
     }
 
     /* Conditions Section */
     .conditions-section {
-      background: #1e293b;
-      border: 2px solid #334155;
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+      background: var(--color-surface-dark);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-base);
+      padding: var(--space-6);
+      margin-bottom: var(--space-8);
       transition: border-color 0.3s ease;
     }
 
     .conditions-section:hover {
-      border-color: #00ff88;
+      border-color: var(--color-accent-green);
     }
 
     .conditions-section h2 {
-      font-size: 1.5rem;
-      margin: 0 0 1rem 0;
-      color: #00ff88;
+      font-size: var(--font-size-2xl);
+      margin: 0 0 1rem;
+      color: var(--color-accent-green);
     }
 
     .conditions-loading,
     .conditions-error {
-      color: #94a3b8;
+      color: var(--color-text-muted);
       font-style: italic;
       padding: 0.5rem 0;
-      font-size: 0.9rem;
+      font-size: var(--font-size-0-9);
     }
 
     .conditions-error {
-      color: #f87171;
+      color: var(--color-danger);
     }
 
     .conditions-horizontal {
@@ -414,44 +414,44 @@ const serializedSpot = serializeSpot(entry);
 
     .condition-item {
       text-align: center;
-      padding: 1rem;
-      background: #0f172a;
-      border-radius: 6px;
-      border: 1px solid #334155;
+      padding: var(--space-4);
+      background: var(--color-surface-deep);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
       transition: border-color 0.2s ease;
     }
 
     .condition-item:hover {
-      border-color: #00ff88;
+      border-color: var(--color-accent-green);
     }
 
     .condition-label {
-      font-size: 0.75rem;
-      color: #94a3b8;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
       margin-bottom: 0.5rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
     .condition-value {
-      font-size: 1.75rem;
+      font-size: var(--font-size-1-75);
       font-weight: 700;
-      color: #00ff88;
+      color: var(--color-accent-green);
       margin-bottom: 0.25rem;
     }
 
     .condition-meta {
-      font-size: 0.85rem;
-      color: #cbd5e1;
+      font-size: var(--font-size-0-85);
+      color: var(--color-text-light);
     }
 
     .conditions-updated {
       text-align: center;
-      font-size: 0.75rem;
-      color: #64748b;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-dim);
       margin-top: 0.5rem;
       padding-top: 1rem;
-      border-top: 1px solid #334155;
+      border-top: 1px solid var(--color-border);
     }
 
     /* Main Content Styles */
@@ -461,20 +461,20 @@ const serializedSpot = serializeSpot(entry);
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: var(--font-size-4xl);
       margin-bottom: 1rem;
-      color: #00ff88;
+      color: var(--color-accent-green);
     }
 
     .spot-description {
-      font-size: 1.125rem;
+      font-size: var(--font-size-lg);
       line-height: 1.6;
       margin-bottom: 1rem;
       padding: 1.5rem;
-      background: #1e293b;
-      border-left: 4px solid #00ff88;
-      border-radius: 4px;
-      color: #cbd5e1;
+      background: var(--color-surface-dark);
+      border-left: 4px solid var(--color-accent-green);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-light);
     }
 
     .skill-levels {
@@ -492,18 +492,18 @@ const serializedSpot = serializeSpot(entry);
     }
 
     .skill-beginner {
-      background: #d4edda;
-      color: #155724;
+      background: var(--color-mint-light);
+      color: var(--color-state-success-text);
     }
 
     .skill-intermediate {
       background: #fff3cd;
-      color: #856404;
+      color: var(--color-state-warning-text);
     }
 
     .skill-advanced {
       background: #f8d7da;
-      color: #721c24;
+      color: var(--color-state-danger-text);
     }
 
     dl {
@@ -516,18 +516,18 @@ const serializedSpot = serializeSpot(entry);
 
     dt {
       font-weight: 600;
-      color: #00ff88;
-      font-size: 0.75rem;
+      color: var(--color-accent-green);
+      font-size: var(--font-size-xs);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       opacity: 0.8;
     }
 
     dd {
-      margin: 0 0 0.75rem 0;
-      color: #cbd5e1;
+      margin: 0 0 0.75rem;
+      color: var(--color-text-light);
       padding-bottom: 0.75rem;
-      border-bottom: 1px solid #334155;
+      border-bottom: 1px solid var(--color-border);
     }
 
     dd:last-of-type {
@@ -539,8 +539,8 @@ const serializedSpot = serializeSpot(entry);
     .hazards-list {
       margin: 0;
       padding-left: 1.25rem;
-      color: #cbd5e1;
-      font-size: 0.9rem;
+      color: var(--color-text-light);
+      font-size: var(--font-size-0-9);
     }
 
     .hazards-list li {
@@ -553,14 +553,14 @@ const serializedSpot = serializeSpot(entry);
 
     .coordinates {
       font-family: monospace;
-      font-size: 0.95rem;
-      color: #cbd5e1;
+      font-size: var(--font-size-0-95);
+      color: var(--color-text-light);
       margin: 0;
       text-align: center;
       padding: 0.75rem;
-      background: #0f172a;
-      border-radius: 6px;
-      border: 1px solid #334155;
+      background: var(--color-surface-deep);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
     }
 
     @media (max-width: 768px) {

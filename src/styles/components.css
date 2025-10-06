@@ -23,6 +23,7 @@ OR BETTER: Using component classes
 .spot-card {
   /* Instead of: background-color: #132635; */
   background-color: var(--color-surface-secondary);
+
   /* Instead of: border: 1px solid #132635; */
   border: 1px solid var(--color-border);
   border-radius: var(--radius-base);
@@ -58,7 +59,7 @@ OR BETTER: Using component classes
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #000000cc;
+  background-color: var(--overlay-scrim);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,7 +171,7 @@ OR BETTER: Using component classes
 .form-field select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px #febc081a;
+  box-shadow: var(--focus-ring-primary);
 }
 
 /* Example: Alert/Status Components */
@@ -182,25 +183,25 @@ OR BETTER: Using component classes
 }
 
 .alert-info {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: var(--bg-info-weak);
   border-left-color: var(--color-info);
   color: var(--color-info);
 }
 
 .alert-success {
-  background-color: rgba(34, 197, 94, 0.1);
+  background-color: var(--bg-success-weak);
   border-left-color: var(--color-success);
   color: var(--color-success);
 }
 
 .alert-warning {
-  background-color: rgba(245, 158, 11, 0.1);
+  background-color: var(--bg-warning-weak);
   border-left-color: var(--color-warning);
   color: var(--color-warning);
 }
 
 .alert-error {
-  background-color: rgba(239, 68, 68, 0.1);
+  background-color: var(--bg-error-weak);
   border-left-color: var(--color-error);
   color: var(--color-error);
 }

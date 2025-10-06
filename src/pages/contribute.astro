@@ -179,7 +179,7 @@ import Layout from '../layouts/Layout.astro';
     content: "→";
     position: absolute;
     left: 0;
-    color: #0c6; /* visually similar accent */
+    color: var(--color-accent-green-hover);
   }
 
   .contribute-link {
@@ -194,17 +194,19 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .contribute-link:hover {
-    background-color: #0c6;
+    background-color: var(--color-accent-green-hover);
   }
 
   .article {
     max-width: 800px;
     margin: 0 auto 2rem;
   }
+
   .article p, .article li {
     color: var(--color-accent-green);
     opacity: 0.95;
   }
+
   .article ul, .article ol {
     margin-left: 1rem;
   }
@@ -222,7 +224,7 @@ import Layout from '../layouts/Layout.astro';
   .templates .code-block {
     display: block;
     background: var(--color-surface-deep);
-    color: #d1fae5;
+    color: var(--color-mint-light);
     padding: 1rem;
     border-radius: 6px;
     border: 1px solid var(--color-border);
@@ -271,7 +273,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .step-card a {
-    color: #0c6;
+    color: var(--color-accent-green-hover);
     text-decoration: none;
     font-weight: 600;
   }
@@ -304,7 +306,7 @@ import Layout from '../layouts/Layout.astro';
 
   .contact-method h4 {
     color: var(--color-accent-green);
-    font-size: var(--font-size-1_1);
+    font-size: var(--font-size-1-1);
     margin-bottom: 0.5rem;
   }
 
