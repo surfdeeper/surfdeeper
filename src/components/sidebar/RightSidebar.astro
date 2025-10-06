@@ -1,0 +1,41 @@
+---
+import AboutCard from "./AboutCard.astro";
+import RecentlyUpdatedList from "./RecentlyUpdatedList.astro";
+import RecentCommitsList from "./RecentCommitsList.astro";
+
+interface UpdatedPage {
+  title: string;
+  url: string;
+  date: string;
+  hierarchy: string;
+}
+
+interface CommitItem {
+  hash: string;
+  date: string;
+  isoDate: string;
+  message: string;
+  url: string;
+}
+
+const { recentlyUpdated = [], recentCommits = [] } = Astro.props as {
+  recentlyUpdated: UpdatedPage[];
+  recentCommits: CommitItem[];
+};
+---
+
+<aside class="right-sidebar">
+  <AboutCard />
+  <div class="card surf-wisdom">
+    <h3>🧘 Surf Wisdom</h3>
+    <p class="wisdom-quote">
+      "The best surfer out there is the one having the most fun."
+    </p>
+    <p class="wisdom-quote">
+      "You can't stop the waves, but you can learn to surf."
+    </p>
+  </div>
+
+  <RecentlyUpdatedList items={recentlyUpdated} max={4} />
+  <RecentCommitsList items={recentCommits} max={3} />
+</aside>

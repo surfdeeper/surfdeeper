@@ -2,6 +2,10 @@
 import Layout from "../layouts/Layout.astro";
 import sections from "../content/guides/_sections.json";
 import { loadHomepageData } from "../utils/homepage-data";
+import SkillsGuideSidebar from "../components/sidebar/SkillsGuideSidebar.astro";
+import RightSidebar from "../components/sidebar/RightSidebar.astro";
+import AboutCard from "../components/sidebar/AboutCard.astro";
+import RecentlyUpdatedList from "../components/sidebar/RecentlyUpdatedList.astro";
 
 const {
   spots,
@@ -93,146 +97,19 @@ const {
       </section>
 
       <!-- Left Sidebar -->
-      <aside class="left-sidebar">
-        <div class="card">
-          <h3>🏄 Skills Guide</h3>
-          <ul class="sidebar-links nested-guide">
-            {
-              Object.entries(sections)
-                .sort(([, a], [, b]) => a.order - b.order)
-                .map(([slug, section]) => {
-                  const allGuides = guidesBySection[slug] || [];
-                  // Filter out guides that have the same title as the section
-                  const guides = allGuides.filter(
-                    (guide) => guide.title !== section.label,
-                  );
-                  const visibleGuides = guides.slice(0, 3);
-                  const remainingCount = guides.length - 3;
-
-                  return (
-                    <li class="section-item">
-                      <a href={`/guide/${slug}`} class="section-link">
-                        {section.label}
-                      </a>
-                      {guides.length > 0 && (
-                        <ul class="nested-links">
-                          {visibleGuides.map((guide) => (
-                            <li>
-                              <a href={guide.url}>{guide.title}</a>
-                            </li>
-                          ))}
-                          {remainingCount > 0 && (
-                            <li class="more-items">
-                              <a href={`/guide/${slug}`}>
-                                {remainingCount} more →
-                              </a>
-                            </li>
-                          )}
-                          {comingSoonCountBySection[slug] > 0 && (
-                            <li class="coming-soon-items">
-                              {comingSoonCountBySection[slug]} coming soon
-                            </li>
-                          )}
-                        </ul>
-                      )}
-                    </li>
-                  );
-                })
-            }
-          </ul>
-          <div class="sidebar-cta-wrap">
-            <a href="/guide" class="sidebar-cta">Browse All →</a>
-          </div>
-        </div>
-      </aside>
+      <SkillsGuideSidebar
+        sections={sections}
+        guidesBySection={guidesBySection}
+        comingSoonCountBySection={comingSoonCountBySection}
+      />
 
       <!-- Right Sidebar -->
-      <aside class="right-sidebar">
-        <div class="card">
-          <h3>💡 About</h3>
-          <p class="about-text">
-            <strong>Free and open source</strong> — Built by surfers, for surfers.
-            <a href="/contribute">Contribute your knowledge</a> to help others learn
-            and progress.
-          </p>
-        </div>
-
-        <div class="card surf-wisdom">
-          <h3>🧘 Surf Wisdom</h3>
-          <p class="wisdom-quote">
-            "The best surfer out there is the one having the most fun."
-          </p>
-          <p class="wisdom-quote">
-            "You can't stop the waves, but you can learn to surf."
-          </p>
-        </div>
-
-        {
-          recentlyUpdated.length > 0 && (
-            <div class="card updates-section">
-              <h3>📝 Recently Updated</h3>
-              <ul class="updates-list">
-                {recentlyUpdated.slice(0, 4).map((page) => (
-                  <li class="update-item">
-                    <a href={page.url} class="update-link">
-                      <span class="page-hierarchy">{page.hierarchy}</span>
-                      <span class="page-title">{page.title}</span>
-                    </a>
-                    <span class="update-date">
-                      {new Date(page.date).toLocaleString("en-US", {
-                        timeZone: "America/Los_Angeles",
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                        timeZoneName: "short",
-                      })}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-        }
-
-        {
-          recentCommits.length > 0 && (
-            <div class="card updates-section">
-              <h3>🔨 Recent Commits</h3>
-              <ul class="updates-list">
-                {recentCommits.slice(0, 3).map((commit) => (
-                  <li class="update-item">
-                    <a
-                      href={commit.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="update-link commit-link"
-                    >
-                      {commit.message.length > 60
-                        ? commit.message.substring(0, 60) + "..."
-                        : commit.message}
-                    </a>
-                    <span class="update-date">
-                      {new Date(commit.isoDate).toLocaleString("en-US", {
-                        timeZone: "America/Los_Angeles",
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                        timeZoneName: "short",
-                      })}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-        }
-      </aside>
+      <RightSidebar
+        recentlyUpdated={recentlyUpdated}
+        recentCommits={recentCommits}
+      />
+      <AboutCard showCta={true} ctaVariant="secondary" />
+      <RecentlyUpdatedList items={recentlyUpdated} max={3} />
     </div>
   </div>
 </Layout>

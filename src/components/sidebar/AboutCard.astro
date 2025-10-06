@@ -1,0 +1,29 @@
+---
+const { showCta = false, ctaVariant = "secondary" } = Astro.props as {
+  showCta?: boolean;
+  ctaVariant?: "primary" | "secondary";
+};
+---
+
+<div class="card">
+  <h3>💡 About</h3>
+  <p class="about-text">
+    <strong>Free and open source</strong> — Built by surfers, for surfers.
+    <a href="/contribute">Contribute your knowledge</a> to help others learn and
+    progress.
+  </p>
+  {
+    showCta && (
+      <div class="sidebar-cta-wrap">
+        <a
+          href="/contribute"
+          class={
+            ctaVariant === "primary" ? "btn btn-primary" : "btn btn-secondary"
+          }
+        >
+          Contribute
+        </a>
+      </div>
+    )
+  }
+</div>

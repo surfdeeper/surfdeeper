@@ -1,0 +1,66 @@
+---
+export interface SectionDef {
+  label: string;
+  order: number;
+}
+
+const { sections, guidesBySection, comingSoonCountBySection } = Astro.props as {
+  sections: Record<string, SectionDef>;
+  guidesBySection: Record<
+    string,
+    Array<{ slug: string; title: string; url: string }>
+  >;
+  comingSoonCountBySection: Record<string, number>;
+};
+---
+
+<aside class="left-sidebar">
+  <div class="card">
+    <h3>🏄‍♂️ Skills Guide</h3>
+    <ul class="sidebar-links nested-guide">
+      {
+        Object.entries(sections)
+          .sort(([, a], [, b]) => a.order - b.order)
+          .map(([slug, section]) => {
+            const allGuides = guidesBySection[slug] || [];
+            // Filter out guides that have the same title as the section
+            const guides = allGuides.filter(
+              (guide) => guide.title !== section.label,
+            );
+            const visibleGuides = guides.slice(0, 3);
+            const remainingCount = guides.length - 3;
+
+            return (
+              <li class="section-item">
+                <a href={`/guide/${slug}`} class="section-link">
+                  {section.label}
+                </a>
+                {guides.length > 0 && (
+                  <ul class="nested-links">
+                    {visibleGuides.map((guide) => (
+                      <li>
+                        <a href={guide.url}>{guide.title}</a>
+                      </li>
+                    ))}
+                    {remainingCount > 0 && (
+                      <li class="more-items">
+                        <a href={`/guide/${slug}`}>{remainingCount} more →</a>
+                      </li>
+                    )}
+                    {comingSoonCountBySection[slug] > 0 && (
+                      <li class="coming-soon-items">
+                        {comingSoonCountBySection[slug]} coming soon
+                      </li>
+                    )}
+                  </ul>
+                )}
+              </li>
+            );
+          })
+      }
+    </ul>
+    <div class="sidebar-cta-wrap">
+      <a href="/guide" class="sidebar-cta">Browse All →</a>
+    </div>
+  </div>
+</aside>

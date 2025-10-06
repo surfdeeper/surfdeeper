@@ -1,0 +1,43 @@
+---
+interface UpdatedPage {
+  title: string;
+  url: string;
+  date: string;
+  hierarchy: string;
+}
+
+const { items, max = 4 } = Astro.props as {
+  items: UpdatedPage[];
+  max?: number;
+};
+---
+
+{
+  items.length > 0 && (
+    <div class="card updates-section">
+      <h3>📝 Recently Updated</h3>
+      <ul class="updates-list">
+        {items.slice(0, max).map((page) => (
+          <li class="update-item">
+            <a href={page.url} class="update-link">
+              <span class="page-hierarchy">{page.hierarchy}</span>
+              <span class="page-title">{page.title}</span>
+            </a>
+            <span class="update-date">
+              {new Date(page.date).toLocaleString("en-US", {
+                timeZone: "America/Los_Angeles",
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+                timeZoneName: "short",
+              })}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
