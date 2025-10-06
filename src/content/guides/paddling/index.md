@@ -7,4 +7,3 @@ order: 4
 # Paddling
 
 Improve your paddling technique, build endurance, and protect your shoulders.
-

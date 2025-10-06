@@ -7,4 +7,3 @@ order: 6
 # Intermediate
 
 Level up your surfing with advanced maneuvers and lineup positioning strategies.
-

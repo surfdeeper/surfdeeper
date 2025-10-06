@@ -1,18 +1,18 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getCollection, getEntryBySlug } from 'astro:content';
-import { serializeSpot } from '../../utils/spot-data';
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, getEntryBySlug } from "astro:content";
+import { serializeSpot } from "../../utils/spot-data";
 
 export async function getStaticPaths() {
-  const entries = await getCollection('spots');
+  const entries = await getCollection("spots");
   return entries.map((e) => ({ params: { slug: e.slug } }));
 }
 
 const { slug } = Astro.params;
-const entry = await getEntryBySlug('spots', slug);
+const entry = await getEntryBySlug("spots", slug);
 
 if (!entry) {
-  throw Astro.redirect('/spots');
+  throw Astro.redirect("/spots");
 }
 
 const { Content } = await entry.render();
@@ -20,7 +20,11 @@ const { data } = entry;
 const serializedSpot = serializeSpot(entry);
 ---
 
-<Layout title={data.title} description={data.description} editPath={`src/content/spots/${entry.slug}.md`}>
+<Layout
+  title={data.title}
+  description={data.description}
+  editPath={`src/content/spots/${entry.slug}.md`}
+>
   <div class="spot-page-wrapper">
     <div class="three-column-layout">
       <!-- Main Content -->
@@ -30,8 +34,14 @@ const serializedSpot = serializeSpot(entry);
 
           <div class="conditions-section">
             <h2>🌊 Current Conditions</h2>
-            <div id="conditions-loading" class="conditions-loading">Loading conditions...</div>
-            <div id="conditions-data" class="conditions-data" style="display: none;">
+            <div id="conditions-loading" class="conditions-loading">
+              Loading conditions...
+            </div>
+            <div
+              id="conditions-data"
+              class="conditions-data"
+              style="display: none;"
+            >
               <div class="conditions-horizontal">
                 <div class="condition-item">
                   <div class="condition-label">Swell</div>
@@ -51,11 +61,15 @@ const serializedSpot = serializeSpot(entry);
               </div>
               <div class="conditions-updated" id="conditions-updated">--</div>
             </div>
-            <div id="conditions-error" class="conditions-error" style="display: none;">
+            <div
+              id="conditions-error"
+              class="conditions-error"
+              style="display: none;"
+            >
               Unable to load current conditions
             </div>
           </div>
-          
+
           <div class="spot-description">
             <Content />
           </div>
@@ -72,9 +86,11 @@ const serializedSpot = serializeSpot(entry);
         <div class="sidebar-section">
           <h3>🏄 Skill Level</h3>
           <div class="skill-levels">
-            {data.skillLevels.map((level: string) => (
-              <span class={`skill-badge skill-${level}`}>{level}</span>
-            ))}
+            {
+              data.skillLevels.map((level: string) => (
+                <span class={`skill-badge skill-${level}`}>{level}</span>
+              ))
+            }
           </div>
         </div>
 
@@ -116,12 +132,14 @@ const serializedSpot = serializeSpot(entry);
           <dl>
             <dt>Parking</dt>
             <dd>{data.parking}</dd>
-            {data.facilities && (
-              <>
-                <dt>Facilities</dt>
-                <dd>{data.facilities}</dd>
-              </>
-            )}
+            {
+              data.facilities && (
+                <>
+                  <dt>Facilities</dt>
+                  <dd>{data.facilities}</dd>
+                </>
+              )
+            }
           </dl>
         </div>
 
@@ -135,32 +153,58 @@ const serializedSpot = serializeSpot(entry);
     </div>
   </div>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  />
+  <script
+    is:inline
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+    defer></script>
 
-  <script type="application/json" id="spot-data" set:html={JSON.stringify(serializedSpot)}></script>
-  
+  <script
+    type="application/json"
+    id="spot-data"
+    set:html={JSON.stringify(serializedSpot)}
+  />
+
   <script>
-    import { MAP_DEFAULTS, DEFAULT_THEME_SPOT } from '../../config/map-constants';
-    import { createBaseMap, waitForLeaflet, createMarkerWithPopup, getStoredTheme } from '../../utils/leaflet-setup';
-    import { getSpotDataFromElement } from '../../utils/spot-data';
-    import { 
-      fetchMarineConditions, 
-      degreesToCardinal, 
-      metersToFeet 
-    } from '../../utils/marine-weather';
-    import { getTheme, addThemeSwitcherToMap } from '../../utils/map-theme-switcher';
+    import {
+      MAP_DEFAULTS,
+      DEFAULT_THEME_SPOT,
+    } from "../../config/map-constants";
+    import {
+      createBaseMap,
+      waitForLeaflet,
+      createMarkerWithPopup,
+      getStoredTheme,
+    } from "../../utils/leaflet-setup";
+    import { getSpotDataFromElement } from "../../utils/spot-data";
+    import {
+      fetchMarineConditions,
+      degreesToCardinal,
+      metersToFeet,
+    } from "../../utils/marine-weather";
+    import {
+      getTheme,
+      addThemeSwitcherToMap,
+    } from "../../utils/map-theme-switcher";
 
     async function loadConditions() {
-      const spot = getSpotDataFromElement('spot-data');
+      const spot = getSpotDataFromElement("spot-data");
       if (!spot) return;
 
       try {
-        const conditions = await fetchMarineConditions(spot.latitude, spot.longitude);
-        
+        const conditions = await fetchMarineConditions(
+          spot.latitude,
+          spot.longitude,
+        );
+
         if (!conditions) {
-          document.getElementById('conditions-loading')!.style.display = 'none';
-          document.getElementById('conditions-error')!.style.display = 'block';
+          document.getElementById("conditions-loading")!.style.display = "none";
+          document.getElementById("conditions-error")!.style.display = "block";
           return;
         }
 
@@ -169,45 +213,56 @@ const serializedSpot = serializeSpot(entry);
         const waveFt = metersToFeet(conditions.waveHeight).toFixed(1);
         const windMph = (conditions.windSpeed * 0.621371).toFixed(0);
 
-        document.getElementById('swell-height')!.textContent = `${swellFt} ft`;
-        document.getElementById('swell-meta')!.textContent = 
+        document.getElementById("swell-height")!.textContent = `${swellFt} ft`;
+        document.getElementById("swell-meta")!.textContent =
           `${conditions.swellPeriod.toFixed(0)}s @ ${degreesToCardinal(conditions.swellDirection)}`;
-        
-        document.getElementById('wind-speed')!.textContent = `${windMph} mph`;
-        document.getElementById('wind-direction')!.textContent = degreesToCardinal(conditions.windDirection);
-        
-        document.getElementById('wave-height')!.textContent = `${waveFt} ft`;
-        document.getElementById('wave-period')!.textContent = `${conditions.wavePeriod.toFixed(0)}s period`;
 
-        const time = new Date(conditions.timestamp).toLocaleTimeString('en-US', { 
-          hour: 'numeric', 
-          minute: '2-digit' 
-        });
-        document.getElementById('conditions-updated')!.textContent = `Updated ${time}`;
+        document.getElementById("wind-speed")!.textContent = `${windMph} mph`;
+        document.getElementById("wind-direction")!.textContent =
+          degreesToCardinal(conditions.windDirection);
 
-        document.getElementById('conditions-loading')!.style.display = 'none';
-        document.getElementById('conditions-data')!.style.display = 'block';
+        document.getElementById("wave-height")!.textContent = `${waveFt} ft`;
+        document.getElementById("wave-period")!.textContent =
+          `${conditions.wavePeriod.toFixed(0)}s period`;
+
+        const time = new Date(conditions.timestamp).toLocaleTimeString(
+          "en-US",
+          {
+            hour: "numeric",
+            minute: "2-digit",
+          },
+        );
+        document.getElementById("conditions-updated")!.textContent =
+          `Updated ${time}`;
+
+        document.getElementById("conditions-loading")!.style.display = "none";
+        document.getElementById("conditions-data")!.style.display = "block";
       } catch (error) {
-        console.error('Error loading conditions:', error);
-        document.getElementById('conditions-loading')!.style.display = 'none';
-        document.getElementById('conditions-error')!.style.display = 'block';
+        console.error("Error loading conditions:", error);
+        document.getElementById("conditions-loading")!.style.display = "none";
+        document.getElementById("conditions-error")!.style.display = "block";
       }
     }
 
     function initSpotMap() {
       waitForLeaflet(() => {
-        const spot = getSpotDataFromElement('spot-data');
+        const spot = getSpotDataFromElement("spot-data");
         if (!spot) return;
 
         // Get the user's preferred theme or use default
         const currentThemeId = getStoredTheme(DEFAULT_THEME_SPOT);
         const theme = getTheme(currentThemeId, DEFAULT_THEME_SPOT);
 
-        const map = createBaseMap('spot-map', [spot.latitude, spot.longitude], MAP_DEFAULTS.SPOT_ZOOM, theme);
+        const map = createBaseMap(
+          "spot-map",
+          [spot.latitude, spot.longitude],
+          MAP_DEFAULTS.SPOT_ZOOM,
+          theme,
+        );
         if (!map) return;
 
         // Add theme switcher control
-        addThemeSwitcherToMap(map, DEFAULT_THEME_SPOT, 'topright');
+        addThemeSwitcherToMap(map, DEFAULT_THEME_SPOT, "topright");
 
         createMarkerWithPopup(
           map,
@@ -215,7 +270,7 @@ const serializedSpot = serializeSpot(entry);
           spot.longitude,
           spot.title,
           spot.description,
-          true
+          true,
         );
       });
     }
@@ -225,10 +280,13 @@ const serializedSpot = serializeSpot(entry);
       initSpotMap();
     }
 
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    if (
+      document.readyState === "complete" ||
+      document.readyState === "interactive"
+    ) {
       init();
     } else {
-      document.addEventListener('DOMContentLoaded', init);
+      document.addEventListener("DOMContentLoaded", init);
     }
   </script>
 

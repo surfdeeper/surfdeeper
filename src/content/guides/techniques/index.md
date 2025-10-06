@@ -7,4 +7,3 @@ order: 8
 # Techniques
 
 Detailed breakdowns of specific surfing techniques and mechanics.
-

@@ -1,23 +1,23 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getCollection, getEntryBySlug } from 'astro:content';
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, getEntryBySlug } from "astro:content";
 
 export async function getStaticPaths() {
-  const entries = await getCollection('guides');
+  const entries = await getCollection("guides");
   return entries.map((e) => ({ params: { slug: e.slug } }));
 }
 
 const { slug } = Astro.params;
 const slugStr = String(slug);
-let entry = await getEntryBySlug('guides', slugStr);
+let entry = await getEntryBySlug("guides", slugStr);
 
 // If direct slug not found, try section/index pattern
-if (!entry && !slugStr.includes('/')) {
-  entry = await getEntryBySlug('guides', `${slugStr}/index`);
+if (!entry && !slugStr.includes("/")) {
+  entry = await getEntryBySlug("guides", `${slugStr}/index`);
 }
 
 if (!entry) {
-  throw Astro.redirect('/guide');
+  throw Astro.redirect("/guide");
 }
 
 const { Content } = await entry.render();
@@ -25,44 +25,57 @@ const { data } = entry;
 
 // Check if this is a section landing page
 // Astro normalizes folder/index.md to just folder as the slug
-const isSectionPage = entry.slug.endsWith('/index') || !entry.slug.includes('/');
+const isSectionPage =
+  entry.slug.endsWith("/index") || !entry.slug.includes("/");
 let sectionGuides: any[] = [];
 
 if (isSectionPage) {
   // Get all guides in this section
-  const allGuides = await getCollection('guides');
-  const sectionName = entry.slug.replace('/index', '');
+  const allGuides = await getCollection("guides");
+  const sectionName = entry.slug.replace("/index", "");
   sectionGuides = allGuides
-    .filter(guide => {
-      const guideSection = guide.slug.split('/')[0];
+    .filter((guide) => {
+      const guideSection = guide.slug.split("/")[0];
       // Include guides in this section, but exclude the index page itself
-      return guideSection === sectionName && guide.slug !== entry.slug && guide.slug.includes('/');
+      return (
+        guideSection === sectionName &&
+        guide.slug !== entry.slug &&
+        guide.slug.includes("/")
+      );
     })
-    .sort((a, b) => 
-      (a.data.order ?? 999) - (b.data.order ?? 999) || a.data.title.localeCompare(b.data.title)
+    .sort(
+      (a, b) =>
+        (a.data.order ?? 999) - (b.data.order ?? 999) ||
+        a.data.title.localeCompare(b.data.title),
     );
 }
 ---
 
-<Layout title={data.title} description={data.description} editPath={`src/content/guides/${entry.slug}.md`}>
+<Layout
+  title={data.title}
+  description={data.description}
+  editPath={`src/content/guides/${entry.slug}.md`}
+>
   <article class="guide-article">
     <Content />
-    
-    {isSectionPage && sectionGuides.length > 0 && (
-      <section class="section-guides">
-        <h2>Guides in this section</h2>
-        <ul class="guides-list">
-          {sectionGuides.map((guide) => (
-            <li>
-              <a href={`/guide/${guide.slug}`}>{guide.data.title}</a>
-              {guide.data.description && (
-                <p class="guide-description">{guide.data.description}</p>
-              )}
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
+
+    {
+      isSectionPage && sectionGuides.length > 0 && (
+        <section class="section-guides">
+          <h2>Guides in this section</h2>
+          <ul class="guides-list">
+            {sectionGuides.map((guide) => (
+              <li>
+                <a href={`/guide/${guide.slug}`}>{guide.data.title}</a>
+                {guide.data.description && (
+                  <p class="guide-description">{guide.data.description}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
   </article>
 
   <style>
@@ -136,5 +149,3 @@ if (isSectionPage) {
     }
   </style>
 </Layout>
-
-

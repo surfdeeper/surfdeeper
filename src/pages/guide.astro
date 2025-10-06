@@ -1,27 +1,35 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import sections from '../content/guides/_sections.json';
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import sections from "../content/guides/_sections.json";
 
-const entries = await getCollection('guides');
+const entries = await getCollection("guides");
 
-type EntryType = typeof entries[number];
+type EntryType = (typeof entries)[number];
 
 // Group by first path segment (supports nested folders later)
-const grouped = entries.reduce((acc, e) => {
-  const [section] = e.slug.split('/');
-  (acc[section] ||= []).push(e);
-  return acc;
-}, {} as Record<string, EntryType[]>);
+const grouped = entries.reduce(
+  (acc, e) => {
+    const [section] = e.slug.split("/");
+    (acc[section] ||= []).push(e);
+    return acc;
+  },
+  {} as Record<string, EntryType[]>,
+);
 
 for (const key of Object.keys(grouped)) {
-  grouped[key].sort((a, b) =>
-    (a.data.order ?? 999) - (b.data.order ?? 999) || a.data.title.localeCompare(b.data.title)
+  grouped[key].sort(
+    (a, b) =>
+      (a.data.order ?? 999) - (b.data.order ?? 999) ||
+      a.data.title.localeCompare(b.data.title),
   );
 }
 ---
 
-<Layout title="Guides - Surf Deeper" description="Guides for understanding waves, ocean safety, and surf techniques. Learn from the community.">
+<Layout
+  title="Guides - Surf Deeper"
+  description="Guides for understanding waves, ocean safety, and surf techniques. Learn from the community."
+>
   <header class="page-header">
     <h1>Guides</h1>
     <p class="page-subtitle">Master the fundamentals and advanced techniques</p>
@@ -31,22 +39,27 @@ for (const key of Object.keys(grouped)) {
     <div class="section-grid">
       {
         (Object.entries(grouped) as [string, EntryType[]][])
-          .sort(([a], [b]) => (sections[a]?.order ?? 999) - (sections[b]?.order ?? 999))
+          .sort(
+            ([a], [b]) =>
+              (sections[a]?.order ?? 999) - (sections[b]?.order ?? 999),
+          )
           .map(([section, items]) => (
             <a href={`/guide/${section}`} class="section-card">
               <div class="card-content">
                 <h3>{sections[section]?.label ?? section}</h3>
-                <p class="guide-count">{items.length} {items.length === 1 ? 'guide' : 'guides'}</p>
+                <p class="guide-count">
+                  {items.length} {items.length === 1 ? "guide" : "guides"}
+                </p>
                 <ul class="guide-preview">
                   {items.slice(0, 3).map((e) => (
                     <li>{e.data.title}</li>
                   ))}
-                  {items.length > 3 && <li class="more">+{items.length - 3} more</li>}
+                  {items.length > 3 && (
+                    <li class="more">+{items.length - 3} more</li>
+                  )}
                 </ul>
               </div>
-              <div class="card-link">
-                View Guides →
-              </div>
+              <div class="card-link">View Guides →</div>
             </a>
           ))
       }
@@ -55,7 +68,10 @@ for (const key of Object.keys(grouped)) {
 
   <section class="coming-soon">
     <h2>Share Your Knowledge</h2>
-    <p>Have a technique you've mastered? Share it with the community and help others improve their surfing.</p>
+    <p>
+      Have a technique you've mastered? Share it with the community and help
+      others improve their surfing.
+    </p>
     <a href="/contribute" class="cta-button">Contribute a Technique</a>
   </section>
 
@@ -64,7 +80,7 @@ for (const key of Object.keys(grouped)) {
       text-align: center;
       margin-bottom: 3rem;
     }
-    
+
     .page-header h1 {
       color: #00ff88;
       font-size: 3rem;
@@ -72,26 +88,26 @@ for (const key of Object.keys(grouped)) {
       font-weight: 700;
       letter-spacing: 0.02em;
     }
-    
+
     .page-subtitle {
       color: #00ff88;
       font-size: 1.25rem;
       opacity: 0.9;
       margin: 0;
     }
-    
+
     .surfing-manual {
       max-width: 1200px;
       margin: 0 auto;
     }
-    
+
     .section-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 2rem;
       margin-bottom: 3rem;
     }
-    
+
     .section-card {
       background-color: #1e293b;
       border: 2px solid #334155;
@@ -103,23 +119,23 @@ for (const key of Object.keys(grouped)) {
       color: inherit;
       transition: border-color 0.3s ease;
     }
-    
+
     .section-card:hover {
       border-color: #00ff88;
     }
-    
+
     .card-content {
       flex: 1;
       margin-bottom: 1.5rem;
     }
-    
+
     .section-card h3 {
       color: #00ff88;
       font-size: 1.5rem;
       margin: 0 0 0.5rem 0;
       text-align: center;
     }
-    
+
     .guide-count {
       color: #00ff88;
       font-size: 0.9rem;
@@ -127,13 +143,13 @@ for (const key of Object.keys(grouped)) {
       text-align: center;
       margin: 0 0 1.5rem 0;
     }
-    
+
     .guide-preview {
       list-style: none;
       padding: 0;
       margin: 0;
     }
-    
+
     .guide-preview li {
       color: #00ff88;
       padding-left: 1.5rem;
@@ -141,7 +157,7 @@ for (const key of Object.keys(grouped)) {
       opacity: 0.9;
       margin-bottom: 0.5rem;
     }
-    
+
     .guide-preview li::before {
       content: "•";
       position: absolute;
@@ -149,12 +165,12 @@ for (const key of Object.keys(grouped)) {
       color: #00cc6a;
       font-weight: bold;
     }
-    
+
     .guide-preview li.more {
       color: #00cc6a;
       font-style: italic;
     }
-    
+
     .card-link {
       display: block;
       text-align: center;
@@ -163,11 +179,11 @@ for (const key of Object.keys(grouped)) {
       font-size: 1.1rem;
       transition: opacity 0.2s ease;
     }
-    
+
     .section-card:hover .card-link {
       opacity: 0.8;
     }
-    
+
     .coming-soon {
       background-color: #1e293b;
       border: 2px solid #334155;
@@ -175,19 +191,19 @@ for (const key of Object.keys(grouped)) {
       padding: 1.5rem;
       text-align: center;
     }
-    
+
     .coming-soon h2 {
       color: #00ff88;
       font-size: 1.5rem;
       margin: 0 0 0.5rem 0;
     }
-    
+
     .coming-soon p {
       color: #00ff88;
       margin: 0 0 1rem 0;
       opacity: 0.9;
     }
-    
+
     .cta-button {
       display: inline-block;
       background-color: #00ff88;
@@ -198,11 +214,11 @@ for (const key of Object.keys(grouped)) {
       font-weight: 600;
       transition: background-color 0.3s ease;
     }
-    
-    .cta-button:hover { 
-      background-color: #00cc6a; 
+
+    .cta-button:hover {
+      background-color: #00cc6a;
     }
-    
+
     @media (max-width: 768px) {
       .section-grid {
         grid-template-columns: 1fr;
@@ -210,4 +226,3 @@ for (const key of Object.keys(grouped)) {
     }
   </style>
 </Layout>
-

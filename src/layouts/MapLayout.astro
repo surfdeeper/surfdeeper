@@ -4,13 +4,14 @@ export interface Props {
   description?: string;
 }
 
-const { title, description = "Surf deeper. Learn more. Share what you know." } = Astro.props;
+const { title, description = "Surf deeper. Learn more. Share what you know." } =
+  Astro.props;
 
 // Canonical URL - ensures Google knows the preferred URL
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -21,16 +22,22 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="canonical" href={canonicalURL} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"
+    ></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'G-4EL168HRYZ');
+      gtag("config", "G-4EL168HRYZ");
     </script>
   </head>
   <body>
@@ -38,7 +45,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="nav-container">
         <a href="/" class="nav-logo" aria-label="Surf Deeper home">
           <span class="logo-crop">
-            <img src="/logo.png?v=5" alt="SurfDeeper logo" class="image-logo" width="180" height="108" onerror="this.onerror=null;this.src='/favicon.svg';" />
+            <img
+              src="/logo.png?v=5"
+              alt="SurfDeeper logo"
+              class="image-logo"
+              width="180"
+              height="108"
+              onerror="this.onerror=null;this.src='/favicon.svg';"
+            />
           </span>
         </a>
         <ul class="nav-links">
@@ -57,7 +71,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 </html>
 
 <style>
-  html, body {
+  html,
+  body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -65,7 +80,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   }
 
   body {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     line-height: 1.6;
     background-color: #0f172a;
     color: #00ff88;
@@ -153,7 +168,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   .nav-links a {
     color: #00ff88;
     text-decoration: none;
-    font-family: 'Roboto Mono', monospace;
+    font-family: "Roboto Mono", monospace;
     font-size: 1.1rem;
     font-weight: 500;
     transition: color 0.3s ease;
@@ -183,9 +198,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       gap: 1rem;
     }
 
-    .main-nav { 
-      --nav-logo-height: 120px; 
+    .main-nav {
+      --nav-logo-height: 120px;
     }
   }
 </style>
-
