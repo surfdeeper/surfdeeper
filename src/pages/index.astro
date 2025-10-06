@@ -101,7 +101,11 @@ const {
               Object.entries(sections)
                 .sort(([, a], [, b]) => a.order - b.order)
                 .map(([slug, section]) => {
-                  const guides = guidesBySection[slug] || [];
+                  const allGuides = guidesBySection[slug] || [];
+                  // Filter out guides that have the same title as the section
+                  const guides = allGuides.filter(
+                    (guide) => guide.title !== section.label,
+                  );
                   const visibleGuides = guides.slice(0, 3);
                   const remainingCount = guides.length - 3;
 
