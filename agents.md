@@ -1,3 +1,5 @@
+Always run nvm use / match node version to .nvmrc
+
 # AI Agent Instructions for SurfDeeper
 
 ## Quick Setup

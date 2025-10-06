@@ -2,11 +2,15 @@
  * Helper functions for spot guides map interactions
  */
 
-export function createPopupContent(spot: any, marker: any, isDragging = false): string {
+export function createPopupContent(
+  spot: any,
+  marker: any,
+  isDragging = false,
+): string {
   const position = marker.getLatLng();
   const lat = position.lat.toFixed(4);
   const lng = position.lng.toFixed(4);
-  
+
   if (isDragging) {
     return `
       <div class="marker-popup">
@@ -21,11 +25,11 @@ export function createPopupContent(spot: any, marker: any, isDragging = false): 
       </div>
     `;
   }
-  
+
   return `
     <div class="marker-popup">
       <b>${spot.title}</b>
-      ${spot.description ? `<br/>${spot.description}` : ''}
+      ${spot.description ? `<br/>${spot.description}` : ""}
       <div class="popup-actions">
         <a href="/spots/${spot.slug}" class="view-spot-link">View Spot →</a>
         <a href="#" class="edit-location-link" data-slug="${spot.slug}">📍 Pin in wrong location?</a>
@@ -34,9 +38,13 @@ export function createPopupContent(spot: any, marker: any, isDragging = false): 
   `;
 }
 
-export function showContributionInstructions(spot: any, newLat: string, newLng: string): void {
-  const modal = document.createElement('div');
-  modal.className = 'contribution-modal';
+export function showContributionInstructions(
+  spot: any,
+  newLat: string,
+  newLng: string,
+): void {
+  const modal = document.createElement("div");
+  modal.className = "contribution-modal";
   modal.innerHTML = `
     <div class="contribution-modal-content">
       <h2>Update ${spot.title} Coordinates</h2>
@@ -55,15 +63,15 @@ longitude: ${newLng}
       <button class="close-modal-btn">Close</button>
     </div>
   `;
-  
+
   document.body.appendChild(modal);
-  
-  const closeBtn = modal.querySelector('.close-modal-btn');
-  closeBtn?.addEventListener('click', () => {
+
+  const closeBtn = modal.querySelector(".close-modal-btn");
+  closeBtn?.addEventListener("click", () => {
     document.body.removeChild(modal);
   });
-  
-  modal.addEventListener('click', (e) => {
+
+  modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       document.body.removeChild(modal);
     }
@@ -74,15 +82,19 @@ export function setupMarkerInteractions(
   marker: any,
   spot: any,
   createPopupContentFn: (spot: any, marker: any, isDragging: boolean) => string,
-  showInstructionsFn: (spot: any, lat: string, lng: string) => void
+  showInstructionsFn: (spot: any, lat: string, lng: string) => void,
 ): void {
   // Listen for popup open events to attach event listeners
-  marker.on('popupopen', () => {
-    const editLink = document.querySelector(`.edit-location-link[data-slug="${spot.slug}"]`);
-    const doneBtn = document.querySelector(`.done-dragging-btn[data-slug="${spot.slug}"]`);
-    
+  marker.on("popupopen", () => {
+    const editLink = document.querySelector(
+      `.edit-location-link[data-slug="${spot.slug}"]`,
+    );
+    const doneBtn = document.querySelector(
+      `.done-dragging-btn[data-slug="${spot.slug}"]`,
+    );
+
     if (editLink) {
-      editLink.addEventListener('click', (e: Event) => {
+      editLink.addEventListener("click", (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
         // Enable dragging
@@ -99,14 +111,14 @@ export function setupMarkerInteractions(
         }
       });
     }
-    
+
     if (doneBtn) {
-      doneBtn.addEventListener('click', () => {
+      doneBtn.addEventListener("click", () => {
         const position = marker.getLatLng();
         showInstructionsFn(
           spot,
           position.lat.toFixed(4),
-          position.lng.toFixed(4)
+          position.lng.toFixed(4),
         );
         // Disable dragging
         marker.dragging.disable();
@@ -121,12 +133,11 @@ export function setupMarkerInteractions(
       });
     }
   });
-  
+
   // Update coordinates in popup while dragging
-  marker.on('drag', () => {
+  marker.on("drag", () => {
     if (marker.isPopupOpen()) {
       marker.setPopupContent(createPopupContentFn(spot, marker, true));
     }
   });
 }
-

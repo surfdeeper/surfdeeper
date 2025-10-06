@@ -3,17 +3,17 @@
 /* CSS Custom Properties (Design Tokens) */
 :root {
   /* Color Palette */
-  --color-primary: #febc08;          /* Golden yellow - main accent */
-  --color-primary-hover: #e0a607;    /* Darker yellow for hover states */
-  --color-surface-primary: #111a22;   /* Dark blue - main backgrounds */
+  --color-primary: #febc08; /* Golden yellow - main accent */
+  --color-primary-hover: #e0a607; /* Darker yellow for hover states */
+  --color-surface-primary: #111a22; /* Dark blue - main backgrounds */
   --color-surface-secondary: #132635; /* Lighter blue - cards, elevated surfaces */
-  --color-surface-tertiary: #1a2332;  /* Even lighter - subtle variations */
-  --color-text-primary: #999;      /* Main text color */
-  --color-text-secondary: #666;    /* Muted text */
-  --color-text-on-primary: #111a22;   /* Text on primary color backgrounds */
-  --color-border: #132635;            /* Default borders */
+  --color-surface-tertiary: #1a2332; /* Even lighter - subtle variations */
+  --color-text-primary: #999; /* Main text color */
+  --color-text-secondary: #666; /* Muted text */
+  --color-text-on-primary: #000; /* Text on primary (yellow) backgrounds should be black */
+  --color-border: #132635; /* Default borders */
   --color-border-accent: var(--color-primary); /* Accent borders */
-  
+
   /* Semantic Colors */
   --color-success: #22c55e;
   --color-warning: #f59e0b;
@@ -21,6 +21,7 @@
   --color-info: #3b82f6;
 
   /* Additional semantic colors used across pages */
+
   /* Deprecated for text: prefer --color-primary (accent) or --color-text-* for body copy */
   --color-accent-green: #0f8; /* #00ff88 */
   --color-accent-green-hover: #0c6; /* #00cc66 */
@@ -44,18 +45,18 @@
 
   /* Overlay / Scrims */
   --overlay-scrim: #000c; /* 80% black */
-  
+
   /* Typography Scale */
-  --font-family-primary: 'Roboto', sans-serif;
-  --font-family-mono: 'Roboto Mono', monospace;
-  --font-size-xs: 0.75rem;   /* 12px */
-  --font-size-sm: 0.875rem;  /* 14px */
-  --font-size-base: 1rem;    /* 16px */
-  --font-size-lg: 1.125rem;  /* 18px */
-  --font-size-xl: 1.25rem;   /* 20px */
-  --font-size-2xl: 1.5rem;   /* 24px */
-  --font-size-3xl: 2rem;     /* 32px */
-  --font-size-4xl: 2.5rem;   /* 40px */
+  --font-family-primary: "Roboto", sans-serif;
+  --font-family-mono: "Roboto Mono", monospace;
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 2rem; /* 32px */
+  --font-size-4xl: 2.5rem; /* 40px */
 
   /* Extended sizes to satisfy existing design */
   --font-size-0-7: 0.7rem;
@@ -70,25 +71,25 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  
+
   /* Spacing Scale (8px base) */
-  --space-1: 0.25rem;   /* 4px */
-  --space-2: 0.5rem;    /* 8px */
-  --space-3: 0.75rem;   /* 12px */
-  --space-4: 1rem;      /* 16px */
-  --space-5: 1.25rem;   /* 20px */
-  --space-6: 1.5rem;    /* 24px */
-  --space-8: 2rem;      /* 32px */
-  --space-10: 2.5rem;   /* 40px */
-  --space-12: 3rem;     /* 48px */
-  --space-16: 4rem;     /* 64px */
-  
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+
   /* Border Radius */
   --radius-sm: 4px;
   --radius-base: 8px;
   --radius-lg: 12px;
   --radius-full: 50%;
-  
+
   /* Shadows */
   --shadow-sm: 0 1px 2px #0000001a; /* 10% */
   --shadow-base: 0 4px 12px #0000004d; /* 30% */
@@ -97,7 +98,7 @@
 
   /* Focus rings */
   --focus-ring-primary: 0 0 0 3px #febc081a;
-  
+
   /* Z-index Scale */
   --z-dropdown: 1000;
   --z-sticky: 1020;
@@ -109,7 +110,7 @@
   --z-overlay-max: 10000;
   --z-1: 1;
   --z-2: 2;
-  
+
   /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-base: 0.3s ease;
@@ -122,11 +123,11 @@
   --color-accent-hover: var(--color-primary-hover);
 
   /* Spacing aliases (semantic naming) */
-  --space-xs: var(--space-2);   /* 8px */
-  --space-sm: var(--space-3);   /* 12px */
-  --space-md: var(--space-4);   /* 16px */
-  --space-lg: var(--space-6);   /* 24px */
-  --space-xl: var(--space-8);   /* 32px */
+  --space-xs: var(--space-2); /* 8px */
+  --space-sm: var(--space-3); /* 12px */
+  --space-md: var(--space-4); /* 16px */
+  --space-lg: var(--space-6); /* 24px */
+  --space-xl: var(--space-8); /* 32px */
   --space-2xl: var(--space-10); /* 40px */
   --space-3xl: var(--space-12); /* 48px */
 
@@ -148,7 +149,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family-primary);
@@ -259,7 +261,7 @@ html, body {
 }
 
 /* Links */
-a {
+a:not(.btn) {
   color: var(--color-primary);
   text-decoration: underline;
   text-decoration-color: var(--color-primary);
@@ -267,12 +269,12 @@ a {
   transition: color var(--transition-base);
 }
 
-a:hover {
+a:not(.btn):hover {
   color: var(--color-primary-hover);
   text-decoration-color: var(--color-primary);
 }
 
-a:visited {
+a:not(.btn):visited {
   color: var(--color-primary);
 }
 
@@ -402,7 +404,7 @@ a:focus-visible {
   .nav-links {
     gap: var(--space-4);
   }
-  
+
   .nav-logo {
     --nav-logo-height: 120px;
   }

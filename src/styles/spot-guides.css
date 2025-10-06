@@ -200,24 +200,24 @@
     width: 48px;
     height: 48px;
   }
-  
+
   .toggle-icon svg {
     width: 20px;
     height: 20px;
   }
-  
+
   .directory-container {
     padding: var(--space-md) var(--space-sm) var(--space-3xl) var(--space-sm);
   }
-  
+
   .directory-header h1 {
     font-size: var(--font-size-2xl);
   }
-  
+
   .directory-description {
     font-size: var(--font-size-base);
   }
-  
+
   .spots-list {
     grid-template-columns: 1fr;
     gap: var(--space-sm);
@@ -382,5 +382,3 @@
 .close-modal-btn:hover {
   background-color: var(--color-accent-hover);
 }
-
-

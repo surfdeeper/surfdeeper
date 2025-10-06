@@ -28,7 +28,7 @@ export interface SpotEntry {
 export function serializeSpot(spot: SpotEntry): SerializedSpot {
   return {
     title: spot.data.title,
-    description: spot.data.description || '',
+    description: spot.data.description || "",
     latitude: spot.data.latitude,
     longitude: spot.data.longitude,
     slug: spot.slug,
@@ -57,10 +57,13 @@ export function getSpotDataFromElement(elementId: string): any {
   }
 
   try {
-    const json = dataElement.textContent || '{}';
+    const json = dataElement.textContent || "{}";
     return JSON.parse(json);
   } catch (error) {
-    console.error(`Failed to parse spot data from element "${elementId}":`, error);
+    console.error(
+      `Failed to parse spot data from element "${elementId}":`,
+      error,
+    );
     return null;
   }
 }
@@ -78,11 +81,13 @@ export function getSpotsDataFromElement(elementId: string): any[] {
   }
 
   try {
-    const json = dataElement.textContent || '[]';
+    const json = dataElement.textContent || "[]";
     return JSON.parse(json);
   } catch (error) {
-    console.error(`Failed to parse spots data from element "${elementId}":`, error);
+    console.error(
+      `Failed to parse spots data from element "${elementId}":`,
+      error,
+    );
     return [];
   }
 }
-

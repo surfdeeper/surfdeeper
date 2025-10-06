@@ -1,7 +1,7 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z } from "astro:content";
 
 const guides = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
@@ -10,13 +10,13 @@ const guides = defineCollection({
 });
 
 const spots = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
     latitude: z.number(),
     longitude: z.number(),
-    skillLevels: z.array(z.enum(['beginner', 'intermediate', 'advanced'])),
+    skillLevels: z.array(z.enum(["beginner", "intermediate", "advanced"])),
     waveType: z.string(),
     bottom: z.string(),
     bestSize: z.string(),
@@ -31,5 +31,3 @@ const spots = defineCollection({
 });
 
 export const collections = { guides, spots };
-
-

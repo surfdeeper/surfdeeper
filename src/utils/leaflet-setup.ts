@@ -2,7 +2,7 @@
  * Utility functions for setting up Leaflet maps
  */
 
-import type { MapTheme } from '../config/map-constants';
+import type { MapTheme } from "../config/map-constants";
 
 /**
  * Waits for Leaflet library to be loaded
@@ -11,18 +11,18 @@ import type { MapTheme } from '../config/map-constants';
  */
 export function waitForLeaflet(callback: () => void, maxAttempts = 50): void {
   let attempts = 0;
-  
+
   function check() {
-    if (typeof window !== 'undefined' && (window as any).L) {
+    if (typeof window !== "undefined" && (window as any).L) {
       callback();
     } else if (attempts < maxAttempts) {
       attempts++;
       setTimeout(check, 100);
     } else {
-      console.error('Leaflet library failed to load');
+      console.error("Leaflet library failed to load");
     }
   }
-  
+
   check();
 }
 
@@ -32,9 +32,9 @@ export function waitForLeaflet(callback: () => void, maxAttempts = 50): void {
  * @returns The theme ID
  */
 export function getStoredTheme(defaultTheme: string): string {
-  if (typeof window === 'undefined') return defaultTheme;
+  if (typeof window === "undefined") return defaultTheme;
   try {
-    return localStorage.getItem('mapTheme') || defaultTheme;
+    return localStorage.getItem("mapTheme") || defaultTheme;
   } catch {
     return defaultTheme;
   }
@@ -45,11 +45,11 @@ export function getStoredTheme(defaultTheme: string): string {
  * @param themeId The theme ID to store
  */
 export function storeTheme(themeId: string): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   try {
-    localStorage.setItem('mapTheme', themeId);
+    localStorage.setItem("mapTheme", themeId);
   } catch (e) {
-    console.warn('Failed to store theme preference:', e);
+    console.warn("Failed to store theme preference:", e);
   }
 }
 
@@ -65,17 +65,17 @@ export function createBaseMap(
   elementId: string,
   center: [number, number],
   zoom: number,
-  theme?: MapTheme
+  theme?: MapTheme,
 ): any | null {
-  if (typeof window === 'undefined' || !(window as any).L) {
-    console.error('Leaflet not loaded');
+  if (typeof window === "undefined" || !(window as any).L) {
+    console.error("Leaflet not loaded");
     return null;
   }
 
   const L = (window as any).L;
   const map = L.map(elementId, {
     // Set dark background to prevent white flicker
-    backgroundColor: '#1a1f2e'
+    backgroundColor: "#1a1f2e",
   }).setView(center, zoom);
 
   // Add tile layer if theme is provided
@@ -83,16 +83,16 @@ export function createBaseMap(
     const tileLayerOptions: any = {
       attribution: theme.attribution,
       maxZoom: theme.maxZoom,
-      className: 'map-tiles'
+      className: "map-tiles",
     };
-    
+
     if (theme.subdomains) {
       tileLayerOptions.subdomains = theme.subdomains;
     }
-    
+
     const tileLayer = L.tileLayer(theme.url, tileLayerOptions);
     tileLayer.addTo(map);
-    
+
     // Store tile layer reference on map for theme switching
     (map as any)._tileLayer = tileLayer;
   }
@@ -106,32 +106,32 @@ export function createBaseMap(
  * @param theme The new theme configuration
  */
 export function changeMapTheme(map: any, theme: MapTheme): void {
-  if (!map || typeof window === 'undefined') return;
-  
+  if (!map || typeof window === "undefined") return;
+
   const L = (window as any).L;
-  
+
   // Remove existing tile layer
   if ((map as any)._tileLayer) {
     map.removeLayer((map as any)._tileLayer);
   }
-  
+
   // Add new tile layer
   const tileLayerOptions: any = {
     attribution: theme.attribution,
     maxZoom: theme.maxZoom,
-    className: 'map-tiles'
+    className: "map-tiles",
   };
-  
+
   if (theme.subdomains) {
     tileLayerOptions.subdomains = theme.subdomains;
   }
-  
+
   const tileLayer = L.tileLayer(theme.url, tileLayerOptions);
   tileLayer.addTo(map);
-  
+
   // Store new tile layer reference
   (map as any)._tileLayer = tileLayer;
-  
+
   // Store theme preference
   storeTheme(theme.id);
 }
@@ -152,18 +152,17 @@ export function createMarkerWithPopup(
   longitude: number,
   title: string,
   description?: string,
-  openPopup = false
+  openPopup = false,
 ): any {
   const L = (window as any).L;
   const marker = L.marker([latitude, longitude]).addTo(map);
-  
-  const popupContent = `<b>${title}</b>${description ? `<br/>${description}` : ''}`;
+
+  const popupContent = `<b>${title}</b>${description ? `<br/>${description}` : ""}`;
   marker.bindPopup(popupContent);
-  
+
   if (openPopup) {
     marker.openPopup();
   }
-  
+
   return marker;
 }
-

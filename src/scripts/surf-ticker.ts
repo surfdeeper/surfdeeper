@@ -2,37 +2,40 @@
 
 async function fetchMarineConditions(latitude: number, longitude: number) {
   try {
-    const marineUrl = new URL('https://marine-api.open-meteo.com/v1/marine');
-    marineUrl.searchParams.set('latitude', latitude.toString());
-    marineUrl.searchParams.set('longitude', longitude.toString());
-    marineUrl.searchParams.set('hourly', [
-      'wave_height',
-      'wave_period',
-      'wave_direction',
-      'swell_wave_height',
-      'swell_wave_period',
-      'swell_wave_direction'
-    ].join(','));
-    marineUrl.searchParams.set('forecast_days', '1');
+    const marineUrl = new URL("https://marine-api.open-meteo.com/v1/marine");
+    marineUrl.searchParams.set("latitude", latitude.toString());
+    marineUrl.searchParams.set("longitude", longitude.toString());
+    marineUrl.searchParams.set(
+      "hourly",
+      [
+        "wave_height",
+        "wave_period",
+        "wave_direction",
+        "swell_wave_height",
+        "swell_wave_period",
+        "swell_wave_direction",
+      ].join(","),
+    );
+    marineUrl.searchParams.set("forecast_days", "1");
 
-    const weatherUrl = new URL('https://api.open-meteo.com/v1/forecast');
-    weatherUrl.searchParams.set('latitude', latitude.toString());
-    weatherUrl.searchParams.set('longitude', longitude.toString());
-    weatherUrl.searchParams.set('hourly', 'wind_speed_10m,wind_direction_10m');
-    weatherUrl.searchParams.set('forecast_days', '1');
+    const weatherUrl = new URL("https://api.open-meteo.com/v1/forecast");
+    weatherUrl.searchParams.set("latitude", latitude.toString());
+    weatherUrl.searchParams.set("longitude", longitude.toString());
+    weatherUrl.searchParams.set("hourly", "wind_speed_10m,wind_direction_10m");
+    weatherUrl.searchParams.set("forecast_days", "1");
 
     const [marineResponse, weatherResponse] = await Promise.all([
       fetch(marineUrl.toString()),
-      fetch(weatherUrl.toString())
+      fetch(weatherUrl.toString()),
     ]);
 
     if (!marineResponse.ok || !weatherResponse.ok) {
-      throw new Error('API error');
+      throw new Error("API error");
     }
 
     const marineData = await marineResponse.json();
     const weatherData = await weatherResponse.json();
-    
+
     const marineHourly = marineData.hourly;
     const weatherHourly = weatherData.hourly;
     const idx = 0;
@@ -49,13 +52,30 @@ async function fetchMarineConditions(latitude: number, longitude: number) {
       timestamp: marineHourly.time[idx] || new Date().toISOString(),
     };
   } catch (error) {
-    console.error('Failed to fetch marine conditions:', error);
+    console.error("Failed to fetch marine conditions:", error);
     return null;
   }
 }
 
 function degreesToCardinal(degrees: number) {
-  const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+  const directions = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+  ];
   const index = Math.round(degrees / 22.5) % 16;
   return directions[index];
 }
@@ -129,51 +149,66 @@ const surfSayings = [
   "📢 Surf lie: It's 4-6 and clean - in Surfline voice",
   "📢 Surf lie: That section was makeable",
   "📢 Surf lie: I'm not cold",
-  "📢 Surf lie: You didn't burn me"
+  "📢 Surf lie: You didn't burn me",
 ];
 
 function getRandomSaying() {
   return surfSayings[Math.floor(Math.random() * surfSayings.length)];
 }
 
-function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+) {
   // Haversine formula for distance between two points
   const R = 6371; // Radius of Earth in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c; // Distance in km
 }
 
 async function updateSurfTicker() {
-  const tickerContent = document.getElementById('ticker-content');
+  const tickerContent = document.getElementById("ticker-content");
   if (!tickerContent) return;
 
   // Surf spots to check (using actual spots from the site)
   const spots = [
-    { name: 'Ocean Beach', slug: 'ocean-beach', lat: 37.7699, lon: -122.5109 },
-    { name: 'Linda Mar', slug: 'linda-mar', lat: 37.5989, lon: -122.5001 },
-    { name: 'Pleasure Point', slug: 'pleasure-point', lat: 36.9651, lon: -121.9698 },
-    { name: 'Bolinas', slug: 'bolinas', lat: 37.9079, lon: -122.6859 }
+    { name: "Ocean Beach", slug: "ocean-beach", lat: 37.7699, lon: -122.5109 },
+    { name: "Linda Mar", slug: "linda-mar", lat: 37.5989, lon: -122.5001 },
+    {
+      name: "Pleasure Point",
+      slug: "pleasure-point",
+      lat: 36.9651,
+      lon: -121.9698,
+    },
+    { name: "Bolinas", slug: "bolinas", lat: 37.9079, lon: -122.6859 },
   ];
 
   let closestSpot = spots[0]; // Default to first spot
 
   // Try to get user's location to find closest spot
   try {
-    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject, {
-        timeout: 5000,
-        maximumAge: 600000 // Cache for 10 minutes
-      });
-    });
-    
+    const position = await new Promise<GeolocationPosition>(
+      (resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          timeout: 5000,
+          maximumAge: 600000, // Cache for 10 minutes
+        });
+      },
+    );
+
     const userLat = position.coords.latitude;
     const userLon = position.coords.longitude;
-    
+
     // Find closest spot
     let minDistance = Infinity;
     for (const spot of spots) {
@@ -185,14 +220,20 @@ async function updateSurfTicker() {
     }
   } catch (error) {
     // Geolocation failed or denied, use default spot
-    console.log('Using default surf spot (geolocation unavailable)');
+    console.log("Using default surf spot (geolocation unavailable)");
   }
 
   // Fetch conditions for closest spot only
-  const conditions = await fetchMarineConditions(closestSpot.lat, closestSpot.lon);
-  
+  const conditions = await fetchMarineConditions(
+    closestSpot.lat,
+    closestSpot.lon,
+  );
+
   if (!conditions) {
-    (tickerContent as HTMLElement).innerHTML = getRandomSaying() + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + getRandomSaying();
+    (tickerContent as HTMLElement).innerHTML =
+      getRandomSaying() +
+      "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+      getRandomSaying();
     initMarqueeAnimation();
     return;
   }
@@ -203,19 +244,22 @@ async function updateSurfTicker() {
   const windDir = degreesToCardinal(conditions.windDirection);
   const swellDir = degreesToCardinal(conditions.swellDirection);
   const period = conditions.swellPeriod.toFixed(0);
-  
+
   const surfReport = `<a href="/spots/${closestSpot.slug}" style="color: var(--color-primary); text-decoration: none; border-bottom: 1px dotted var(--color-primary); font-weight: 600;">${closestSpot.name}</a>: ${waveHeightFt}ft @ ${period}s ${swellDir} • Wind ${windSpeedMph}mph ${windDir}`;
-  
+
   // Get 2 random sayings
   const saying1 = getRandomSaying();
   const saying2 = getRandomSaying();
-  
+
   // Build full ticker with surf report + random sayings
   const fullMessage = `${surfReport}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${saying1}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${saying2}`;
-  
+
   // Duplicate content for seamless scrolling
-  (tickerContent as HTMLElement).innerHTML = fullMessage + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + fullMessage;
-  
+  (tickerContent as HTMLElement).innerHTML =
+    fullMessage +
+    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+    fullMessage;
+
   // Restart marquee animation after content update
   initMarqueeAnimation();
 }
@@ -224,52 +268,58 @@ async function updateSurfTicker() {
 let animationFrameId: number | null = null;
 
 function initMarqueeAnimation() {
-  const tickerContent = document.getElementById('ticker-content');
+  const tickerContent = document.getElementById("ticker-content");
   if (!tickerContent) return;
-  
+
   // Cancel any existing animation
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
   }
-  
+
   // Check if user prefers reduced motion
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
   if (prefersReducedMotion) {
     return; // Don't animate if user prefers reduced motion
   }
-  
+
   let position = 0;
   const speed = 0.5; // pixels per frame (adjust for speed)
-  
+
   function animate() {
     // Get the width of the content
     const contentWidth = (tickerContent as HTMLElement).offsetWidth;
-    
+
     // Move the content
     position -= speed;
-    
+
     // Reset position when we've scrolled half the content (due to duplication)
     if (Math.abs(position) >= contentWidth / 2) {
       position = 0;
     }
-    
+
     // Apply transform
-    (tickerContent as HTMLElement).style.transform = `translateX(${position}px)`;
-    
+    (tickerContent as HTMLElement).style.transform =
+      `translateX(${position}px)`;
+
     // Continue animation
     animationFrameId = requestAnimationFrame(animate);
   }
-  
+
   // Start the animation
   animationFrameId = requestAnimationFrame(animate);
 }
 
 // Initial update and start animation
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
+if (
+  document.readyState === "complete" ||
+  document.readyState === "interactive"
+) {
   updateSurfTicker();
 } else {
-  document.addEventListener('DOMContentLoaded', updateSurfTicker);
+  document.addEventListener("DOMContentLoaded", updateSurfTicker);
 }
 
 // Refresh every 15 minutes
@@ -285,5 +335,5 @@ export {
   getRandomSaying,
   calculateDistance,
   updateSurfTicker,
-  initMarqueeAnimation
+  initMarqueeAnimation,
 };

@@ -34,6 +34,57 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } =
             </div>
           </div>
         </div>
+
+        {/** Mobile-only quick sections below the map */}
+        <div class="mobile-home-sections">
+          <div class="card">
+            <h3>🏄 Explore the Skills Guide</h3>
+            <p class="about-text">
+              Learn fundamentals, techniques, and strategy. Short, practical
+              guides for all levels.
+            </p>
+            <div class="sidebar-cta-wrap">
+              <a href="/guide" class="btn btn-primary">Browse Guide →</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>💡 About</h3>
+            <p class="about-text">
+              <strong>Free and open source</strong> — Built by surfers, for surfers.
+              Share your knowledge and help the community grow.
+            </p>
+            <div class="sidebar-cta-wrap">
+              <a href="/contribute" class="btn btn-secondary">Contribute</a>
+            </div>
+          </div>
+
+          {
+            recentlyUpdated.length > 0 && (
+              <div class="card updates-section">
+                <h3>📝 Recently Updated</h3>
+                <ul class="updates-list">
+                  {recentlyUpdated.slice(0, 3).map((page) => (
+                    <li class="update-item">
+                      <a href={page.url} class="update-link">
+                        <span class="page-hierarchy">{page.hierarchy}</span>
+                        <span class="page-title">{page.title}</span>
+                      </a>
+                      <span class="update-date">
+                        {new Date(page.date).toLocaleString("en-US", {
+                          timeZone: "America/Los_Angeles",
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+        </div>
       </section>
 
       <!-- Left Sidebar -->

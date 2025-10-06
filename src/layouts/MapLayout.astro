@@ -1,5 +1,7 @@
 ---
 import Navigation from "../components/Navigation.astro";
+import HeadMeta from "../components/HeadMeta.astro";
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import "../styles/design-system.css";
 
 export interface Props {
@@ -17,31 +19,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+    <HeadMeta
+      title={title}
+      description={description}
+      canonicalURL={canonicalURL}
     />
-    <title>{title}</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"
-    ></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-4EL168HRYZ");
-    </script>
+    <GoogleAnalytics />
   </head>
   <body>
     <Navigation />
@@ -49,29 +32,28 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <main class="map-main">
       <slot />
     </main>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Main content area - fills remaining space */
+      .map-main {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+    </style>
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  body {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Main content area - fills remaining space */
-  .map-main {
-    flex: 1;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-  }
-</style>
