@@ -2,7 +2,9 @@
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import sections from "../content/guides/_sections.json";
+import { isPlaceholderTodo } from "../utils/guide-filters";
 
+// Load all guides
 const entries = await getCollection("guides");
 
 type EntryType = (typeof entries)[number];
@@ -24,6 +26,17 @@ for (const key of Object.keys(grouped)) {
       a.data.title.localeCompare(b.data.title),
   );
 }
+
+// Determine which section index pages are placeholder TODO-only
+const disabledSectionLinks = new Set<string>();
+for (const section of Object.keys(grouped)) {
+  const sectionIndex = entries.find(
+    (e) => e.slug === section || e.slug === `${section}/index`,
+  );
+  if (sectionIndex && isPlaceholderTodo(sectionIndex.body)) {
+    disabledSectionLinks.add(section);
+  }
+}
 ---
 
 <Layout
@@ -44,27 +57,35 @@ for (const key of Object.keys(grouped)) {
             ([a], [b]) =>
               (sections[a]?.order ?? 999) - (sections[b]?.order ?? 999),
           )
-          .map(([section, items]) => (
-            <a href={`/guide/${section}`} class="card">
-              <div class="card-content">
-                <h3 class="heading heading-md">
-                  {sections[section]?.label ?? section}
-                </h3>
-                <p class="guide-count">
-                  {items.length} {items.length === 1 ? "guide" : "guides"}
-                </p>
-                <ul class="guide-preview">
-                  {items.slice(0, 3).map((e) => (
-                    <li>{e.data.title}</li>
-                  ))}
-                  {items.length > 3 && (
-                    <li class="more">+{items.length - 3} more</li>
-                  )}
-                </ul>
-              </div>
-              <div class="card-link">View Guides →</div>
-            </a>
-          ))
+          .map(([section, items]) => {
+            const disabled = disabledSectionLinks.has(section);
+            return (
+              <a
+                class={`card${disabled ? " is-disabled" : ""}`}
+                href={!disabled ? `/guide/${section}` : undefined}
+                aria-disabled={disabled ? "true" : undefined}
+                tabindex={disabled ? -1 : undefined}
+              >
+                <div class="card-content">
+                  <h3 class="heading heading-md">
+                    {sections[section]?.label ?? section}
+                  </h3>
+                  <p class="guide-count">
+                    {items.length} {items.length === 1 ? "guide" : "guides"}
+                  </p>
+                  <ul class="guide-preview">
+                    {items.slice(0, 3).map((e) => (
+                      <li>{e.data.title}</li>
+                    ))}
+                    {items.length > 3 && (
+                      <li class="more">+{items.length - 3} more</li>
+                    )}
+                  </ul>
+                </div>
+                <div class="card-link">View Guides →</div>
+              </a>
+            );
+          })
       }
     </div>
   </section>
@@ -189,6 +210,12 @@ for (const key of Object.keys(grouped)) {
       color: var(--color-text-secondary);
       margin: 0 0 var(--space-sm) 0;
       opacity: 0.9;
+    }
+
+    /* Disabled section cards */
+    .section-grid .card.is-disabled {
+      pointer-events: none;
+      opacity: 0.6;
     }
 
     /* button styles are provided by .btn .btn-primary */
