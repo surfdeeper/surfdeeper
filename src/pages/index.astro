@@ -3,8 +3,13 @@ import Layout from "../layouts/Layout.astro";
 import sections from "../content/guides/_sections.json";
 import { loadHomepageData } from "../utils/homepage-data";
 
-const { spots, guidesBySection, recentCommits, recentlyUpdated } =
-  await loadHomepageData();
+const {
+  spots,
+  guidesBySection,
+  comingSoonCountBySection,
+  recentCommits,
+  recentlyUpdated,
+} = await loadHomepageData();
 ---
 
 <Layout
@@ -117,6 +122,11 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } =
                               <a href={`/guide/${slug}`}>
                                 {remainingCount} more →
                               </a>
+                            </li>
+                          )}
+                          {comingSoonCountBySection[slug] > 0 && (
+                            <li class="coming-soon-items">
+                              {comingSoonCountBySection[slug]} coming soon
                             </li>
                           )}
                         </ul>

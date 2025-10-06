@@ -22,6 +22,7 @@ export async function loadHomepageData() {
     string,
     Array<{ slug: string; title: string; url: string }>
   > = {};
+  const comingSoonCountBySection: Record<string, number> = {};
 
   // Group guides by their section (first part of slug)
   for (const guide of allGuides) {
@@ -32,11 +33,18 @@ export async function loadHomepageData() {
     // Skip index pages
     if (pageName === "index") continue;
 
-    // Skip placeholder guides that contain only "coming soon" or "todo" content
-    if (isPlaceholderTodo(guide.body)) continue;
-
+    // Initialize section arrays if they don't exist
     if (!guidesBySection[section]) {
       guidesBySection[section] = [];
+    }
+    if (!comingSoonCountBySection[section]) {
+      comingSoonCountBySection[section] = 0;
+    }
+
+    // Check if this is a placeholder guide
+    if (isPlaceholderTodo(guide.body)) {
+      comingSoonCountBySection[section]++;
+      continue;
     }
 
     guidesBySection[section].push({
@@ -164,5 +172,5 @@ export async function loadHomepageData() {
     console.warn("Could not fetch recently updated pages:", error);
   }
 
-  return { spots, guidesBySection, recentCommits, recentlyUpdated };
+  return { spots, guidesBySection, comingSoonCountBySection, recentCommits, recentlyUpdated };
 }
