@@ -7,9 +7,24 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint:links": "node scripts/validate-links.js",
+    "lint:md": "markdownlint src/content/**/*.md",
+    "lint": "npm run lint:links && npm run lint:md",
+    "fix:md": "markdownlint --fix src/content/**/*.md",
+    "fix": "npm run fix:md",
+    "format": "prettier --write \"**/*.{md,js,json}\" && prettier --write \"**/*.astro\"",
+    "format:check": "prettier --check \"**/*.{md,js,json}\" && prettier --check \"**/*.astro\"",
+    "precommit": "npm run lint"
   },
   "dependencies": {
     "astro": "^4.0.0"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.37.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-astro": "^0.12.0"
   }
 }

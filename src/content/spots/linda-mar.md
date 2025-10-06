@@ -3,7 +3,7 @@ title: Linda Mar Beach, Pacifica
 description: Popular Bay Area beach break in Pacifica, CA
 latitude: 37.5938
 longitude: -122.5010
-skillLevels: ['beginner', 'intermediate', 'advanced']
+skillLevels: ["beginner", "intermediate", "advanced"]
 waveType: Beach break
 bottom: Sand
 bestSize: 2-4 feet
@@ -11,7 +11,7 @@ bestTide: Mid to high
 bestWind: E/NE offshore
 bestSeason: Year-round
 swellDirection: NW
-hazards: ['Rocks near north end', 'Strong rip currents', 'Crowded lineup']
+hazards: ["Rocks near north end", "Strong rip currents", "Crowded lineup"]
 parking: Large parking lot ($3-5)
 facilities: Restrooms and showers available
 ---

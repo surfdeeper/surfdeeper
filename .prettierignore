@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.npm/
+
+# Build outputs
+dist/
+build/
+.astro/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Generated files
+package-lock.json
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+
+# Temporary files
+*.tmp
+*.temp

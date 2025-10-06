@@ -1,7 +1,7 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import sections from '../content/guides/_sections.json';
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import sections from "../content/guides/_sections.json";
 
 interface GalleryImage {
   src: string;
@@ -14,7 +14,7 @@ interface GalleryImage {
 }
 
 // Get all guides
-const allGuides = await getCollection('guides');
+const allGuides = await getCollection("guides");
 
 const images: GalleryImage[] = [];
 
@@ -26,26 +26,26 @@ const headingRegex = /^#{1,6}\s+(.+)$/gm;
 
 for (const guide of allGuides) {
   // Skip index pages
-  if (guide.slug.endsWith('/index') || !guide.slug.includes('/')) {
+  if (guide.slug.endsWith("/index") || !guide.slug.includes("/")) {
     continue;
   }
 
   const guideLink = `/guide/${guide.slug}`;
   const guideTitle = guide.data.title;
-  const sectionSlug = guide.slug.split('/')[0];
+  const sectionSlug = guide.slug.split("/")[0];
   const sectionData = sections[sectionSlug as keyof typeof sections];
   const sectionLabel = sectionData?.label || sectionSlug;
 
   // Get the raw markdown body
   const body = guide.body;
-  
+
   // Extract all headings with their positions
   const headings: { text: string; position: number }[] = [];
   let headingMatch;
   while ((headingMatch = headingRegex.exec(body)) !== null) {
     headings.push({
       text: headingMatch[1],
-      position: headingMatch.index
+      position: headingMatch.index,
     });
   }
 
@@ -57,7 +57,7 @@ for (const guide of allGuides) {
     const imagePosition = match.index;
 
     // Find the closest heading before this image
-    let closestHeading = '';
+    let closestHeading = "";
     for (let i = headings.length - 1; i >= 0; i--) {
       if (headings[i].position < imagePosition) {
         closestHeading = headings[i].text;
@@ -67,7 +67,7 @@ for (const guide of allGuides) {
 
     // Create caption: use alt text if available, otherwise use article title
     let caption = alt || guideTitle;
-    
+
     // Add context if we found a heading
     let context = closestHeading ? `${closestHeading}` : undefined;
 
@@ -78,84 +78,99 @@ for (const guide of allGuides) {
       guideTitle,
       guideLink,
       section: sectionLabel,
-      context
+      context,
     });
   }
 }
 
 // Group images by section
-const imagesBySection = images.reduce((acc, img) => {
-  if (!acc[img.section]) {
-    acc[img.section] = [];
-  }
-  acc[img.section].push(img);
-  return acc;
-}, {} as Record<string, GalleryImage[]>);
+const imagesBySection = images.reduce(
+  (acc, img) => {
+    if (!acc[img.section]) {
+      acc[img.section] = [];
+    }
+    acc[img.section].push(img);
+    return acc;
+  },
+  {} as Record<string, GalleryImage[]>,
+);
 ---
 
-<Layout 
-  title="Gallery - Surf Deeper" 
+<Layout
+  title="Gallery - Surf Deeper"
   description="Visual guide to surfing concepts, wave types, and techniques. Explore diagrams and illustrations for better understanding."
 >
   <div class="gallery-container">
     <header class="gallery-header">
       <h1>Gallery</h1>
       <p class="gallery-intro">
-        All images from the surf guides in one place. 
-        Click any image to jump to the full guide where it appears.
-        {images.length > 0 && (
-          <span class="total-count"> — {images.length} total image{images.length !== 1 ? 's' : ''}</span>
-        )}
+        All images from the surf guides in one place. Click any image to jump to
+        the full guide where it appears.
+        {
+          images.length > 0 && (
+            <span class="total-count">
+              {" "}
+              — {images.length} total image{images.length !== 1 ? "s" : ""}
+            </span>
+          )
+        }
       </p>
     </header>
 
-    {images.length === 0 ? (
-      <div class="no-images">
-        <p>No images found in the guides yet. <a href="/contribute">Contribute</a> guides with images!</p>
-      </div>
-    ) : (
-      Object.entries(imagesBySection)
-        .sort(([, a], [, b]) => b.length - a.length) // Sort by number of images descending
-        .map(([section, sectionImages]) => (
-          <section class="gallery-category">
-            <h2 class="category-title">{section} <span class="image-count">({sectionImages.length})</span></h2>
-            <div class="gallery-grid">
-              {sectionImages.map((image, idx) => (
-                <article class="gallery-item">
-                  <a href={image.guideLink} class="gallery-link">
-                    <div class="image-wrapper">
-                      <img 
-                        src={image.src} 
-                        alt={image.alt}
-                        loading="lazy"
-                      />
-                    </div>
-                    <div class="image-details">
-                      <div class="image-caption">
-                        {image.context && (
-                          <div class="image-context">{image.context}</div>
-                        )}
-                        <div class="image-title">{image.caption}</div>
+    {
+      images.length === 0 ? (
+        <div class="no-images">
+          <p>
+            No images found in the guides yet.{" "}
+            <a href="/contribute">Contribute</a> guides with images!
+          </p>
+        </div>
+      ) : (
+        Object.entries(imagesBySection)
+          .sort(([, a], [, b]) => b.length - a.length) // Sort by number of images descending
+          .map(([section, sectionImages]) => (
+            <section class="gallery-category">
+              <h2 class="category-title">
+                {section}{" "}
+                <span class="image-count">({sectionImages.length})</span>
+              </h2>
+              <div class="gallery-grid">
+                {sectionImages.map((image, idx) => (
+                  <article class="gallery-item">
+                    <a href={image.guideLink} class="gallery-link">
+                      <div class="image-wrapper">
+                        <img src={image.src} alt={image.alt} loading="lazy" />
                       </div>
-                      <div class="image-meta">
-                        <span class="guide-reference">from: {image.guideTitle}</span>
+                      <div class="image-details">
+                        <div class="image-caption">
+                          {image.context && (
+                            <div class="image-context">{image.context}</div>
+                          )}
+                          <div class="image-title">{image.caption}</div>
+                        </div>
+                        <div class="image-meta">
+                          <span class="guide-reference">
+                            from: {image.guideTitle}
+                          </span>
+                        </div>
+                        <span class="view-guide-hint">View Guide →</span>
                       </div>
-                      <span class="view-guide-hint">View Guide →</span>
-                    </div>
-                  </a>
-                </article>
-              ))}
-            </div>
-          </section>
-        ))
-    )}
+                    </a>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))
+      )
+    }
 
     <section class="contribute-section">
       <div class="contribute-box">
         <h3>📸 Add Your Own</h3>
         <p>
-          Have diagrams, illustrations, or photos that could help other surfers? 
-          <a href="/contribute">Contribute to the gallery</a> and share your knowledge with the community.
+          Have diagrams, illustrations, or photos that could help other surfers?
+          <a href="/contribute">Contribute to the gallery</a> and share your knowledge
+          with the community.
         </p>
       </div>
     </section>
@@ -414,5 +429,3 @@ const imagesBySection = images.reduce((acc, img) => {
     }
   }
 </style>
-</Layout>
-

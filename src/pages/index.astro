@@ -1,12 +1,16 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import sections from '../content/guides/_sections.json';
-import { loadHomepageData } from '../utils/homepage-data';
+import Layout from "../layouts/Layout.astro";
+import sections from "../content/guides/_sections.json";
+import { loadHomepageData } from "../utils/homepage-data";
 
-const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHomepageData();
+const { spots, guidesBySection, recentCommits, recentlyUpdated } =
+  await loadHomepageData();
 ---
 
-<Layout title="Surf Deeper" description="Open source surfing guide for skills and spots. Community-driven knowledge for surfers of all levels.">
+<Layout
+  title="Surf Deeper"
+  description="Open source surfing guide for skills and spots. Community-driven knowledge for surfers of all levels."
+>
   <div class="homepage-wrapper">
     <div class="marquee-container">
       <div class="marquee" id="surf-ticker">
@@ -17,16 +21,19 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
     <div class="three-column-layout">
       <!-- Main Content -->
       <section class="content">
-    <div class="main-content-grid">
-      <div class="map-preview-section">
-        <div id="map-preview" class="map-preview-container">
-          <div id="spot-list-panel-homepage" class="spot-list-panel-homepage">
-            <h3>Spots on Map</h3>
-            <ul id="spot-list-homepage"></ul>
+        <div class="main-content-grid">
+          <div class="map-preview-section">
+            <div id="map-preview" class="map-preview-container">
+              <div
+                id="spot-list-panel-homepage"
+                class="spot-list-panel-homepage"
+              >
+                <h3>Spots on Map</h3>
+                <ul id="spot-list-homepage"></ul>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
       </section>
 
       <!-- Left Sidebar -->
@@ -34,35 +41,46 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
         <div class="sidebar-section">
           <h3>🏄 Skills Guide</h3>
           <ul class="sidebar-links nested-guide">
-            {Object.entries(sections)
-              .sort(([, a], [, b]) => a.order - b.order)
-              .map(([slug, section]) => {
-                const guides = guidesBySection[slug] || [];
-                const visibleGuides = guides.slice(0, 3);
-                const remainingCount = guides.length - 3;
-                
-                return (
-                  <li class="section-item">
-                    <a href={`/guide/${slug}`} class="section-link">{section.label}</a>
-                    {guides.length > 0 && (
-                      <ul class="nested-links">
-                        {visibleGuides.map(guide => (
-                          <li><a href={guide.url}>{guide.title}</a></li>
-                        ))}
-                        {remainingCount > 0 && (
-                          <li class="more-items">
-                            <a href={`/guide/${slug}`}>{remainingCount} more →</a>
-                          </li>
-                        )}
-                      </ul>
-                    )}
-                  </li>
-                );
-              })
+            {
+              Object.entries(sections)
+                .sort(([, a], [, b]) => a.order - b.order)
+                .map(([slug, section]) => {
+                  const guides = guidesBySection[slug] || [];
+                  const visibleGuides = guides.slice(0, 3);
+                  const remainingCount = guides.length - 3;
+
+                  return (
+                    <li class="section-item">
+                      <a href={`/guide/${slug}`} class="section-link">
+                        {section.label}
+                      </a>
+                      {guides.length > 0 && (
+                        <ul class="nested-links">
+                          {visibleGuides.map((guide) => (
+                            <li>
+                              <a href={guide.url}>{guide.title}</a>
+                            </li>
+                          ))}
+                          {remainingCount > 0 && (
+                            <li class="more-items">
+                              <a href={`/guide/${slug}`}>
+                                {remainingCount} more →
+                              </a>
+                            </li>
+                          )}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                })
             }
           </ul>
           <div style="margin-top: 1rem; text-align: center;">
-            <a href="/guide" style="color: #00ff88; text-decoration: none; font-size: 0.9rem;">Browse All →</a>
+            <a
+              href="/guide"
+              style="color: #00ff88; text-decoration: none; font-size: 0.9rem;"
+              >Browse All →</a
+            >
           </div>
         </div>
       </aside>
@@ -71,113 +89,146 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
       <aside class="right-sidebar">
         <div class="sidebar-section">
           <h3>💡 About</h3>
-          <p style="color: #00ff88; opacity: 0.9; font-size: 0.9rem; line-height: 1.6; margin: 0;"><strong>Free and open source</strong> — Built by surfers, for surfers. <a href="/contribute" style="color: #00ff88; text-decoration: underline; text-underline-offset: 3px;">Contribute your knowledge</a> to help others learn and progress.</p>
+          <p
+            style="color: #00ff88; opacity: 0.9; font-size: 0.9rem; line-height: 1.6; margin: 0;"
+          >
+            <strong>Free and open source</strong> — Built by surfers, for surfers.
+            <a
+              href="/contribute"
+              style="color: #00ff88; text-decoration: underline; text-underline-offset: 3px;"
+              >Contribute your knowledge</a
+            > to help others learn and progress.
+          </p>
         </div>
 
         <div class="sidebar-section surf-wisdom">
           <h3>🧘 Surf Wisdom</h3>
-          <p class="wisdom-quote">"The best surfer out there is the one having the most fun."</p>
-          <p class="wisdom-quote">"You can't stop the waves, but you can learn to surf."</p>
+          <p class="wisdom-quote">
+            "The best surfer out there is the one having the most fun."
+          </p>
+          <p class="wisdom-quote">
+            "You can't stop the waves, but you can learn to surf."
+          </p>
         </div>
 
-        {recentlyUpdated.length > 0 && (
-          <div class="sidebar-section updates-section">
-            <h3>📝 Recently Updated</h3>
-            <ul class="updates-list">
-              {recentlyUpdated.slice(0, 4).map(page => (
-                <li class="update-item">
-                  <a href={page.url} class="update-link">
-                    <span class="page-hierarchy">{page.hierarchy}</span>
-                    <span class="page-title">{page.title}</span>
-                  </a>
-                  <span class="update-date">
-                    {new Date(page.date).toLocaleString('en-US', {
-                      timeZone: 'America/Los_Angeles',
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true,
-                      timeZoneName: 'short'
-                    })}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {
+          recentlyUpdated.length > 0 && (
+            <div class="sidebar-section updates-section">
+              <h3>📝 Recently Updated</h3>
+              <ul class="updates-list">
+                {recentlyUpdated.slice(0, 4).map((page) => (
+                  <li class="update-item">
+                    <a href={page.url} class="update-link">
+                      <span class="page-hierarchy">{page.hierarchy}</span>
+                      <span class="page-title">{page.title}</span>
+                    </a>
+                    <span class="update-date">
+                      {new Date(page.date).toLocaleString("en-US", {
+                        timeZone: "America/Los_Angeles",
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                        timeZoneName: "short",
+                      })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
 
-        {recentCommits.length > 0 && (
-          <div class="sidebar-section updates-section">
-            <h3>🔨 Recent Commits</h3>
-            <ul class="updates-list">
-              {recentCommits.slice(0, 3).map(commit => (
-                <li class="update-item">
-                  <a href={commit.url} target="_blank" rel="noopener noreferrer" class="update-link commit-link">
-                    {commit.message.length > 60 ? commit.message.substring(0, 60) + '...' : commit.message}
-                  </a>
-                  <span class="update-date">
-                    {new Date(commit.isoDate).toLocaleString('en-US', {
-                      timeZone: 'America/Los_Angeles',
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true,
-                      timeZoneName: 'short'
-                    })}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {
+          recentCommits.length > 0 && (
+            <div class="sidebar-section updates-section">
+              <h3>🔨 Recent Commits</h3>
+              <ul class="updates-list">
+                {recentCommits.slice(0, 3).map((commit) => (
+                  <li class="update-item">
+                    <a
+                      href={commit.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="update-link commit-link"
+                    >
+                      {commit.message.length > 60
+                        ? commit.message.substring(0, 60) + "..."
+                        : commit.message}
+                    </a>
+                    <span class="update-date">
+                      {new Date(commit.isoDate).toLocaleString("en-US", {
+                        timeZone: "America/Los_Angeles",
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                        timeZoneName: "short",
+                      })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
       </aside>
     </div>
   </div>
 </Layout>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  crossorigin=""
+/>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  crossorigin=""
+  defer></script>
 
 <style>
-  @import '../styles/homepage.css';
+  @import "../styles/homepage.css";
 </style>
 
 <script
   type="application/json"
   id="spots-data"
-  set:html={JSON.stringify(spots.map((s) => ({
-    title: s.data.title,
-    description: s.data.description || '',
-    latitude: s.data.latitude,
-    longitude: s.data.longitude,
-    slug: s.slug,
-  })))}
-></script>
+  set:html={JSON.stringify(
+    spots.map((s) => ({
+      title: s.data.title,
+      description: s.data.description || "",
+      latitude: s.data.latitude,
+      longitude: s.data.longitude,
+      slug: s.slug,
+    })),
+  )}
+/>
 
 <script>
-  import { initializeMapPreview } from '../scripts/map-preview';
+  import { initializeMapPreview } from "../scripts/map-preview";
 
   // Initialize map preview
   initializeMapPreview();
 </script>
 
 <script>
-  import { updateSurfTicker } from '../scripts/surf-ticker';
+  import { updateSurfTicker } from "../scripts/surf-ticker";
 
   // Initialize surf ticker
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  if (
+    document.readyState === "complete" ||
+    document.readyState === "interactive"
+  ) {
     updateSurfTicker();
   } else {
-    document.addEventListener('DOMContentLoaded', updateSurfTicker);
+    document.addEventListener("DOMContentLoaded", updateSurfTicker);
   }
 
   // Refresh every 15 minutes
   setInterval(updateSurfTicker, 15 * 60 * 1000);
 </script>
-
-
-

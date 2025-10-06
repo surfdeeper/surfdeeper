@@ -1,16 +1,16 @@
-import { MAP_DEFAULTS } from '../config/map-constants';
-import { createBaseMap, waitForLeaflet } from '../utils/leaflet-setup';
-import { getSpotsDataFromElement } from '../utils/spot-data';
+import { MAP_DEFAULTS } from "../config/map-constants";
+import { createBaseMap, waitForLeaflet } from "../utils/leaflet-setup";
+import { getSpotsDataFromElement } from "../utils/spot-data";
 
 function getSpotsFromJson() {
-  return getSpotsDataFromElement('spots-data');
+  return getSpotsDataFromElement("spots-data");
 }
 
 function createPopupContent(spot, marker, isDragging = false) {
   const position = marker.getLatLng();
   const lat = position.lat.toFixed(4);
   const lng = position.lng.toFixed(4);
-  
+
   if (isDragging) {
     return `
       <div class="marker-popup">
@@ -25,11 +25,11 @@ function createPopupContent(spot, marker, isDragging = false) {
       </div>
     `;
   }
-  
+
   return `
     <div class="marker-popup">
       <b>${spot.title}</b>
-      ${spot.description ? `<br/>${spot.description}` : ''}
+      ${spot.description ? `<br/>${spot.description}` : ""}
       <div class="popup-actions">
         <a href="/spots/${spot.slug}" class="view-spot-link">View Spot →</a>
         <a href="#" class="edit-location-link" data-slug="${spot.slug}">📍 Pin in wrong location?</a>
@@ -39,8 +39,8 @@ function createPopupContent(spot, marker, isDragging = false) {
 }
 
 function showContributionInstructions(spot, newLat, newLng) {
-  const modal = document.createElement('div');
-  modal.className = 'contribution-modal';
+  const modal = document.createElement("div");
+  modal.className = "contribution-modal";
   modal.innerHTML = `
     <div class="contribution-modal-content">
       <h2>Update ${spot.title} Coordinates</h2>
@@ -59,15 +59,15 @@ longitude: ${newLng}
       <button class="close-modal-btn">Close</button>
     </div>
   `;
-  
+
   document.body.appendChild(modal);
-  
-  const closeBtn = modal.querySelector('.close-modal-btn');
-  closeBtn.addEventListener('click', () => {
+
+  const closeBtn = modal.querySelector(".close-modal-btn");
+  closeBtn.addEventListener("click", () => {
     document.body.removeChild(modal);
   });
-  
-  modal.addEventListener('click', (e) => {
+
+  modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       document.body.removeChild(modal);
     }
@@ -77,27 +77,34 @@ longitude: ${newLng}
 function initMap() {
   waitForLeaflet(() => {
     const spots = getSpotsFromJson();
-    const map = createBaseMap('map', MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM);
+    const map = createBaseMap("map", MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM);
     if (!map) return;
 
     const L = window.L;
     const markers = [];
     for (const spot of spots) {
-      if (typeof spot.latitude === 'number' && typeof spot.longitude === 'number') {
+      if (
+        typeof spot.latitude === "number" &&
+        typeof spot.longitude === "number"
+      ) {
         const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
         const popup = createPopupContent(spot, marker, false);
         marker.bindPopup(popup);
-        
+
         // Store spot data on marker for later use
         marker.spotData = spot;
-        
+
         // Listen for popup open events to attach event listeners
-        marker.on('popupopen', () => {
-          const editLink = document.querySelector(`.edit-location-link[data-slug="${spot.slug}"]`);
-          const doneBtn = document.querySelector(`.done-dragging-btn[data-slug="${spot.slug}"]`);
-          
+        marker.on("popupopen", () => {
+          const editLink = document.querySelector(
+            `.edit-location-link[data-slug="${spot.slug}"]`,
+          );
+          const doneBtn = document.querySelector(
+            `.done-dragging-btn[data-slug="${spot.slug}"]`,
+          );
+
           if (editLink) {
-            editLink.addEventListener('click', (e) => {
+            editLink.addEventListener("click", (e) => {
               e.preventDefault();
               e.stopPropagation();
               // Enable dragging
@@ -114,14 +121,14 @@ function initMap() {
               }
             });
           }
-          
+
           if (doneBtn) {
-            doneBtn.addEventListener('click', () => {
+            doneBtn.addEventListener("click", () => {
               const position = marker.getLatLng();
               showContributionInstructions(
                 spot,
                 position.lat.toFixed(4),
-                position.lng.toFixed(4)
+                position.lng.toFixed(4),
               );
               // Disable dragging
               marker.dragging.disable();
@@ -136,14 +143,14 @@ function initMap() {
             });
           }
         });
-        
+
         // Update coordinates in popup while dragging
-        marker.on('drag', () => {
+        marker.on("drag", () => {
           if (marker.isPopupOpen()) {
             marker.setPopupContent(createPopupContent(spot, marker, true));
           }
         });
-        
+
         markers.push(marker);
       }
     }
@@ -151,37 +158,38 @@ function initMap() {
 }
 
 function initViewToggle() {
-  const toggleBtn = document.getElementById('view-toggle');
-  const mapView = document.getElementById('map-view');
-  const directoryView = document.getElementById('directory-view');
-  
+  const toggleBtn = document.getElementById("view-toggle");
+  const mapView = document.getElementById("map-view");
+  const directoryView = document.getElementById("directory-view");
+
   if (!toggleBtn || !mapView || !directoryView) return;
-  
-  toggleBtn.addEventListener('click', () => {
-    const isMapActive = mapView.classList.contains('active');
-    
+
+  toggleBtn.addEventListener("click", () => {
+    const isMapActive = mapView.classList.contains("active");
+
     if (isMapActive) {
       // Switch to directory view
-      mapView.classList.remove('active');
-      directoryView.classList.add('active');
-      toggleBtn.classList.add('directory-active');
+      mapView.classList.remove("active");
+      directoryView.classList.add("active");
+      toggleBtn.classList.add("directory-active");
     } else {
       // Switch to map view
-      directoryView.classList.remove('active');
-      mapView.classList.add('active');
-      toggleBtn.classList.remove('directory-active');
+      directoryView.classList.remove("active");
+      mapView.classList.add("active");
+      toggleBtn.classList.remove("directory-active");
     }
   });
 }
 
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
+if (
+  document.readyState === "complete" ||
+  document.readyState === "interactive"
+) {
   initMap();
   initViewToggle();
 } else {
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     initMap();
     initViewToggle();
   });
 }
-
-
