@@ -21,6 +21,7 @@
   --color-info: #3b82f6;
 
   /* Additional semantic colors used across pages */
+  /* Deprecated for text: prefer --color-primary (accent) or --color-text-* for body copy */
   --color-accent-green: #0f8; /* #00ff88 */
   --color-accent-green-hover: #0c6; /* #00cc66 */
   --color-surface-deep: #0f172a;

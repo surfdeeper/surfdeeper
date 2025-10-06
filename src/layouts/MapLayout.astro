@@ -1,5 +1,6 @@
 ---
 import Navigation from "../components/Navigation.astro";
+import "../styles/design-system.css";
 
 export interface Props {
   title: string;
@@ -28,7 +29,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/src/styles/design-system.css" />
     <title>{title}</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"

@@ -74,7 +74,7 @@ const surfSayings = [
   "🏄 No one is born knowing how to surf - we all started as kooks",
   "💡 Open source surfing - built by surfers, for surfers",
   "✨ Knowledge shared is knowledge multiplied",
-  "📚 Got surf wisdom? <a href='/contribute' style='color: #00ff88; text-decoration: underline;'>Contribute a guide</a>",
+  "📚 Got surf wisdom? <a href='/contribute' style='color: var(--color-primary); text-decoration: underline;'>Contribute a guide</a>",
   "🎯 Every wipeout is a lesson, every wave is practice",
   "🌅 Dawn patrol: where legends are made and coffee is essential",
   "🦈 Spoiler: You're more likely to drown than get attacked by a shark",
@@ -98,7 +98,7 @@ const surfSayings = [
   "🧠 Smart surfing beats strong surfing every time",
   "💫 The lineup is a classroom, the ocean is the teacher",
   "🎪 Every surf session is a gift",
-  "🎨 Make this resource better - <a href='/contribute' style='color: #00ff88; text-decoration: underline;'>add your knowledge</a>",
+  "🎨 Make this resource better - <a href='/contribute' style='color: var(--color-primary); text-decoration: underline;'>add your knowledge</a>",
   "🌊 Surf therapy: cheaper than a psychologist, more effective",
   "🔧 DIY ding repair: because surf shops close at 6pm",
   "☀️ Sunscreen today, skin tomorrow",
@@ -109,7 +109,7 @@ const surfSayings = [
   "🌍 Protect the ocean, it's the only one we've got",
   "💧 Hydrate before you paddle, thank yourself later",
   "🎪 Worst day surfing > best day working",
-  "🔥 Got tips? Got spots? Got stories? <a href='/contribute' style='color: #00ff88; text-decoration: underline;'>Share them here</a>",
+  "🔥 Got tips? Got spots? Got stories? <a href='/contribute' style='color: var(--color-primary); text-decoration: underline;'>Share them here</a>",
   "🎯 Position beats power in the lineup",
   "🌊 Wave count doesn't matter if you're smiling",
   "🧘 Breathe, relax, paddle, repeat",
@@ -204,7 +204,7 @@ async function updateSurfTicker() {
   const swellDir = degreesToCardinal(conditions.swellDirection);
   const period = conditions.swellPeriod.toFixed(0);
   
-  const surfReport = `<a href="/spots/${closestSpot.slug}" style="color: #00ff88; text-decoration: none; border-bottom: 1px dotted #00ff88; font-weight: 600;">${closestSpot.name}</a>: ${waveHeightFt}ft @ ${period}s ${swellDir} • Wind ${windSpeedMph}mph ${windDir}`;
+  const surfReport = `<a href="/spots/${closestSpot.slug}" style="color: var(--color-primary); text-decoration: none; border-bottom: 1px dotted var(--color-primary); font-weight: 600;">${closestSpot.name}</a>: ${waveHeightFt}ft @ ${period}s ${swellDir} • Wind ${windSpeedMph}mph ${windDir}`;
   
   // Get 2 random sayings
   const saying1 = getRandomSaying();
