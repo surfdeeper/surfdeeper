@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getCollection, getEntryBySlug } from "astro:content";
+import { isPlaceholderTodo } from "../../utils/guide-filters";
 
 export async function getStaticPaths() {
   const entries = await getCollection("guides");
@@ -64,14 +65,28 @@ if (isSectionPage) {
         <section class="section-guides">
           <h2>Guides in this section</h2>
           <ul class="guides-list">
-            {sectionGuides.map((guide) => (
-              <li>
-                <a href={`/guide/${guide.slug}`}>{guide.data.title}</a>
-                {guide.data.description && (
-                  <p class="guide-description">{guide.data.description}</p>
-                )}
-              </li>
-            ))}
+            {sectionGuides.map((guide) => {
+              const disabled = isPlaceholderTodo(guide.body);
+              return (
+                <li>
+                  <a
+                    class={disabled ? "is-disabled" : undefined}
+                    href={!disabled ? `/guide/${guide.slug}` : "#"}
+                    aria-disabled={disabled ? "true" : undefined}
+                    tabindex={disabled ? -1 : undefined}
+                  >
+                    {guide.data.title}
+                  </a>
+                  {disabled ? (
+                    <p class="guide-description">coming soon</p>
+                  ) : (
+                    guide.data.description && (
+                      <p class="guide-description">{guide.data.description}</p>
+                    )
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </section>
       )
@@ -138,6 +153,13 @@ if (isSectionPage) {
     .guides-list li a:hover {
       color: var(--color-accent-hover);
       text-decoration-color: var(--color-accent);
+    }
+
+    .guides-list li a.is-disabled {
+      pointer-events: none;
+      opacity: 0.6;
+      text-decoration: none;
+      cursor: default;
     }
 
     .guide-description {

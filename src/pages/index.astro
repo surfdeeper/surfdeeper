@@ -3,8 +3,13 @@ import Layout from "../layouts/Layout.astro";
 import sections from "../content/guides/_sections.json";
 import { loadHomepageData } from "../utils/homepage-data";
 
-const { spots, guidesBySection, recentCommits, recentlyUpdated } =
-  await loadHomepageData();
+const {
+  spots,
+  guidesBySection,
+  comingSoonCountBySection,
+  recentCommits,
+  recentlyUpdated,
+} = await loadHomepageData();
 ---
 
 <Layout
@@ -96,7 +101,11 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } =
               Object.entries(sections)
                 .sort(([, a], [, b]) => a.order - b.order)
                 .map(([slug, section]) => {
-                  const guides = guidesBySection[slug] || [];
+                  const allGuides = guidesBySection[slug] || [];
+                  // Filter out guides that have the same title as the section
+                  const guides = allGuides.filter(
+                    (guide) => guide.title !== section.label,
+                  );
                   const visibleGuides = guides.slice(0, 3);
                   const remainingCount = guides.length - 3;
 
@@ -117,6 +126,11 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } =
                               <a href={`/guide/${slug}`}>
                                 {remainingCount} more →
                               </a>
+                            </li>
+                          )}
+                          {comingSoonCountBySection[slug] > 0 && (
+                            <li class="coming-soon-items">
+                              {comingSoonCountBySection[slug]} coming soon
                             </li>
                           )}
                         </ul>
