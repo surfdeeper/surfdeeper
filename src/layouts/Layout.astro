@@ -1,5 +1,7 @@
 ---
 import Navigation from "../components/Navigation.astro";
+import HeadMeta from "../components/HeadMeta.astro";
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import "../styles/design-system.css";
 
 export interface Props {
@@ -30,31 +32,12 @@ const canonicalURL = `${Astro.site}${path}`;
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+    <HeadMeta
+      title={title}
+      description={description}
+      canonicalURL={canonicalURL}
     />
-    <title>{title}</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4EL168HRYZ"
-    ></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-4EL168HRYZ");
-    </script>
+    <GoogleAnalytics />
   </head>
   <body>
     <Navigation />
@@ -144,213 +127,211 @@ const canonicalURL = `${Astro.site}${path}`;
         </div>
       </div>
     </footer>
-  </body>
-</html>
+  </body><style>
+    body {
+      display: flex;
+      flex-direction: column;
+    }
 
-<style>
-  body {
-    display: flex;
-    flex-direction: column;
-  }
-
-  main {
-    flex: 1;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: var(--space-lg);
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* Full width pages like guides, gallery */
-  main.full-width {
-    max-width: 1200px;
-    padding: var(--space-lg) var(--space-md);
-  }
-
-  /* Footer Styles */
-  .main-footer {
-    background-color: var(--color-surface-secondary);
-    border-top: 2px solid var(--color-accent);
-    margin-top: auto;
-  }
-
-  .footer-container {
-    max-width: var(--size-max-width);
-    margin: 0 auto;
-    padding: var(--space-lg);
-  }
-
-  .footer-logo {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-lg);
-    color: var(--color-accent);
-    font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-xl);
-  }
-
-  .footer-logo .image-logo {
-    width: 180px;
-    height: auto;
-    display: block;
-  }
-
-  .footer-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-lg);
-    margin-bottom: var(--space-lg);
-  }
-
-  .footer-section h4 {
-    color: var(--color-accent);
-    margin-bottom: var(--space-sm);
-    font-size: var(--font-size-lg);
-  }
-
-  .footer-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .footer-section li {
-    margin-bottom: var(--space-sm);
-  }
-
-  .footer-section a {
-    color: var(--color-text-primary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .footer-section a:hover {
-    color: var(--color-accent);
-  }
-
-  .footer-disclaimer {
-    background-color: var(--color-surface-primary);
-    border: 2px solid var(--color-surface-secondary);
-    border-radius: var(--border-radius-lg);
-    padding: var(--space-md);
-    margin-bottom: var(--space-lg);
-  }
-
-  .footer-disclaimer h4 {
-    color: var(--color-accent);
-    margin: 0 0 var(--space-sm) 0;
-    font-size: var(--font-size-base);
-    text-align: center;
-  }
-
-  .footer-disclaimer p {
-    color: var(--color-text-primary);
-    margin: 0;
-    font-size: var(--font-size-xs);
-    line-height: var(--line-height-relaxed);
-    text-align: center;
-  }
-
-  .footer-disclaimer strong {
-    color: var(--color-accent);
-    font-weight: var(--font-weight-bold);
-  }
-
-  .footer-bottom {
-    border-top: 1px solid var(--color-border);
-    padding-top: var(--space-4);
-    text-align: center;
-  }
-
-  .footer-bottom p {
-    color: var(--color-text-primary);
-    margin: 0;
-    font-size: var(--font-size-sm);
-  }
-
-  /* Leaflet Map Dark Theme - Prevent white flicker on tile load */
-  :global(.leaflet-container) {
-    background-color: var(--color-surface-primary) !important;
-  }
-
-  :global(.leaflet-tile-pane) {
-    background-color: var(--color-surface-primary) !important;
-  }
-
-  :global(.leaflet-tile-container) {
-    background-color: var(--color-surface-primary) !important;
-  }
-
-  :global(.leaflet-tile) {
-    background-color: var(--color-surface-primary) !important;
-  }
-
-  :global(.dark-tiles) {
-    background-color: var(--color-surface-primary) !important;
-  }
-
-  :global(.leaflet-pane) {
-    background-color: transparent;
-  }
-
-  :global(.leaflet-map-pane) {
-    background-color: var(--color-surface-primary);
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
     main {
-      padding: 1rem;
+      flex: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Full width pages like guides, gallery */
+    main.full-width {
+      max-width: 1200px;
+      padding: var(--space-lg) var(--space-md);
+    }
+
+    /* Footer Styles */
+    .main-footer {
+      background-color: var(--color-surface-secondary);
+      border-top: 2px solid var(--color-accent);
+      margin-top: auto;
     }
 
     .footer-container {
-      padding: 1rem;
+      max-width: var(--size-max-width);
+      margin: 0 auto;
+      padding: var(--space-lg);
     }
-  }
 
-  /* Edit page button */
-  .edit-page-button {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background-color: var(--color-surface-primary);
-    border: 2px solid var(--color-surface-primary);
-    color: var(--color-accent);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    z-index: var(--z-dropdown);
-    box-shadow: var(--shadow-base);
-    opacity: 0.7;
-  }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      color: var(--color-accent);
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-xl);
+    }
 
-  .edit-page-button:hover {
-    opacity: 1;
-    background-color: var(--color-accent);
-    color: var(--color-text-on-primary);
-    border-color: var(--color-accent);
-    transform: scale(1.1);
-    box-shadow: var(--shadow-primary);
-  }
+    .footer-logo .image-logo {
+      width: 180px;
+      height: auto;
+      display: block;
+    }
 
-  .edit-page-button:focus-visible {
-    outline: 2px dashed var(--color-accent);
-    outline-offset: 4px;
-  }
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
 
-  @media (max-width: 768px) {
+    .footer-section h4 {
+      color: var(--color-accent);
+      margin-bottom: var(--space-sm);
+      font-size: var(--font-size-lg);
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-section li {
+      margin-bottom: var(--space-sm);
+    }
+
+    .footer-section a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: var(--color-accent);
+    }
+
+    .footer-disclaimer {
+      background-color: var(--color-surface-primary);
+      border: 2px solid var(--color-surface-secondary);
+      border-radius: var(--border-radius-lg);
+      padding: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .footer-disclaimer h4 {
+      color: var(--color-accent);
+      margin: 0 0 var(--space-sm) 0;
+      font-size: var(--font-size-base);
+      text-align: center;
+    }
+
+    .footer-disclaimer p {
+      color: var(--color-text-primary);
+      margin: 0;
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-relaxed);
+      text-align: center;
+    }
+
+    .footer-disclaimer strong {
+      color: var(--color-accent);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--color-border);
+      padding-top: var(--space-4);
+      text-align: center;
+    }
+
+    .footer-bottom p {
+      color: var(--color-text-primary);
+      margin: 0;
+      font-size: var(--font-size-sm);
+    }
+
+    /* Leaflet Map Dark Theme - Prevent white flicker on tile load */
+    :global(.leaflet-container) {
+      background-color: var(--color-surface-primary) !important;
+    }
+
+    :global(.leaflet-tile-pane) {
+      background-color: var(--color-surface-primary) !important;
+    }
+
+    :global(.leaflet-tile-container) {
+      background-color: var(--color-surface-primary) !important;
+    }
+
+    :global(.leaflet-tile) {
+      background-color: var(--color-surface-primary) !important;
+    }
+
+    :global(.dark-tiles) {
+      background-color: var(--color-surface-primary) !important;
+    }
+
+    :global(.leaflet-pane) {
+      background-color: transparent;
+    }
+
+    :global(.leaflet-map-pane) {
+      background-color: var(--color-surface-primary);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      main {
+        padding: 1rem;
+      }
+
+      .footer-container {
+        padding: 1rem;
+      }
+    }
+
+    /* Edit page button */
     .edit-page-button {
-      bottom: 1rem;
-      right: 1rem;
-      width: 40px;
-      height: 40px;
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: var(--color-surface-primary);
+      border: 2px solid var(--color-surface-primary);
+      color: var(--color-accent);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      z-index: var(--z-dropdown);
+      box-shadow: var(--shadow-base);
+      opacity: 0.7;
     }
-  }
-</style>
+
+    .edit-page-button:hover {
+      opacity: 1;
+      background-color: var(--color-accent);
+      color: var(--color-text-on-primary);
+      border-color: var(--color-accent);
+      transform: scale(1.1);
+      box-shadow: var(--shadow-primary);
+    }
+
+    .edit-page-button:focus-visible {
+      outline: 2px dashed var(--color-accent);
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .edit-page-button {
+        bottom: 1rem;
+        right: 1rem;
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</html>
