@@ -11,7 +11,6 @@ Automated system to prevent broken internal links in content.
 ## Scripts
 
 - `npm run lint:links` - Check all internal links
-- `npm run fix:links` - Auto-fix common broken link patterns
 
 ## Link Format
 
