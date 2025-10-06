@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "typecheck": "astro check",
     "lint:links": "node scripts/validate-links.js",
     "lint:md": "markdownlint src/content/**/*.md",
     "lint": "npm run lint:links && npm run lint:md",
@@ -18,12 +19,14 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "astro": "^4.0.0"
+    "@astrojs/check": "^0.9.4",
+    "astro": "^4.0.0",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "markdownlint-cli": "^0.37.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.0",
+    "markdownlint-cli": "^0.37.0",
     "prettier": "^3.0.0",
     "prettier-plugin-astro": "^0.12.0"
   }

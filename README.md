@@ -1,5 +1,7 @@
 # Surf Deeper
 
+[![CI](https://github.com/surfdeeper/surfdeeper/actions/workflows/ci.yml/badge.svg)](https://github.com/surfdeeper/surfdeeper/actions/workflows/ci.yml)
+
 A minimal Astro site.
 
 ## Getting Started
