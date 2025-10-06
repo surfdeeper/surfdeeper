@@ -73,11 +73,6 @@
   gap: 1.5rem;
 }
 
-/* Mobile: single column, hide right sidebar */
-.right-sidebar {
-  display: none;
-}
-
 /* Desktop: three columns when there's room */
 @media (min-width: 1200px) {
   .three-column-layout {
@@ -85,11 +80,6 @@
     gap: 2rem;
     max-width: 1400px;
     margin: 0 auto;
-  }
-
-  .right-sidebar {
-    display: block;
-    order: 3;
   }
 
   .content {
@@ -164,71 +154,6 @@
   color: var(--color-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-/* Lists - consistent styling for updates */
-.updates-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.update-item {
-  margin-bottom: 0.75rem;
-}
-
-.update-item:last-child {
-  margin-bottom: 0;
-}
-
-.update-link {
-  color: var(--color-text-primary);
-  text-decoration: none;
-  font-size: var(--font-size-sm);
-  opacity: 0.8;
-  transition: opacity var(--transition-fast);
-  display: block;
-}
-
-.update-link:hover {
-  opacity: 1;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-/* Update metadata */
-.page-hierarchy {
-  font-size: var(--font-size-0-7);
-  opacity: 0.6;
-  color: var(--color-text-primary);
-}
-
-.page-title,
-.commit-link {
-  font-size: var(--font-size-0-85);
-  color: var(--color-text-primary);
-  opacity: 0.8;
-}
-
-.update-date {
-  color: var(--color-text-primary);
-  opacity: 0.5;
-  font-size: var(--font-size-0-7);
-  margin-top: 0.25rem;
-}
-
-/* Wisdom quotes */
-.wisdom-quote {
-  color: var(--color-text-primary);
-  opacity: 0.8;
-  font-size: var(--font-size-0-85);
-  font-style: italic;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-}
-
-.wisdom-quote:last-child {
-  margin-bottom: 0;
 }
 
 /* Map markers - simplified */
