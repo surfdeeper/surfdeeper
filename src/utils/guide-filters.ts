@@ -7,6 +7,5 @@
  */
 export function isPlaceholderTodo(markdown: string | undefined | null): boolean {
   const normalized = (markdown ?? "").toLowerCase().replace(/[^a-z]/g, "").trim();
-  console.log(normalized)
   return  normalized === "todo" || normalized == 'comingsoon';
 }
