@@ -265,6 +265,10 @@ const serializedSpot = serializeSpot(entry);
     /* Mobile: Stack everything vertically */
     .right-sidebar {
       display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
     }
 
     .content {
@@ -300,7 +304,7 @@ const serializedSpot = serializeSpot(entry);
       }
 
       .right-sidebar {
-        display: block;
+        display: flex;
         min-width: 0;
         order: 2;
       }
@@ -314,14 +318,7 @@ const serializedSpot = serializeSpot(entry);
       }
     }
 
-    /* Sidebar Styles */
-    .right-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      padding-top: 2rem;
-      padding-bottom: 2rem;
-    }
+    
 
     .sidebar-section {
       background-color: var(--color-surface-dark);
@@ -488,7 +485,7 @@ const serializedSpot = serializeSpot(entry);
       border-radius: 20px;
       font-weight: 600;
       text-transform: capitalize;
-      font-size: 0.875rem;
+      font-size: var(--font-size-sm);
     }
 
     .skill-beginner {
@@ -511,7 +508,7 @@ const serializedSpot = serializeSpot(entry);
       grid-template-columns: 1fr;
       gap: 0.5rem;
       margin: 0;
-      font-size: 0.9rem;
+      font-size: var(--font-size-0-9);
     }
 
     dt {
@@ -572,7 +569,7 @@ const serializedSpot = serializeSpot(entry);
 
     @media (max-width: 640px) {
       h1 {
-        font-size: 2rem;
+        font-size: var(--font-size-3xl);
       }
 
       .spot-article {
@@ -580,7 +577,7 @@ const serializedSpot = serializeSpot(entry);
       }
 
       .condition-value {
-        font-size: 1.5rem;
+        font-size: var(--font-size-2xl);
       }
 
       .conditions-section {
@@ -589,7 +586,7 @@ const serializedSpot = serializeSpot(entry);
       }
 
       .conditions-section h2 {
-        font-size: 1.25rem;
+        font-size: var(--font-size-xl);
       }
 
       .spot-map {
@@ -601,7 +598,7 @@ const serializedSpot = serializeSpot(entry);
       }
 
       .main-map-section h2 {
-        font-size: 1.25rem;
+        font-size: var(--font-size-xl);
       }
     }
   </style>
