@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import { readdirSync } from "fs";
 import { join } from "path";
 import { getCollection } from "astro:content";
+import { isPlaceholderTodo } from "./guide-filters";
 
 export interface UpdatedPage {
   title: string;
@@ -30,6 +31,9 @@ export async function loadHomepageData() {
 
     // Skip index pages
     if (pageName === "index") continue;
+
+    // Skip placeholder guides that contain only "coming soon" or "todo" content
+    if (isPlaceholderTodo(guide.body)) continue;
 
     if (!guidesBySection[section]) {
       guidesBySection[section] = [];
