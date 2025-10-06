@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, trunk, develop, links-and-lints ]
+    branches: [main, trunk, develop, links-and-lints]
   pull_request:
-    branches: [ main, trunk, develop, links-and-lints ]
+    branches: [main, trunk, develop, links-and-lints]
 
 jobs:
   build:
@@ -23,8 +23,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -40,4 +40,3 @@ jobs:
 
       - name: Build
         run: npm run build
-

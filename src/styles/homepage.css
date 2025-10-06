@@ -24,7 +24,12 @@
 
 /* Marquee ticker */
 .marquee-container {
-  background: linear-gradient(90deg, var(--color-surface-secondary) 0%, var(--color-surface-primary) 50%, var(--color-surface-secondary) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-secondary) 0%,
+    var(--color-surface-primary) 50%,
+    var(--color-surface-secondary) 100%
+  );
   border-bottom: 2px solid var(--color-primary);
   padding: var(--space-3) 0;
   overflow: hidden;
@@ -135,8 +140,6 @@
 }
 
 /* duplicate cleaned above */
-
-
 
 .about-box p {
   color: var(--color-text-primary);

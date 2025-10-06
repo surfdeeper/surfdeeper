@@ -13,10 +13,10 @@
     "lint:links": "node scripts/validate-links.js",
     "lint:assets": "node scripts/lint-assets.js",
     "lint:md": "markdownlint src/content/**/*.md",
-    "lint": "npm run lint:links && npm run lint:md && npm run lint:assets && npm run lint:css",
+    "lint": "npm run lint:links && npm run lint:md && npm run lint:assets && npm run lint:css && npx prettier --check .",
     "fix:md": "markdownlint --fix src/content/**/*.md",
     "fix": "npm run fix:md",
-    "format": "prettier --write \"**/*.{md,js,json}\" && prettier --write \"**/*.astro\"",
+    "format": "prettier --write .",
     "format:check": "prettier --check \"**/*.{md,js,json}\" && prettier --check \"**/*.astro\"",
     "precommit": "npm run lint"
   },

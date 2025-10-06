@@ -22,33 +22,36 @@ export interface MarineConditions {
  */
 export async function fetchMarineConditions(
   latitude: number,
-  longitude: number
+  longitude: number,
 ): Promise<MarineConditions | null> {
   try {
     // Marine API for wave/swell data
-    const marineUrl = new URL('https://marine-api.open-meteo.com/v1/marine');
-    marineUrl.searchParams.set('latitude', latitude.toString());
-    marineUrl.searchParams.set('longitude', longitude.toString());
-    marineUrl.searchParams.set('hourly', [
-      'wave_height',
-      'wave_period',
-      'wave_direction',
-      'swell_wave_height',
-      'swell_wave_period',
-      'swell_wave_direction'
-    ].join(','));
-    marineUrl.searchParams.set('forecast_days', '1');
+    const marineUrl = new URL("https://marine-api.open-meteo.com/v1/marine");
+    marineUrl.searchParams.set("latitude", latitude.toString());
+    marineUrl.searchParams.set("longitude", longitude.toString());
+    marineUrl.searchParams.set(
+      "hourly",
+      [
+        "wave_height",
+        "wave_period",
+        "wave_direction",
+        "swell_wave_height",
+        "swell_wave_period",
+        "swell_wave_direction",
+      ].join(","),
+    );
+    marineUrl.searchParams.set("forecast_days", "1");
 
     // Weather API for wind data
-    const weatherUrl = new URL('https://api.open-meteo.com/v1/forecast');
-    weatherUrl.searchParams.set('latitude', latitude.toString());
-    weatherUrl.searchParams.set('longitude', longitude.toString());
-    weatherUrl.searchParams.set('hourly', 'wind_speed_10m,wind_direction_10m');
-    weatherUrl.searchParams.set('forecast_days', '1');
+    const weatherUrl = new URL("https://api.open-meteo.com/v1/forecast");
+    weatherUrl.searchParams.set("latitude", latitude.toString());
+    weatherUrl.searchParams.set("longitude", longitude.toString());
+    weatherUrl.searchParams.set("hourly", "wind_speed_10m,wind_direction_10m");
+    weatherUrl.searchParams.set("forecast_days", "1");
 
     const [marineResponse, weatherResponse] = await Promise.all([
       fetch(marineUrl.toString()),
-      fetch(weatherUrl.toString())
+      fetch(weatherUrl.toString()),
     ]);
 
     if (!marineResponse.ok) {
@@ -60,7 +63,7 @@ export async function fetchMarineConditions(
 
     const marineData = await marineResponse.json();
     const weatherData = await weatherResponse.json();
-    
+
     // Get the first hourly forecast (current hour)
     const marineHourly = marineData.hourly;
     const weatherHourly = weatherData.hourly;
@@ -78,7 +81,7 @@ export async function fetchMarineConditions(
       timestamp: marineHourly.time[idx] || new Date().toISOString(),
     };
   } catch (error) {
-    console.error('Failed to fetch marine conditions:', error);
+    console.error("Failed to fetch marine conditions:", error);
     return null;
   }
 }
@@ -87,7 +90,24 @@ export async function fetchMarineConditions(
  * Converts degrees to cardinal direction
  */
 export function degreesToCardinal(degrees: number): string {
-  const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+  const directions = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+  ];
   const index = Math.round(degrees / 22.5) % 16;
   return directions[index];
 }
@@ -105,4 +125,3 @@ export function metersToFeet(meters: number): number {
 export function kmhToMph(kmh: number): number {
   return kmh * 0.621371;
 }
-

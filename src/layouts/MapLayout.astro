@@ -32,27 +32,28 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <main class="map-main">
       <slot />
     </main>
-  </body><style>
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+      }
 
-    body {
-      display: flex;
-      flex-direction: column;
-    }
+      body {
+        display: flex;
+        flex-direction: column;
+      }
 
-    /* Main content area - fills remaining space */
-    .map-main {
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      position: relative;
-    }
-  </style>
+      /* Main content area - fills remaining space */
+      .map-main {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+    </style>
+  </body>
 </html>

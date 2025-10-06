@@ -101,7 +101,7 @@ OR BETTER: Using component classes
 }
 
 .nav-item-active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -8px;
   left: 50%;
