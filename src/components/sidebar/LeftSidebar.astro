@@ -1,0 +1,147 @@
+---
+import sections from "../../content/guides/_sections.json";
+
+interface Props {
+  guidesBySection: Record<string, Array<{ title: string; url: string }>>;
+  comingSoonCountBySection: Record<string, number>;
+}
+
+const { guidesBySection, comingSoonCountBySection } = Astro.props;
+---
+
+<aside class="left-sidebar">
+  <div class="card">
+    <h3>🏄 Skills Guide</h3>
+    <ul class="sidebar-links nested-guide">
+      {
+        Object.entries(sections)
+          .sort(([, a], [, b]) => a.order - b.order)
+          .map(([slug, section]) => {
+            const allGuides = guidesBySection[slug] || [];
+            // Filter out guides that have the same title as the section
+            const guides = allGuides.filter(
+              (guide) => guide.title !== section.label,
+            );
+            const visibleGuides = guides.slice(0, 3);
+            const remainingCount = guides.length - 3;
+
+            return (
+              <li class="section-item">
+                <a href={`/guide/${slug}`} class="section-link">
+                  {section.label}
+                </a>
+                {guides.length > 0 && (
+                  <ul class="nested-links">
+                    {visibleGuides.map((guide) => (
+                      <li>
+                        <a href={guide.url}>{guide.title}</a>
+                      </li>
+                    ))}
+                    {remainingCount > 0 && (
+                      <li class="more-items">
+                        <a href={`/guide/${slug}`}>{remainingCount} more →</a>
+                      </li>
+                    )}
+                    {comingSoonCountBySection[slug] > 0 && (
+                      <li class="coming-soon-items">
+                        {comingSoonCountBySection[slug]} coming soon
+                      </li>
+                    )}
+                  </ul>
+                )}
+              </li>
+            );
+          })
+      }
+    </ul>
+    <div class="sidebar-cta-wrap">
+      <a href="/guide" class="sidebar-cta">Browse All →</a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  /* Left sidebar layout and display rules */
+  .left-sidebar {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
+    .left-sidebar {
+      display: block;
+      order: 1;
+    }
+  }
+
+  /* Sidebar CTA (browse all) */
+  .sidebar-cta-wrap {
+    margin-top: var(--space-4);
+    text-align: center;
+  }
+
+  .sidebar-cta {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+  }
+
+  /* Sidebar navigation links */
+  .sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-links li {
+    margin-bottom: 0.75rem;
+  }
+
+  .sidebar-links li:last-child {
+    margin-bottom: 0;
+  }
+
+  .sidebar-links a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+    display: block;
+  }
+
+  .sidebar-links a:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Nested navigation - hide on mobile, show on desktop */
+  .nested-links {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
+    .nested-links {
+      display: block;
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0 1rem;
+    }
+
+    .nested-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .nested-links a {
+      font-size: var(--font-size-0-8);
+      opacity: 0.7;
+    }
+
+    .nested-links .coming-soon-items {
+      color: var(--color-accent);
+      font-style: italic;
+      opacity: 0.6;
+      font-size: var(--font-size-0-75);
+    }
+  }
+</style>
