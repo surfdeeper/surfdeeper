@@ -12,14 +12,12 @@
 }
 
 /* Content sections - clean minimal styling */
-.sidebar-section,
 .about-box {
   border-left: 2px solid var(--color-border);
   padding: var(--space-4) 0 var(--space-4) var(--space-4);
   margin-bottom: var(--space-6);
 }
 
-.sidebar-section:last-child,
 .about-box:last-child {
   margin-bottom: 0;
 }
@@ -120,12 +118,7 @@
 
 /* duplicate cleaned above */
 
-.sidebar-section h3 {
-  color: var(--color-accent);
-  font-size: var(--font-size-base);
-  margin: 0 0 var(--space-4) 0;
-  font-weight: var(--font-weight-semibold);
-}
+
 
 .about-box p {
   color: var(--color-text-primary);

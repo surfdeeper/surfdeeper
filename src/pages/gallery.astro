@@ -122,7 +122,7 @@ const imagesBySection = images.reduce((acc, img) => {
             <h2 class="category-title">{section} <span class="image-count">({sectionImages.length})</span></h2>
             <div class="gallery-grid">
               {sectionImages.map((image, idx) => (
-                <article class="gallery-item card card-elevated">
+                <article class="card">
                   <a href={image.guideLink} class="gallery-link">
                     <div class="image-wrapper">
                       <img 
@@ -240,18 +240,6 @@ const imagesBySection = images.reduce((acc, img) => {
     }
   }
 
-  .gallery-item {
-    /* Use design system card by classes on element */
-    background-color: var(--color-surface-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    transition: all var(--transition-base);
-    display: flex;
-    flex-direction: column;
-    padding: 0; /* media card: image edge-to-edge */
-  }
-
   .gallery-link {
     text-decoration: none;
     display: flex;
@@ -259,10 +247,11 @@ const imagesBySection = images.reduce((acc, img) => {
     height: 100%;
   }
 
-  .gallery-item:hover {
-    border-color: var(--color-border-accent);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-primary);
+  .gallery-grid .card {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0; /* media card: image edge-to-edge */
   }
 
   .image-wrapper {
@@ -284,7 +273,7 @@ const imagesBySection = images.reduce((acc, img) => {
     transition: transform 0.3s ease;
   }
 
-  .gallery-item:hover .image-wrapper img {
+  .gallery-grid .card:hover .image-wrapper img {
     transform: scale(1.05);
   }
 
@@ -344,7 +333,7 @@ const imagesBySection = images.reduce((acc, img) => {
     margin-top: auto;
   }
 
-  .gallery-item:hover .view-guide-hint {
+  .gallery-grid .card:hover .view-guide-hint {
     opacity: 1;
   }
 

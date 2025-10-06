@@ -33,7 +33,7 @@ for (const key of Object.keys(grouped)) {
         (Object.entries(grouped) as [string, EntryType[]][])
           .sort(([a], [b]) => (sections[a]?.order ?? 999) - (sections[b]?.order ?? 999))
           .map(([section, items]) => (
-            <a href={`/guide/${section}`} class="card card-elevated section-card">
+            <a href={`/guide/${section}`} class="card">
               <div class="card-content">
                 <h3 class="heading heading-md">{sections[section]?.label ?? section}</h3>
                 <p class="guide-count">{items.length} {items.length === 1 ? 'guide' : 'guides'}</p>
@@ -51,7 +51,7 @@ for (const key of Object.keys(grouped)) {
     </div>
   </section>
 
-  <section class="coming-soon card card-elevated">
+  <section class="coming-soon card">
     <h2>Share Your Knowledge</h2>
     <p>Have a technique you've mastered? Share it with the community and help others improve their surfing.</p>
     <a href="/contribute" class="btn btn-primary">Contribute a Technique</a>
@@ -89,16 +89,9 @@ for (const key of Object.keys(grouped)) {
       margin-bottom: var(--space-2xl);
     }
     
-    .section-card {
+    .section-grid .card {
       text-decoration: none;
       color: inherit;
-      transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
-    }
-
-    .section-card:hover {
-      border-color: var(--color-border-accent);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-primary);
     }
     
     .card-content {
@@ -106,7 +99,7 @@ for (const key of Object.keys(grouped)) {
       margin-bottom: var(--space-md);
     }
     
-    .section-card h3 {
+    .section-grid .card h3 {
       color: var(--color-accent);
       font-size: var(--font-size-2xl);
       margin: 0 0 var(--space-sm) 0;
@@ -157,7 +150,7 @@ for (const key of Object.keys(grouped)) {
       transition: opacity 0.2s ease;
     }
     
-    .section-card:hover .card-link {
+    .section-grid .card:hover .card-link {
       opacity: 0.8;
     }
     

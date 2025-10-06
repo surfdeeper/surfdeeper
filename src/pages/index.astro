@@ -31,7 +31,7 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
 
       <!-- Left Sidebar -->
       <aside class="left-sidebar">
-        <div class="sidebar-section">
+        <div class="card">
           <h3>🏄 Skills Guide</h3>
           <ul class="sidebar-links nested-guide">
             {Object.entries(sections)
@@ -69,19 +69,19 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
 
       <!-- Right Sidebar -->
       <aside class="right-sidebar">
-        <div class="sidebar-section">
+        <div class="card">
           <h3>💡 About</h3>
           <p class="about-text"><strong>Free and open source</strong> — Built by surfers, for surfers. <a href="/contribute">Contribute your knowledge</a> to help others learn and progress.</p>
         </div>
 
-        <div class="sidebar-section surf-wisdom">
+        <div class="card surf-wisdom">
           <h3>🧘 Surf Wisdom</h3>
           <p class="wisdom-quote">"The best surfer out there is the one having the most fun."</p>
           <p class="wisdom-quote">"You can't stop the waves, but you can learn to surf."</p>
         </div>
 
         {recentlyUpdated.length > 0 && (
-          <div class="sidebar-section updates-section">
+          <div class="card updates-section">
             <h3>📝 Recently Updated</h3>
             <ul class="updates-list">
               {recentlyUpdated.slice(0, 4).map(page => (
@@ -109,7 +109,7 @@ const { spots, guidesBySection, recentCommits, recentlyUpdated } = await loadHom
         )}
 
         {recentCommits.length > 0 && (
-          <div class="sidebar-section updates-section">
+          <div class="card updates-section">
             <h3>🔨 Recent Commits</h3>
             <ul class="updates-list">
               {recentCommits.slice(0, 3).map(commit => (

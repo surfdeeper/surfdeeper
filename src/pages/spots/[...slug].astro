@@ -69,7 +69,7 @@ const serializedSpot = serializeSpot(entry);
 
       <!-- Right Sidebar -->
       <aside class="right-sidebar">
-        <div class="sidebar-section">
+        <div class="card">
           <h3>🏄 Skill Level</h3>
           <div class="skill-levels">
             {data.skillLevels.map((level: string) => (
@@ -78,7 +78,7 @@ const serializedSpot = serializeSpot(entry);
           </div>
         </div>
 
-        <div class="sidebar-section">
+        <div class="card">
           <h3>🌊 Wave Characteristics</h3>
           <dl>
             <dt>Type</dt>
@@ -92,7 +92,7 @@ const serializedSpot = serializeSpot(entry);
           </dl>
         </div>
 
-        <div class="sidebar-section">
+        <div class="card">
           <h3>✨ Best Conditions</h3>
           <dl>
             <dt>Tide</dt>
@@ -104,14 +104,14 @@ const serializedSpot = serializeSpot(entry);
           </dl>
         </div>
 
-        <div class="sidebar-section">
+        <div class="card">
           <h3>⚠️ Hazards</h3>
           <ul class="hazards-list">
             {data.hazards.map((hazard: string) => <li>{hazard}</li>)}
           </ul>
         </div>
 
-        <div class="sidebar-section">
+        <div class="card">
           <h3>🅿️ Access</h3>
           <dl>
             <dt>Parking</dt>
@@ -125,7 +125,7 @@ const serializedSpot = serializeSpot(entry);
           </dl>
         </div>
 
-        <div class="sidebar-section">
+        <div class="card">
           <h3>📍 Coordinates</h3>
           <p class="coordinates">
             {data.latitude.toFixed(4)}, {data.longitude.toFixed(4)}
@@ -320,26 +320,7 @@ const serializedSpot = serializeSpot(entry);
 
     
 
-    .sidebar-section {
-      background-color: var(--color-surface-dark);
-      border: 2px solid var(--color-border);
-      border-radius: var(--radius-base);
-      padding: var(--space-6);
-      transition: border-color 0.3s ease;
-      min-width: 0;
-      overflow-wrap: break-word;
-    }
 
-    .sidebar-section:hover {
-      border-color: var(--color-accent-green);
-    }
-
-    .sidebar-section h3 {
-      color: var(--color-accent-green);
-      font-size: var(--font-size-1-1);
-      margin: 0 0 1rem;
-      font-weight: 600;
-    }
 
     /* Main map in content area */
     .main-map-section {

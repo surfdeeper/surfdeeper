@@ -20,19 +20,19 @@ import Layout from '../layouts/Layout.astro';
     <h2>Contributing Made Easy</h2>
     <p>Follow these simple steps to start contributing, even if you're new to coding!</p>
     <div class="contribution-steps">
-      <div class="step-card">
+      <div class="card">
         <h3>1. Download VS Code</h3>
         <p><a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a> is a free code editor for Windows, Mac, and Linux.</p>
       </div>
-      <div class="step-card">
+      <div class="card">
         <h3>2. Sign Up for GitHub</h3>
         <p><a href="https://github.com/" target="_blank">Create a free account</a> to contribute and track your changes.</p>
       </div>
-      <div class="step-card">
+      <div class="card">
         <h3>3. Set Up Copilot</h3>
         <p>In VS Code, go to <b>Extensions</b> and install <a href="https://marketplace.visualstudio.com/items?itemName=GitHub.copilot" target="_blank">GitHub Copilot</a>. Sign in with your GitHub account.</p>
       </div>
-      <div class="step-card">
+      <div class="card">
         <h3>4. Fork & Clone the Repo</h3>
         <p>
           <a href="https://github.com/surfdeeper/surfdeeper" target="_blank">Go to the repo</a> and click <b>Fork</b>.<br>
@@ -40,15 +40,15 @@ import Layout from '../layouts/Layout.astro';
           <span class="code-block">git clone https://github.com/YOUR-USERNAME/surfdeeper.git</span>
         </p>
       </div>
-      <div class="step-card">
+      <div class="card">
         <h3>5. Add/Edit Guides & Spots</h3>
         <p>Edit or add Markdown files in <code>src/content/guides/</code> or <code>src/content/spots/</code>. Copilot will help you write!</p>
       </div>
-      <div class="step-card">
+      <div class="card">
         <h3>6. Commit & Push</h3>
         <p>In the terminal, run:<br><span class="code-block">git add .<br>git commit -m "Add new guide/spot"<br>git push origin main</span></p>
       </div>
-      <div class="step-card">
+      <div class="card">
         <h3>7. Make a Pull Request</h3>
         <p>Go to your fork on GitHub, click <b>Compare & pull request</b>, add a description, and submit!</p>
       </div>
@@ -248,39 +248,7 @@ import Layout from '../layouts/Layout.astro';
     gap: 1.5rem;
   }
 
-  .step-card {
-    background-color: var(--color-surface-deep);
-    border: 2px solid var(--color-border);
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: border-color 0.3s ease;
-  }
 
-  .step-card:hover {
-    border-color: var(--color-accent-green);
-  }
-
-  .step-card h3 {
-    color: var(--color-accent-green);
-    font-size: var(--font-size-xl);
-    margin-bottom: 1rem;
-  }
-
-  .step-card p {
-    color: var(--color-accent-green);
-    margin: 0;
-    opacity: 0.9;
-  }
-
-  .step-card a {
-    color: var(--color-accent-green-hover);
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  .step-card a:hover {
-    color: var(--color-accent-green);
-  }
 
   .contact-info {
     background-color: var(--color-surface-dark);

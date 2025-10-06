@@ -178,19 +178,14 @@ html, body {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-base);
   padding: var(--space-6);
-  transition: border-color var(--transition-base);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-base);
 }
 
 .card:hover {
   border-color: var(--color-border-accent);
-}
-
-.card-elevated {
-  box-shadow: var(--shadow-base);
-}
-
-.card-elevated:hover {
   box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
 }
 
 /* Buttons */
