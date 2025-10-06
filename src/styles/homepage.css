@@ -151,7 +151,7 @@
 }
 
 .about-text {
-  color: var(--color-accent);
+  color: var(--color-text-primary);
   opacity: 0.9;
   font-size: var(--font-size-sm);
   line-height: 1.6;
@@ -159,7 +159,7 @@
 }
 
 .about-text a {
-  color: var(--color-accent);
+  color: var(--color-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
