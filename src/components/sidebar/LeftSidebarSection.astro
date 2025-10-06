@@ -1,0 +1,70 @@
+---
+import type { SectionData } from "../../utils/sidebar-data";
+
+export interface Props {
+  section: SectionData;
+}
+
+const { section } = Astro.props;
+---
+
+<li class="section-item">
+  <a href={`/guide/${section.slug}`} class="section-link">
+    {section.label}
+  </a>
+  {
+    section.guides.length > 0 && (
+      <ul class="nested-links">
+        {section.visibleGuides.map((guide) => (
+          <li>
+            <a href={guide.url}>{guide.title}</a>
+          </li>
+        ))}
+        {section.remainingCount > 0 && (
+          <li class="more-items">
+            <a href={`/guide/${section.slug}`}>
+              {section.remainingCount} more →
+            </a>
+          </li>
+        )}
+        {section.comingSoonCount > 0 && (
+          <li class="coming-soon-items">
+            {section.comingSoonCount} coming soon
+          </li>
+        )}
+      </ul>
+    )
+  }
+</li>
+
+<style>
+  /* Nested navigation - hide on mobile, show on desktop */
+  .nested-links {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
+    .nested-links {
+      display: block;
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0 1rem;
+    }
+
+    .nested-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .nested-links a {
+      font-size: var(--font-size-0-8);
+      opacity: 0.7;
+    }
+
+    .nested-links .coming-soon-items {
+      color: var(--color-accent);
+      font-style: italic;
+      opacity: 0.6;
+      font-size: var(--font-size-0-75);
+    }
+  }
+</style>

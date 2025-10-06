@@ -1,5 +1,7 @@
 ---
-import sections from "../../content/guides/_sections.json";
+import LeftSidebarSection from "./LeftSidebarSection.astro";
+import { prepareSidebarSections } from "../../utils/sidebar-data";
+import type { SidebarData } from "../../utils/sidebar-data";
 
 interface Props {
   guidesBySection: Record<string, Array<{ title: string; url: string }>>;
@@ -7,52 +9,21 @@ interface Props {
 }
 
 const { guidesBySection, comingSoonCountBySection } = Astro.props;
+
+// Process the sidebar data using the utility function
+const sidebarData: SidebarData = {
+  guidesBySection,
+  comingSoonCountBySection,
+};
+
+const sections = prepareSidebarSections(sidebarData);
 ---
 
 <aside class="left-sidebar">
   <div class="card">
     <h3>🏄 Skills Guide</h3>
     <ul class="sidebar-links nested-guide">
-      {
-        Object.entries(sections)
-          .sort(([, a], [, b]) => a.order - b.order)
-          .map(([slug, section]) => {
-            const allGuides = guidesBySection[slug] || [];
-            // Filter out guides that have the same title as the section
-            const guides = allGuides.filter(
-              (guide) => guide.title !== section.label,
-            );
-            const visibleGuides = guides.slice(0, 3);
-            const remainingCount = guides.length - 3;
-
-            return (
-              <li class="section-item">
-                <a href={`/guide/${slug}`} class="section-link">
-                  {section.label}
-                </a>
-                {guides.length > 0 && (
-                  <ul class="nested-links">
-                    {visibleGuides.map((guide) => (
-                      <li>
-                        <a href={guide.url}>{guide.title}</a>
-                      </li>
-                    ))}
-                    {remainingCount > 0 && (
-                      <li class="more-items">
-                        <a href={`/guide/${slug}`}>{remainingCount} more →</a>
-                      </li>
-                    )}
-                    {comingSoonCountBySection[slug] > 0 && (
-                      <li class="coming-soon-items">
-                        {comingSoonCountBySection[slug]} coming soon
-                      </li>
-                    )}
-                  </ul>
-                )}
-              </li>
-            );
-          })
-      }
+      {sections.map((section) => <LeftSidebarSection section={section} />)}
     </ul>
     <div class="sidebar-cta-wrap">
       <a href="/guide" class="sidebar-cta">Browse All →</a>
@@ -113,35 +84,5 @@ const { guidesBySection, comingSoonCountBySection } = Astro.props;
     opacity: 1;
     text-decoration: underline;
     text-underline-offset: 2px;
-  }
-
-  /* Nested navigation - hide on mobile, show on desktop */
-  .nested-links {
-    display: none;
-  }
-
-  @media (min-width: 1200px) {
-    .nested-links {
-      display: block;
-      list-style: none;
-      padding: 0;
-      margin: 0.5rem 0 0 1rem;
-    }
-
-    .nested-links li {
-      margin-bottom: 0.5rem;
-    }
-
-    .nested-links a {
-      font-size: var(--font-size-0-8);
-      opacity: 0.7;
-    }
-
-    .nested-links .coming-soon-items {
-      color: var(--color-accent);
-      font-style: italic;
-      opacity: 0.6;
-      font-size: var(--font-size-0-75);
-    }
   }
 </style>

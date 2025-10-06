@@ -5,5 +5,5 @@
     "markdownlint --fix"
   ],
   "*.{js,json}": ["prettier --write"],
-  "*.astro": ["prettier --write"]
+  "*.*": ["prettier --write"]
 }
