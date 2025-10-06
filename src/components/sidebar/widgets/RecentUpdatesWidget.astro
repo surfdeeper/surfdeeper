@@ -15,7 +15,7 @@ const { recentlyUpdated } = Astro.props;
   recentlyUpdated.length > 0 && (
     <div class="card updates-section">
       <h3>📝 Recently Updated</h3>
-      <ul class="updates-list">
+      <ul class="updates-list links-neutral">
         {recentlyUpdated.slice(0, 4).map((page) => (
           <li class="update-item">
             <a href={page.url} class="update-link">
@@ -58,18 +58,8 @@ const { recentlyUpdated } = Astro.props;
   }
 
   .update-link {
-    color: var(--color-text-primary);
-    text-decoration: none;
     font-size: var(--font-size-sm);
-    opacity: 0.8;
-    transition: opacity var(--transition-fast);
     display: block;
-  }
-
-  .update-link:hover {
-    opacity: 1;
-    text-decoration: underline;
-    text-underline-offset: 2px;
   }
 
   /* Update metadata */

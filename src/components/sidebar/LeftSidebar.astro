@@ -22,7 +22,7 @@ const sections = prepareSidebarSections(sidebarData);
 <aside class="left-sidebar">
   <div class="card">
     <h3>🏄 Skills Guide</h3>
-    <ul class="sidebar-links nested-guide">
+    <ul class="sidebar-links nested-guide links-neutral">
       {sections.map((section) => <LeftSidebarSection section={section} />)}
     </ul>
     <div class="sidebar-cta-wrap">
@@ -64,25 +64,12 @@ const sections = prepareSidebarSections(sidebarData);
   }
 
   .sidebar-links li {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--space-3);
   }
 
   .sidebar-links li:last-child {
     margin-bottom: 0;
   }
 
-  .sidebar-links a {
-    color: var(--color-text-primary);
-    text-decoration: none;
-    font-size: var(--font-size-sm);
-    opacity: 0.8;
-    transition: opacity var(--transition-fast);
-    display: block;
-  }
-
-  .sidebar-links a:hover {
-    opacity: 1;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
+  /* Link styles come from the global .link-neutral utility */
 </style>

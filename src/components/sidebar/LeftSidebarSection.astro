@@ -43,28 +43,11 @@ const { section } = Astro.props;
     display: none;
   }
 
-  /* Sidebar links: neutral text color with subtle hover */
+  /* Sidebar link sizing and layout */
   .section-link,
   .nested-links a {
-    color: var(--color-text-primary);
-    text-decoration: none;
     font-size: var(--font-size-sm);
-    opacity: 0.8;
-    transition: opacity var(--transition-fast);
     display: block;
-  }
-
-  .section-link:hover,
-  .nested-links a:hover {
-    opacity: 1;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  /* Preserve neutral color for visited state */
-  .section-link:visited,
-  .nested-links a:visited {
-    color: var(--color-text-primary);
   }
 
   @media (min-width: 1200px) {
