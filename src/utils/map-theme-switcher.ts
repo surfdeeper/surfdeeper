@@ -15,14 +15,14 @@ import { changeMapTheme, getStoredTheme } from './leaflet-setup';
 export function createThemeSwitcher(map: any, defaultTheme: string): HTMLElement {
   const container = document.createElement('div');
   container.className = 'leaflet-theme-switcher leaflet-bar leaflet-control';
-  container.style.cssText = 'background: #1e293b; border: 2px solid #334155; border-radius: 4px; padding: 0.5rem;';
+  container.style.cssText = 'background: var(--color-surface-secondary); border: 2px solid var(--color-border); border-radius: 4px; padding: 0.5rem;';
   
   const select = document.createElement('select');
   select.className = 'theme-select';
   select.style.cssText = `
-    background: #0f172a;
-    color: #00ff88;
-    border: 1px solid #00ff88;
+    background: var(--color-surface-deep);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     padding: 0.5rem;
     font-size: 0.875rem;
@@ -55,11 +55,11 @@ export function createThemeSwitcher(map: any, defaultTheme: string): HTMLElement
   
   // Add hover effect
   select.addEventListener('mouseenter', () => {
-    select.style.borderColor = '#00cc6a';
+    select.style.borderColor = 'var(--color-border-accent)';
   });
   
   select.addEventListener('mouseleave', () => {
-    select.style.borderColor = '#00ff88';
+    select.style.borderColor = 'var(--color-border)';
   });
   
   container.appendChild(select);
