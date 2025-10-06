@@ -1,0 +1,43 @@
+---
+import AboutWidget from "./widgets/AboutWidget.astro";
+import SurfWisdomWidget from "./widgets/SurfWisdomWidget.astro";
+import RecentUpdatesWidget from "./widgets/RecentUpdatesWidget.astro";
+import RecentCommitsWidget from "./widgets/RecentCommitsWidget.astro";
+
+interface Props {
+  recentlyUpdated: Array<{
+    title: string;
+    url: string;
+    hierarchy: string;
+    date: string;
+  }>;
+  recentCommits: Array<{
+    message: string;
+    url: string;
+    isoDate: string;
+  }>;
+}
+
+const { recentlyUpdated, recentCommits } = Astro.props;
+---
+
+<aside class="right-sidebar">
+  <AboutWidget />
+  <SurfWisdomWidget />
+  <RecentUpdatesWidget recentlyUpdated={recentlyUpdated} />
+  <RecentCommitsWidget recentCommits={recentCommits} />
+</aside>
+
+<style>
+  /* Right sidebar layout and display rules */
+  .right-sidebar {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
+    .right-sidebar {
+      display: block;
+      order: 3;
+    }
+  }
+</style>

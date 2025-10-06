@@ -73,12 +73,6 @@
   gap: 1.5rem;
 }
 
-/* Mobile: single column, hide sidebars */
-.left-sidebar,
-.right-sidebar {
-  display: none;
-}
-
 /* Desktop: three columns when there's room */
 @media (min-width: 1200px) {
   .three-column-layout {
@@ -88,21 +82,8 @@
     margin: 0 auto;
   }
 
-  .left-sidebar,
-  .right-sidebar {
-    display: block;
-  }
-
   .content {
     order: 2;
-  }
-
-  .left-sidebar {
-    order: 1;
-  }
-
-  .right-sidebar {
-    order: 3;
   }
 }
 
@@ -159,18 +140,6 @@
   text-underline-offset: 2px;
 }
 
-/* Sidebar CTA (browse all) */
-.sidebar-cta-wrap {
-  margin-top: var(--space-4);
-  text-align: center;
-}
-
-.sidebar-cta {
-  color: var(--color-accent);
-  text-decoration: none;
-  font-size: var(--font-size-sm);
-}
-
 .about-text {
   color: var(--color-text-primary);
   opacity: 0.9;
@@ -183,106 +152,6 @@
   color: var(--color-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-/* Lists - consistent styling */
-.sidebar-links,
-.updates-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sidebar-links li,
-.update-item {
-  margin-bottom: 0.75rem;
-}
-
-.sidebar-links li:last-child,
-.update-item:last-child {
-  margin-bottom: 0;
-}
-
-.sidebar-links a,
-.update-link {
-  color: var(--color-text-primary);
-  text-decoration: none;
-  font-size: var(--font-size-sm);
-  opacity: 0.8;
-  transition: opacity var(--transition-fast);
-  display: block;
-}
-
-.sidebar-links a:hover,
-.update-link:hover {
-  opacity: 1;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-/* Nested navigation - hide on mobile, show on desktop */
-.nested-links {
-  display: none;
-}
-
-@media (min-width: 1200px) {
-  .nested-links {
-    display: block;
-    list-style: none;
-    padding: 0;
-    margin: 0.5rem 0 0 1rem;
-  }
-
-  .nested-links li {
-    margin-bottom: 0.5rem;
-  }
-
-  .nested-links a {
-    font-size: var(--font-size-0-8);
-    opacity: 0.7;
-  }
-
-  .nested-links .coming-soon-items {
-    color: var(--color-accent);
-    font-style: italic;
-    opacity: 0.6;
-    font-size: var(--font-size-0-75);
-  }
-}
-
-/* Update metadata */
-.page-hierarchy {
-  font-size: var(--font-size-0-7);
-  opacity: 0.6;
-  color: var(--color-text-primary);
-}
-
-.page-title,
-.commit-link {
-  font-size: var(--font-size-0-85);
-  color: var(--color-text-primary);
-  opacity: 0.8;
-}
-
-.update-date {
-  color: var(--color-text-primary);
-  opacity: 0.5;
-  font-size: var(--font-size-0-7);
-  margin-top: 0.25rem;
-}
-
-/* Wisdom quotes */
-.wisdom-quote {
-  color: var(--color-text-primary);
-  opacity: 0.8;
-  font-size: var(--font-size-0-85);
-  font-style: italic;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-}
-
-.wisdom-quote:last-child {
-  margin-bottom: 0;
 }
 
 /* Map markers - simplified */

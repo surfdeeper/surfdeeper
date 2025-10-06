@@ -1,0 +1,75 @@
+---
+import LeftSidebarSection from "./LeftSidebarSection.astro";
+import { prepareSidebarSections } from "../../utils/sidebar-data";
+import type { SidebarData } from "../../utils/sidebar-data";
+
+interface Props {
+  guidesBySection: Record<string, Array<{ title: string; url: string }>>;
+  comingSoonCountBySection: Record<string, number>;
+}
+
+const { guidesBySection, comingSoonCountBySection } = Astro.props;
+
+// Process the sidebar data using the utility function
+const sidebarData: SidebarData = {
+  guidesBySection,
+  comingSoonCountBySection,
+};
+
+const sections = prepareSidebarSections(sidebarData);
+---
+
+<aside class="left-sidebar">
+  <div class="card">
+    <h3>🏄 Skills Guide</h3>
+    <ul class="sidebar-links nested-guide links-neutral">
+      {sections.map((section) => <LeftSidebarSection section={section} />)}
+    </ul>
+    <div class="sidebar-cta-wrap">
+      <a href="/guide" class="sidebar-cta">Browse All →</a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  /* Left sidebar layout and display rules */
+  .left-sidebar {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
+    .left-sidebar {
+      display: block;
+      order: 1;
+    }
+  }
+
+  /* Sidebar CTA (browse all) */
+  .sidebar-cta-wrap {
+    margin-top: var(--space-4);
+    text-align: center;
+  }
+
+  .sidebar-cta {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+  }
+
+  /* Sidebar navigation links */
+  .sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-links li {
+    margin-bottom: var(--space-3);
+  }
+
+  .sidebar-links li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Link styles come from the global .link-neutral utility */
+</style>

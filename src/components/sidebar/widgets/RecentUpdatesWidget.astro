@@ -1,0 +1,84 @@
+---
+interface Props {
+  recentlyUpdated: Array<{
+    title: string;
+    url: string;
+    hierarchy: string;
+    date: string;
+  }>;
+}
+
+const { recentlyUpdated } = Astro.props;
+---
+
+{
+  recentlyUpdated.length > 0 && (
+    <div class="card updates-section">
+      <h3>📝 Recently Updated</h3>
+      <ul class="updates-list links-neutral">
+        {recentlyUpdated.slice(0, 4).map((page) => (
+          <li class="update-item">
+            <a href={page.url} class="update-link">
+              <span class="page-hierarchy">{page.hierarchy}</span>
+              <span class="page-title">{page.title}</span>
+            </a>
+            <span class="update-date">
+              {new Date(page.date).toLocaleString("en-US", {
+                timeZone: "America/Los_Angeles",
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+                timeZoneName: "short",
+              })}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  /* Lists - styling for updates */
+  .updates-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .update-item {
+    margin-bottom: 0.75rem;
+  }
+
+  .update-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .update-link {
+    font-size: var(--font-size-sm);
+    display: block;
+  }
+
+  /* Update metadata */
+  .page-hierarchy {
+    font-size: var(--font-size-0-7);
+    opacity: 0.6;
+    color: var(--color-text-primary);
+  }
+
+  .page-title {
+    font-size: var(--font-size-0-85);
+    color: var(--color-text-primary);
+    opacity: 0.8;
+  }
+
+  .update-date {
+    color: var(--color-text-primary);
+    opacity: 0.5;
+    font-size: var(--font-size-0-7);
+    margin-top: 0.25rem;
+  }
+</style>
