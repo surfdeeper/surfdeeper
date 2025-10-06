@@ -33,8 +33,6 @@ OR BETTER: Using component classes
 
 .spot-card:hover {
   border-color: var(--color-border-accent);
-  box-shadow: var(--shadow-primary);
-  transform: translateY(-2px);
 }
 
 .spot-card-title {

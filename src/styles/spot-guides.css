@@ -127,8 +127,6 @@
 
 .spot-item:hover {
   border-color: var(--color-accent);
-  box-shadow: var(--shadow-base);
-  transform: translateY(-2px);
 }
 
 .spot-link {
