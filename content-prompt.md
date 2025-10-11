@@ -1,0 +1,4 @@
+- inspect bb-content-structure and ss-content-structure md files
+- extract our content structure (nested outline form text) to `content-structure.md`
+- now compare all of them.
+- recommend a synthesized one at content-structure-synthesized.md that unifies them all, dedupes, similifies, and/or improves upon them in one unified form
