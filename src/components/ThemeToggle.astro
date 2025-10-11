@@ -1,0 +1,106 @@
+---
+// 3-state theme toggle: auto, light, dark
+---
+
+<div class="theme-toggle" role="group" aria-label="Theme">
+  <button type="button" data-value="auto" aria-pressed="false" class="seg"
+    >Auto</button
+  >
+  <button type="button" data-value="light" aria-pressed="false" class="seg"
+    >Light</button
+  >
+  <button type="button" data-value="dark" aria-pressed="false" class="seg"
+    >Dark</button
+  >
+</div>
+
+<script>
+  (function () {
+    const root = document.documentElement;
+    const STORAGE_KEY = "theme"; // "auto"|"light"|"dark"
+
+    function getSaved() {
+      try {
+        return localStorage.getItem(STORAGE_KEY) || "auto";
+      } catch {
+        return "auto";
+      }
+    }
+
+    function setTheme(value) {
+      try {
+        localStorage.setItem(STORAGE_KEY, value);
+      } catch {}
+      root.setAttribute("data-theme", value);
+      reflectState(value);
+    }
+
+    function reflectState(value) {
+      document.querySelectorAll(".theme-toggle").forEach((grp) => {
+        const buttons = grp.querySelectorAll("button[data-value]");
+        buttons.forEach((btn) => {
+          btn.setAttribute(
+            "aria-pressed",
+            btn.getAttribute("data-value") === value ? "true" : "false",
+          );
+        });
+      });
+    }
+
+    function init() {
+      const current = getSaved();
+      root.setAttribute("data-theme", current);
+      reflectState(current);
+      document.querySelectorAll(".theme-toggle").forEach((grp) => {
+        grp.addEventListener("click", (e) => {
+          const target = (e.target &&
+            (e.target as Element).closest?.(
+              "button[data-value]",
+            )) as HTMLButtonElement | null;
+          if (target && target.dataset.value) {
+            setTheme(target.dataset.value);
+          }
+        });
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    background: var(--color-surface-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .seg {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 0;
+    padding: 6px 10px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .seg[aria-pressed="true"] {
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+  }
+
+  .seg:hover {
+    background: var(--bg-accent-weak);
+  }
+</style>
