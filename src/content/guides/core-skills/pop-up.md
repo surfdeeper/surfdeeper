@@ -2,6 +2,7 @@
 title: The Pop-Up
 description: Master the fundamental pop-up technique — from lying to standing on your board.
 order: 6
+level: 1
 ---
 
 # The Pop-Up

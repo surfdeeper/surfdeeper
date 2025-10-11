@@ -2,6 +2,7 @@
 title: "Paddling"
 description: "Master paddling technique and build endurance"
 order: 4
+level: 1
 ---
 
 # Paddling

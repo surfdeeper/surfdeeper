@@ -2,6 +2,7 @@
 title: "Core Skills"
 description: "Essential surfing techniques and maneuvers"
 order: 5
+level: 2
 ---
 
 # Core Skills

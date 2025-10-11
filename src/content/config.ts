@@ -6,6 +6,7 @@ const guides = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     order: z.number().optional(),
+    level: z.number().min(0).max(4).optional(),
   }),
 });
 

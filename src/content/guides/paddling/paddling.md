@@ -2,6 +2,7 @@
 title: The Art of Efficient Paddling
 description: Master surf paddling with efficient stroke mechanics, smart body position, and calm breathing.
 order: 1
+level: 1
 ---
 
 # The Art of Efficient Paddling

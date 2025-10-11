@@ -2,6 +2,7 @@
 title: "Intermediate"
 description: "Advanced techniques for progressing surfers"
 order: 6
+level: 3
 ---
 
 # Intermediate

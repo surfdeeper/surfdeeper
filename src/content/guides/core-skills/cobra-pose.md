@@ -1,5 +1,6 @@
 ---
 title: The Cobra Pose
+level: 1
 description: Master the cobra pose for precise longboard control — prevent pearling while maintaining speed and angle.
 order: 3
 ---

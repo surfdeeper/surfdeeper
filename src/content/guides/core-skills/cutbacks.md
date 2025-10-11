@@ -1,5 +1,6 @@
 ---
 title: Cutbacks
+level: 3
 description: Master the cutback to stay in the pocket and maintain position on the wave.
 order: 4
 ---
