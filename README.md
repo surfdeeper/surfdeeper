@@ -4,6 +4,11 @@
 
 A minimal Astro site.
 
+## Learn more
+
+- Contributing: CONTRIBUTING.md
+- Knowledge model: docs/KNOWLEDGE_ARCHITECTURE.md
+
 ## Getting Started
 
 1. Install dependencies:
