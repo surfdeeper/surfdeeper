@@ -7,6 +7,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
+import GithubSlugger from "github-slugger";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,7 @@ class LinkValidator {
     // Track all available guide files for validation
     this.availableGuides = new Set();
     this.availablePublicFiles = new Set();
+    this.guideAnchors = new Map(); // slug -> Set of anchor ids
   }
 
   async init() {
@@ -44,6 +46,15 @@ class LinkValidator {
       // Also add the /index variant for section pages
       if (!slug.includes("/")) {
         this.availableGuides.add(`${slug}/index`);
+      }
+
+      // Index anchors for this guide file
+      try {
+        const content = await fs.readFile(filePath, "utf8");
+        const anchors = this.extractAnchors(content);
+        this.guideAnchors.set(slug, anchors);
+      } catch (e) {
+        // ignore
       }
     }
 
@@ -234,10 +245,17 @@ class LinkValidator {
       this.addError(errorMsg, filePath, lineNumber, fullMatch);
     }
 
-    // TODO: Validate hash anchors by parsing the target file's headings
+    // Validate hash anchors by checking indexed headings
     if (hash) {
-      // For now, just log that we found a hash link
-      // console.log(`Hash link found: ${urlPath}#${hash}`);
+      const anchors = this.guideAnchors.get(guideSlug);
+      if (anchors && !anchors.has(decodeURIComponent(hash))) {
+        this.addError(
+          `Broken anchor in guide link: ${urlPath}#${hash}`,
+          filePath,
+          lineNumber,
+          fullMatch,
+        );
+      }
     }
   }
 
@@ -371,3 +389,21 @@ function extractText(node) {
   });
   return text;
 }
+
+// Build a set of GitHub-style heading anchors from markdown content
+function slugify(text) {
+  const slugger = new GithubSlugger();
+  return slugger.slug(text);
+}
+
+LinkValidator.prototype.extractAnchors = function (markdown) {
+  const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown);
+  const anchors = new Set();
+  visit(tree, "heading", (node) => {
+    const text = extractText(node).trim();
+    if (text) {
+      anchors.add(slugify(text));
+    }
+  });
+  return anchors;
+};

@@ -24,6 +24,7 @@
     "@astrojs/check": "^0.9.4",
     "astro": "^4.0.0",
     "typescript": "^5.9.3",
+    "github-slugger": "^2.0.0",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
     "unified": "^11.0.5",
