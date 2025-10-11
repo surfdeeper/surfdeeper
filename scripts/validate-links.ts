@@ -8,7 +8,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.join(__dirname, "..");
 
+type Issue = {
+  type: "error" | "warning";
+  message: string;
+  file: string;
+  line: number;
+  match?: string;
+};
+
 class LinkValidator {
+  contentDir: string;
+  publicDir: string;
+  errors: Issue[];
+  warnings: Issue[];
+  filesChecked: number;
+  linksChecked: number;
+  availableGuides: Set<string>;
+  availablePublicFiles: Set<string>;
+
   constructor() {
     this.contentDir = path.join(rootDir, "src/content");
     this.publicDir = path.join(rootDir, "public");
@@ -22,11 +39,11 @@ class LinkValidator {
     this.availablePublicFiles = new Set();
   }
 
-  async init() {
+  async init(): Promise<void> {
     await this.buildFileIndex();
   }
 
-  async buildFileIndex() {
+  async buildFileIndex(): Promise<void> {
     // Index all guide files
     const guidesDir = path.join(this.contentDir, "guides");
     const guideFiles = await this.getMarkdownFiles(guidesDir);
@@ -50,7 +67,7 @@ class LinkValidator {
         const relativePath = path.relative(this.publicDir, filePath);
         this.availablePublicFiles.add(`/${relativePath}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.warn("Could not index public directory:", error.message);
     }
 
@@ -59,8 +76,8 @@ class LinkValidator {
     );
   }
 
-  async getMarkdownFiles(dir) {
-    const files = [];
+  async getMarkdownFiles(dir: string): Promise<string[]> {
+    const files: string[] = [];
     const entries = await fs.readdir(dir, { withFileTypes: true });
 
     for (const entry of entries) {
@@ -75,8 +92,8 @@ class LinkValidator {
     return files;
   }
 
-  async getPublicFiles(dir) {
-    const files = [];
+  async getPublicFiles(dir: string): Promise<string[]> {
+    const files: string[] = [];
     const entries = await fs.readdir(dir, { withFileTypes: true });
 
     for (const entry of entries) {
@@ -91,7 +108,7 @@ class LinkValidator {
     return files;
   }
 
-  async validateAllFiles() {
+  async validateAllFiles(): Promise<void> {
     const markdownFiles = await this.getMarkdownFiles(this.contentDir);
 
     for (const filePath of markdownFiles) {
@@ -99,14 +116,14 @@ class LinkValidator {
     }
   }
 
-  async validateFile(filePath) {
+  async validateFile(filePath: string): Promise<void> {
     this.filesChecked++;
     const content = await fs.readFile(filePath, "utf-8");
     const relativePath = path.relative(rootDir, filePath);
 
     // Extract all markdown links
     const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-    let match;
+    let match: RegExpExecArray | null;
 
     while ((match = linkRegex.exec(content)) !== null) {
       this.linksChecked++;
@@ -123,11 +140,17 @@ class LinkValidator {
     }
   }
 
-  getLineNumber(content, index) {
+  getLineNumber(content: string, index: number): number {
     return content.substring(0, index).split("\n").length;
   }
 
-  async validateLink(url, linkText, filePath, lineNumber, fullMatch) {
+  async validateLink(
+    url: string,
+    linkText: string,
+    filePath: string,
+    lineNumber: number,
+    fullMatch: string,
+  ): Promise<void> {
     // Skip external links (http/https)
     if (url.startsWith("http://") || url.startsWith("https://")) {
       return;
@@ -174,13 +197,13 @@ class LinkValidator {
   }
 
   async validateGuideLink(
-    urlPath,
-    hash,
-    linkText,
-    filePath,
-    lineNumber,
-    fullMatch,
-  ) {
+    urlPath: string,
+    hash: string | undefined,
+    linkText: string,
+    filePath: string,
+    lineNumber: number,
+    fullMatch: string,
+  ): Promise<void> {
     // Extract guide slug from /guide/slug format
     const guideSlug = urlPath.replace("/guide/", "");
 
@@ -206,7 +229,13 @@ class LinkValidator {
     }
   }
 
-  async validatePublicLink(urlPath, linkText, filePath, lineNumber, fullMatch) {
+  async validatePublicLink(
+    urlPath: string,
+    linkText: string,
+    filePath: string,
+    lineNumber: number,
+    fullMatch: string,
+  ): Promise<void> {
     if (!this.availablePublicFiles.has(urlPath)) {
       this.addError(
         `Broken public file link: ${urlPath}`,
@@ -217,12 +246,12 @@ class LinkValidator {
     }
   }
 
-  findSimilarGuides(searchSlug) {
-    const searchParts = searchSlug.toLowerCase().split(/[-\/]/);
-    const scored = [];
+  findSimilarGuides(searchSlug: string): string[] {
+    const searchParts = searchSlug.toLowerCase().split(/[-\//]/);
+    const scored: Array<{ guide: string; score: number }> = [];
 
     for (const guide of this.availableGuides) {
-      const guideParts = guide.toLowerCase().split(/[-\/]/);
+      const guideParts = guide.toLowerCase().split(/[-\//]/);
       let score = 0;
 
       // Simple scoring based on matching words
@@ -245,7 +274,12 @@ class LinkValidator {
     return scored.sort((a, b) => b.score - a.score).map((item) => item.guide);
   }
 
-  addError(message, filePath, lineNumber, fullMatch = "") {
+  addError(
+    message: string,
+    filePath: string,
+    lineNumber: number,
+    fullMatch = "",
+  ): void {
     this.errors.push({
       type: "error",
       message,
@@ -255,7 +289,12 @@ class LinkValidator {
     });
   }
 
-  addWarning(message, filePath, lineNumber, fullMatch = "") {
+  addWarning(
+    message: string,
+    filePath: string,
+    lineNumber: number,
+    fullMatch = "",
+  ): void {
     this.warnings.push({
       type: "warning",
       message,
@@ -265,7 +304,7 @@ class LinkValidator {
     });
   }
 
-  generateReport() {
+  generateReport(): boolean {
     console.log("\n📊 Link Validation Report");
     console.log("=".repeat(50));
     console.log(`Files checked: ${this.filesChecked}`);
@@ -323,6 +362,7 @@ async function main() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   main();
 }
 
