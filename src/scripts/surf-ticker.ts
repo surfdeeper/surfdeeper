@@ -285,26 +285,43 @@ function initMarqueeAnimation() {
     return; // Don't animate if user prefers reduced motion
   }
 
+  // Position in pixels (negative values move left)
   let position = 0;
-  const speed = 0.5; // pixels per frame (adjust for speed)
+  // Speed in pixels per second for device/time independence
+  const speedPxPerSecond = 40; // adjust for desired marquee speed
+  // Track last timestamp provided by RAF
+  let lastTime: number | null = null;
 
-  function animate() {
-    // Get the width of the content
+  function animate(now: number) {
+    // Measure content width every frame so responsive/layout changes are handled
     const contentWidth = (tickerContent as HTMLElement).offsetWidth;
+    const halfWidth = Math.max(1, contentWidth / 2);
 
-    // Move the content
-    position -= speed;
-
-    // Reset position when we've scrolled half the content (due to duplication)
-    if (Math.abs(position) >= contentWidth / 2) {
-      position = 0;
+    if (lastTime == null) {
+      lastTime = now;
     }
+
+    // Delta time in seconds since last frame
+    let dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    // Protect against giant jumps after long sleeps (~> 1s)
+    // If you prefer fully catching up, remove the clamp.
+    dt = Math.min(dt, 0.25);
+
+    // Update position based on elapsed time
+    position -= speedPxPerSecond * dt;
+
+    // Wrap position to create seamless loop across duplicated content
+    // Ensure we stay within [-halfWidth, 0]
+    while (position <= -halfWidth) position += halfWidth;
+    while (position > 0) position -= halfWidth;
 
     // Apply transform
     (tickerContent as HTMLElement).style.transform =
       `translateX(${position}px)`;
 
-    // Continue animation
+    // Queue next frame
     animationFrameId = requestAnimationFrame(animate);
   }
 
