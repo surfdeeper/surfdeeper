@@ -1,0 +1,12 @@
+---
+title: Foundations
+description: Core fundamentals every surfer should master
+order: 3
+id: foundations
+category: foundations
+kind: section
+---
+
+# Foundations
+
+Build a solid base with essential ocean knowledge and surfing fundamentals.

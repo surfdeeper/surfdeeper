@@ -1,6 +1,9 @@
 import { defineConfig } from "astro/config";
+import remarkMagicLinks from "./scripts/remark-magic-links.mjs";
 
 export default defineConfig({
   site: "https://surfdeeper.com",
-  // Minimal configuration for a basic Astro site
+  markdown: {
+    remarkPlugins: [remarkMagicLinks],
+  },
 });
