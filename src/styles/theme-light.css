@@ -8,6 +8,9 @@
   --color-surface-primary: #fff;
   --color-surface-secondary: #f6f7f9;
   --color-surface-tertiary: #eef1f5;
+  /* Override dark-leaning surfaces from base design-system */
+  --color-surface-deep: #f6f7f9;
+  --color-surface-dark: #eef1f5;
 
   /* Text */
   --color-text-primary: #1d2430;
@@ -57,6 +60,8 @@
     --color-surface-primary: #fff;
     --color-surface-secondary: #f6f7f9;
     --color-surface-tertiary: #eef1f5;
+    --color-surface-deep: #f6f7f9;
+    --color-surface-dark: #eef1f5;
     --color-text-primary: #1d2430;
     --color-text-secondary: #526072;
     --color-text-on-primary: #fff;
