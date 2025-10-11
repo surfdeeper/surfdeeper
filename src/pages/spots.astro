@@ -1,0 +1,303 @@
+---
+// Alias route for Surf Spots that reuses the Map + Directory experience
+import MapLayout from "../layouts/MapLayout.astro";
+import { getCollection } from "astro:content";
+import { serializeSpots } from "../utils/spot-data";
+
+import "../styles/spot-guides.css";
+
+const spots = await getCollection("spots");
+const serializedSpots = serializeSpots(spots);
+---
+
+<MapLayout
+  title="Surf Spots - Surf Deeper"
+  description="Browse surf spots with an interactive map and directory, including local insights, tides, and hazards."
+>
+  <button
+    id="view-toggle"
+    class="view-toggle"
+    aria-label="Toggle between map and directory"
+  >
+    <span class="toggle-icon" id="toggle-icon">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </span>
+  </button>
+
+  <div id="map-view" class="map-view active">
+    <div id="map"></div>
+  </div>
+
+  <div id="directory-view" class="directory-view">
+    <div class="directory-container">
+      <div class="directory-header">
+        <h1>Surf Spots Directory</h1>
+        <p class="directory-description">
+          Browse all surf spots with detailed information
+        </p>
+      </div>
+      <div class="directory-content">
+        <ul class="spots-list">
+          {
+            spots.map((spot) => (
+              <li class="spot-item">
+                <a href={`/spots/${spot.slug}`} class="spot-link">
+                  <h3>{spot.data.title}</h3>
+                  {spot.data.description && (
+                    <p class="spot-excerpt">{spot.data.description}</p>
+                  )}
+                  <div class="spot-meta">
+                    <span class="skill-levels">
+                      {spot.data.skillLevels.map((level: string) => (
+                        <span class={`skill-badge skill-${level}`}>
+                          {level}
+                        </span>
+                      ))}
+                    </span>
+                    <span class="wave-type">{spot.data.waveType}</span>
+                  </div>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</MapLayout>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  crossorigin=""
+/>
+<script
+  is:inline
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  crossorigin=""
+  defer></script>
+
+<script
+  type="application/json"
+  id="spots-data"
+  set:html={JSON.stringify(serializedSpots)}
+/>
+
+<script>
+  import {
+    MAP_DEFAULTS,
+    DEFAULT_THEME_FULL_MAP,
+  } from "../config/map-constants";
+  import {
+    createBaseMap,
+    waitForLeaflet,
+    getStoredTheme,
+  } from "../utils/leaflet-setup";
+  import { getSpotsDataFromElement } from "../utils/spot-data";
+  import {
+    createPopupContent,
+    showContributionInstructions,
+    setupMarkerInteractions,
+  } from "../scripts/spot-guides-helpers";
+  import { getTheme, addThemeSwitcherToMap } from "../utils/map-theme-switcher";
+
+  function initMap() {
+    waitForLeaflet(() => {
+      const spots = getSpotsDataFromElement("spots-data");
+
+      const currentThemeId = getStoredTheme(DEFAULT_THEME_FULL_MAP);
+      const theme = getTheme(currentThemeId, DEFAULT_THEME_FULL_MAP);
+
+      const map = createBaseMap(
+        "map",
+        MAP_DEFAULTS.CENTER,
+        MAP_DEFAULTS.ZOOM,
+        theme,
+      );
+      if (!map) return;
+
+      addThemeSwitcherToMap(map, DEFAULT_THEME_FULL_MAP, "topright");
+
+      const L = (window as any).L;
+
+      const sortedSpots = [...spots].sort((a, b) =>
+        a.title.localeCompare(b.title),
+      );
+
+      sortedSpots.forEach((spot, index) => {
+        if (
+          typeof spot.latitude === "number" &&
+          typeof spot.longitude === "number"
+        ) {
+          const spotNumber = index + 1;
+
+          const icon = L.divIcon({
+            className: "numbered-marker-with-label",
+            html: `
+              <div class="marker-with-label">
+                <div class="marker-badge">${spotNumber}</div>
+                <div class="marker-label">${spot.title}</div>
+                <div class="marker-pointer"></div>
+              </div>
+            `,
+            iconSize: [null, null],
+            iconAnchor: [18, 32],
+            popupAnchor: [0, -32],
+          });
+
+          const marker = L.marker([spot.latitude, spot.longitude], {
+            icon,
+          }).addTo(map);
+          const popup = createPopupContent(spot, marker, false);
+          marker.bindPopup(popup);
+          marker.spotData = spot;
+          marker.spotNumber = spotNumber;
+          setupMarkerInteractions(
+            marker,
+            spot,
+            createPopupContent,
+            showContributionInstructions,
+          );
+        }
+      });
+    });
+  }
+
+  function initViewToggle() {
+    const toggleBtn = document.getElementById("view-toggle");
+    const mapView = document.getElementById("map-view");
+    const directoryView = document.getElementById("directory-view");
+
+    if (!toggleBtn || !mapView || !directoryView) return;
+
+    toggleBtn.addEventListener("click", () => {
+      const isMapActive = mapView.classList.contains("active");
+
+      if (isMapActive) {
+        mapView.classList.remove("active");
+        directoryView.classList.add("active");
+        toggleBtn.classList.add("directory-active");
+      } else {
+        directoryView.classList.remove("active");
+        mapView.classList.add("active");
+        toggleBtn.classList.remove("directory-active");
+      }
+    });
+  }
+
+  if (
+    document.readyState === "complete" ||
+    document.readyState === "interactive"
+  ) {
+    initMap();
+    initViewToggle();
+  } else {
+    document.addEventListener("DOMContentLoaded", () => {
+      initMap();
+      initViewToggle();
+    });
+  }
+</script>
+
+<style>
+  :global(.numbered-marker-with-label) {
+    background: none;
+    border: none;
+  }
+
+  :global(.marker-with-label) {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+
+  :global(.marker-badge) {
+    width: 28px;
+    height: 28px;
+    background: var(--color-accent);
+    color: var(--color-surface-primary);
+    border-radius: var(--border-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xs);
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--color-surface-primary);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    z-index: var(--z-2);
+  }
+
+  :global(.marker-label) {
+    background: #111a22f2;
+    color: var(--color-accent);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #febc0866;
+    backdrop-filter: blur(4px);
+    z-index: var(--z-1);
+  }
+
+  :global(.marker-pointer) {
+    position: absolute;
+    bottom: -6px;
+    left: 8px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--color-surface-primary);
+    z-index: var(--z-2);
+  }
+
+  :global(.numbered-marker-with-label:hover .marker-badge) {
+    background: var(--color-accent-hover);
+    transform: scale(1.1);
+  }
+
+  :global(.numbered-marker-with-label:hover .marker-label) {
+    background: #e0a60726;
+    border-color: var(--color-accent-hover);
+    color: var(--color-accent-hover);
+  }
+
+  @media (max-width: 768px) {
+    :global(.marker-badge) {
+      width: 24px;
+      height: 24px;
+      font-size: var(--font-size-xs);
+    }
+
+    :global(.marker-label) {
+      font-size: var(--font-size-xs);
+      padding: 3px 8px;
+    }
+
+    :global(.marker-pointer) {
+      bottom: -5px;
+      left: 6px;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--color-surface-primary);
+    }
+  }
+</style>

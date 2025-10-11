@@ -50,7 +50,7 @@ export async function loadHomepageData() {
     guidesBySection[section].push({
       slug: guide.slug,
       title: guide.data.title,
-      url: `/guide/${guide.slug}`,
+      url: `/learn/${guide.slug}`,
     });
   }
 
@@ -126,11 +126,11 @@ export async function loadHomepageData() {
                 .replace(/\b\w/g, (l) => l.toUpperCase());
 
               if (slug === "index") {
-                url = `/guide/${category}`;
+                url = `/learn/${category}`;
                 title = categoryFormatted;
                 hierarchy = "Guide";
               } else {
-                url = `/guide/${category}/${slug}`;
+                url = `/learn/${category}/${slug}`;
                 title = slug
                   .replace(/-/g, " ")
                   .replace(/\b\w/g, (l) => l.toUpperCase());

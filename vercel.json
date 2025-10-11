@@ -3,6 +3,9 @@
   "outputDirectory": "dist",
   "framework": "astro",
   "redirects": [
+    { "source": "/guide", "destination": "/learn", "permanent": true },
+    { "source": "/guide/(.*)", "destination": "/learn/$1", "permanent": true },
+    { "source": "/maps", "destination": "/spots", "permanent": true },
     { "source": "/spot-guides", "destination": "/spots", "permanent": true },
     {
       "source": "/(.*)",

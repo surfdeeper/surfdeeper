@@ -9,7 +9,7 @@ const { section } = Astro.props;
 ---
 
 <li class="section-item">
-  <a href={`/guide/${section.slug}`} class="section-link">
+  <a href={`/learn/${section.slug}`} class="section-link">
     {section.label}
   </a>
   {
@@ -22,7 +22,7 @@ const { section } = Astro.props;
         ))}
         {section.remainingCount > 0 && (
           <li class="more-items">
-            <a href={`/guide/${section.slug}`}>
+            <a href={`/learn/${section.slug}`}>
               {section.remainingCount} more →
             </a>
           </li>

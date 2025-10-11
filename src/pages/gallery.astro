@@ -13,7 +13,7 @@ interface GalleryImage {
   context?: string;
 }
 
-// Get all guides
+// Get all guides (learn content)
 const allGuides = await getCollection("guides");
 
 const images: GalleryImage[] = [];
@@ -30,7 +30,7 @@ for (const guide of allGuides) {
     continue;
   }
 
-  const guideLink = `/guide/${guide.slug}`;
+  const guideLink = `/learn/${guide.slug}`;
   const guideTitle = guide.data.title;
   const sectionSlug = guide.slug.split("/")[0];
   const sectionData = sections[sectionSlug as keyof typeof sections];
@@ -105,8 +105,8 @@ const imagesBySection = images.reduce(
     <header class="gallery-header">
       <h1>Gallery</h1>
       <p class="gallery-intro">
-        All images from the surf guides in one place. Click any image to jump to
-        the full guide where it appears.
+        All images from the Learn content in one place. Click any image to jump
+        to the full guide where it appears.
         {
           images.length > 0 && (
             <span class="total-count">
@@ -122,8 +122,8 @@ const imagesBySection = images.reduce(
       images.length === 0 ? (
         <div class="no-images">
           <p>
-            No images found in the guides yet.{" "}
-            <a href="/contribute">Contribute</a> guides with images!
+            No images found in Learn yet. <a href="/contribute">Contribute</a>{" "}
+            guides with images!
           </p>
         </div>
       ) : (
