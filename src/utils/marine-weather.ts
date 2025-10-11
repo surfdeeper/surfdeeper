@@ -25,6 +25,34 @@ export async function fetchMarineConditions(
   longitude: number,
 ): Promise<MarineConditions | null> {
   try {
+    // Client-side caching in localStorage keyed by location + 15-min time bucket
+    const isBrowser =
+      typeof window !== "undefined" && typeof localStorage !== "undefined";
+    const roundTo = (ms: number, bucketMs: number) =>
+      Math.floor(ms / bucketMs) * bucketMs;
+    const BUCKET_MINUTES = 15;
+    const bucketMs = BUCKET_MINUTES * 60 * 1000;
+    const now = Date.now();
+    const bucket = roundTo(now, bucketMs);
+    const latKey = latitude.toFixed(3); // ~100m precision
+    const lonKey = longitude.toFixed(3);
+    const CACHE_PREFIX = "marineConditions:v1";
+    const cacheKey = `${CACHE_PREFIX}:${latKey}:${lonKey}:${bucket}`;
+
+    if (isBrowser) {
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const parsed = JSON.parse(cached) as MarineConditions | null;
+          if (parsed) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        // Ignore cache read/parse errors
+      }
+    }
+
     // Marine API for wave/swell data
     const marineUrl = new URL("https://marine-api.open-meteo.com/v1/marine");
     marineUrl.searchParams.set("latitude", latitude.toString());
@@ -69,7 +97,7 @@ export async function fetchMarineConditions(
     const weatherHourly = weatherData.hourly;
     const idx = 0;
 
-    return {
+    const result: MarineConditions = {
       waveHeight: marineHourly.wave_height[idx] || 0,
       wavePeriod: marineHourly.wave_period[idx] || 0,
       waveDirection: marineHourly.wave_direction[idx] || 0,
@@ -80,6 +108,16 @@ export async function fetchMarineConditions(
       windDirection: weatherHourly.wind_direction_10m[idx] || 0,
       timestamp: marineHourly.time[idx] || new Date().toISOString(),
     };
+
+    if (isBrowser) {
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(result));
+      } catch (e) {
+        // Ignore cache write errors (quota, private mode, etc.)
+      }
+    }
+
+    return result;
   } catch (error) {
     console.error("Failed to fetch marine conditions:", error);
     return null;
