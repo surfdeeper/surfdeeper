@@ -260,45 +260,13 @@ body {
   font-size: var(--font-size-xl);
 }
 
-/* Links - Variable-driven single source of truth */
-/*
-  Base link behavior reads from CSS variables with sensible defaults.
-  Regions or elements can override via container classes that set these vars.
-*/
-
-/* Defaults (accented links) */
-:root {
-  --link-color: var(--color-primary);
-  --link-hover-color: var(--color-primary-hover);
-  --link-visited-color: var(--link-color);
-  --link-opacity: 1;
-  --link-hover-opacity: 1;
-  --link-underline: underline;
-  --link-hover-underline: underline;
-  --link-underline-offset: 3px;
-  --link-decoration-color: var(--color-primary);
-  --link-transition: color var(--transition-base);
-}
-
+/* Links */
 a:not(.btn) {
-  color: var(--link-color);
-  text-decoration: var(--link-underline);
-  text-decoration-color: var(--link-decoration-color);
-  text-underline-offset: var(--link-underline-offset);
-  transition: var(--link-transition);
-  opacity: var(--link-opacity);
-}
-
-a:not(.btn):hover {
-  color: var(--link-hover-color);
-  text-decoration: var(--link-hover-underline);
-  text-decoration-color: var(--link-decoration-color);
-  text-underline-offset: var(--link-underline-offset);
-  opacity: var(--link-hover-opacity);
-}
-
-a:not(.btn):visited {
-  color: var(--link-visited-color);
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--color-primary);
+  text-underline-offset: 3px;
+  transition: color var(--transition-base);
 }
 
 a:focus-visible {
@@ -307,45 +275,65 @@ a:focus-visible {
   border-radius: 2px;
 }
 
-/* Region presets */
-.links-accent {
-  --link-color: var(--color-primary);
-  --link-hover-color: var(--color-primary-hover);
-  --link-visited-color: var(--color-primary);
-  --link-opacity: 1;
-  --link-hover-opacity: 1;
-  --link-underline: underline;
-  --link-hover-underline: underline;
-  --link-underline-offset: 3px;
-  --link-decoration-color: var(--color-primary);
-  --link-transition: color var(--transition-base);
+a:not(.btn):hover {
+  color: var(--color-primary-hover);
+  text-decoration-color: var(--color-primary);
 }
 
-.links-neutral {
-  --link-color: var(--color-text-primary);
-  --link-hover-color: var(--color-text-primary);
-  --link-visited-color: var(--color-text-primary);
-  --link-opacity: 0.8;
-  --link-hover-opacity: 1;
-  --link-underline: none;
-  --link-hover-underline: underline;
-  --link-underline-offset: 2px;
-  --link-decoration-color: currentColor;
-  --link-transition: opacity var(--transition-fast);
+a:not(.btn):visited {
+  color: var(--color-primary);
 }
 
-/* Backwards-compatible element utility */
-.link-neutral {
-  --link-color: var(--color-text-primary);
-  --link-hover-color: var(--color-text-primary);
-  --link-visited-color: var(--color-text-primary);
-  --link-opacity: 0.8;
-  --link-hover-opacity: 1;
-  --link-underline: none;
-  --link-hover-underline: underline;
-  --link-underline-offset: 2px;
-  --link-decoration-color: currentColor;
-  --link-transition: opacity var(--transition-fast);
+/* Link containers for consistent variants */
+.links-accent a:not(.btn) {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--color-primary);
+  text-underline-offset: 3px;
+  transition: color var(--transition-base);
+}
+
+.links-neutral a:not(.btn) {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+}
+
+.links-accent a:not(.btn):hover {
+  color: var(--color-primary-hover);
+}
+
+.links-accent a:not(.btn):visited {
+  color: var(--color-primary);
+}
+
+.links-neutral a:not(.btn):hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.links-neutral a:not(.btn):visited {
+  color: var(--color-text-primary);
+}
+
+/* Element-level utility (use sparingly) */
+a.link-neutral {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+}
+
+a.link-neutral:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a.link-neutral:visited {
+  color: var(--color-text-primary);
 }
 
 /* Navigation */
