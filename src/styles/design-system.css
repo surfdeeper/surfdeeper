@@ -2,49 +2,7 @@
 
 /* CSS Custom Properties (Design Tokens) */
 :root {
-  /* Color Palette */
-  --color-primary: #febc08; /* Golden yellow - main accent */
-  --color-primary-hover: #e0a607; /* Darker yellow for hover states */
-  --color-surface-primary: #111a22; /* Dark blue - main backgrounds */
-  --color-surface-secondary: #132635; /* Lighter blue - cards, elevated surfaces */
-  --color-surface-tertiary: #1a2332; /* Even lighter - subtle variations */
-  --color-text-primary: #999; /* Main text color */
-  --color-text-secondary: #666; /* Muted text */
-  --color-text-on-primary: #000; /* Text on primary (yellow) backgrounds should be black */
-  --color-border: #132635; /* Default borders */
-  --color-border-accent: var(--color-primary); /* Accent borders */
-
-  /* Semantic Colors */
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
-
-  /* Additional semantic colors used across pages */
-
-  /* Deprecated for text: prefer --color-primary (accent) or --color-text-* for body copy */
-  --color-accent-green: #0f8; /* #00ff88 */
-  --color-accent-green-hover: #0c6; /* #00cc66 */
-  --color-surface-deep: #0f172a;
-  --color-surface-dark: #1e293b;
-  --color-text-muted: #94a3b8;
-  --color-text-light: #cbd5e1;
-  --color-text-dim: #64748b;
-  --color-danger: #f87171;
-  --color-state-success-text: #155724;
-  --color-state-warning-text: #856404;
-  --color-state-danger-text: #721c24;
-  --color-mint-light: #d1fae5;
-
-  /* Weak/translucent backgrounds */
-  --bg-accent-weak: #febc081a;
-  --bg-info-weak: #3b82f61a;
-  --bg-success-weak: #22c55e1a;
-  --bg-warning-weak: #f59e0b1a;
-  --bg-error-weak: #ef44441a;
-
-  /* Overlay / Scrims */
-  --overlay-scrim: #000c; /* 80% black */
+  /* Color scheme is owned by theme styles */
 
   /* Typography Scale */
   --font-family-primary: "Roboto", sans-serif;
@@ -142,6 +100,18 @@
 
   /* Layout sizes */
   --size-max-width: 1200px;
+
+  /* Link defaults (accented links) */
+  --link-color: var(--color-primary);
+  --link-hover-color: var(--color-primary-hover);
+  --link-visited-color: var(--link-color);
+  --link-opacity: 1;
+  --link-hover-opacity: 1;
+  --link-underline: underline;
+  --link-hover-underline: underline;
+  --link-underline-offset: 3px;
+  --link-decoration-color: var(--color-primary);
+  --link-transition: color var(--transition-base);
 }
 
 /* Global Base Styles */
@@ -261,24 +231,8 @@ body {
 }
 
 /* Links - Variable-driven single source of truth */
-/*
-  Base link behavior reads from CSS variables with sensible defaults.
-  Regions or elements can override via container classes that set these vars.
-*/
-
-/* Defaults (accented links) */
-:root {
-  --link-color: var(--color-primary);
-  --link-hover-color: var(--color-primary-hover);
-  --link-visited-color: var(--link-color);
-  --link-opacity: 1;
-  --link-hover-opacity: 1;
-  --link-underline: underline;
-  --link-hover-underline: underline;
-  --link-underline-offset: 3px;
-  --link-decoration-color: var(--color-primary);
-  --link-transition: color var(--transition-base);
-}
+/* Base link behavior reads from CSS variables with sensible defaults.
+   Regions or elements can override via container classes that set these vars. */
 
 a:not(.btn) {
   color: var(--link-color);
@@ -330,7 +284,7 @@ a:focus-visible {
   --link-underline: none;
   --link-hover-underline: underline;
   --link-underline-offset: 2px;
-  --link-decoration-color: currentColor;
+  --link-decoration-color: currentcolor;
   --link-transition: opacity var(--transition-fast);
 }
 
@@ -344,7 +298,7 @@ a:focus-visible {
   --link-underline: none;
   --link-hover-underline: underline;
   --link-underline-offset: 2px;
-  --link-decoration-color: currentColor;
+  --link-decoration-color: currentcolor;
   --link-transition: opacity var(--transition-fast);
 }
 
