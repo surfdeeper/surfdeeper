@@ -22,13 +22,6 @@ const {
       <div class="marquee" id="surf-ticker">
         <span id="ticker-content">Loading surf conditions...</span>
       </div>
-      <div class="ticker-attribution" aria-label="Data attribution">
-        Data from <a
-          href="https://open-meteo.com/"
-          target="_blank"
-          rel="noopener">Open‑Meteo</a
-        >
-      </div>
     </div>
 
     <div class="three-column-layout">
@@ -129,20 +122,7 @@ const {
   @import "../styles/homepage.css";
 </style>
 
-<style>
-  .ticker-attribution {
-    text-align: right;
-    padding: 0 var(--space-4) var(--space-2);
-    font-size: var(--font-size-0-85);
-    color: var(--color-text-dim);
-  }
-
-  .ticker-attribution a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-</style>
+<!-- Removed page-level attribution; attribution now lives in global footer -->
 
 <script
   type="application/json"
