@@ -1,6 +1,10 @@
 ---
 import { getCollection } from "astro:content";
 import sections from "../../../content/guides/_sections.json";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import { visit } from "unist-util-visit";
 
 interface GalleryImage {
   src: string;
@@ -16,9 +20,6 @@ interface GalleryImage {
 const allGuides = await getCollection("guides");
 const images: GalleryImage[] = [];
 
-const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g; // markdown image
-const headingRegex = /^#{1,6}\s+(.+)$/gm; // headings for local context
-
 for (const guide of allGuides) {
   // Skip index pages
   if (guide.slug.endsWith("/index") || !guide.slug.includes("/")) continue;
@@ -31,40 +32,75 @@ for (const guide of allGuides) {
 
   const body = guide.body;
 
-  // Gather headings with positions to provide nearby context
-  const headings: { text: string; position: number }[] = [];
-  let headingMatch;
-  while ((headingMatch = headingRegex.exec(body)) !== null) {
-    headings.push({ text: headingMatch[1], position: headingMatch.index });
-  }
+  // Parse markdown body to extract images and nearby heading context
+  const tree = unified().use(remarkParse).use(remarkGfm).parse(body);
 
-  let match;
-  while ((match = imageRegex.exec(body)) !== null) {
-    const alt = match[1];
-    const src = match[2];
-    const imagePosition = match.index;
+  // Collect heading nodes with their starting line and text
+  const headings: { text: string; line: number }[] = [];
+  visit(tree, "heading", (node: any) => {
+    const text = extractText(node).trim();
+    const line = node?.position?.start?.line || 1;
+    if (text) headings.push({ text, line });
+  });
+  // Sort headings by line just in case
+  headings.sort((a, b) => a.line - b.line);
 
-    // Find closest previous heading for context
-    let closestHeading = "";
+  // Gather definitions to resolve reference-style images
+  const definitions = new Map<string, string>();
+  visit(tree, "definition", (node: any) => {
+    const id = String(node.identifier || "").toLowerCase();
+    if (id && typeof node.url === "string") {
+      definitions.set(id, node.url);
+    }
+  });
+
+  // Helper to add an image with context
+  const addImage = (
+    src: string | undefined,
+    alt: string | undefined,
+    node: any,
+  ) => {
+    if (!src) return;
+    const imageLine = node?.position?.start?.line || 1;
+    // Find closest previous heading by line
+    let closestHeading: string | undefined;
     for (let i = headings.length - 1; i >= 0; i--) {
-      if (headings[i].position < imagePosition) {
+      if (headings[i].line < imageLine) {
         closestHeading = headings[i].text;
         break;
       }
     }
-
-    const caption = alt || guideTitle;
-    const context = closestHeading ? `${closestHeading}` : undefined;
-
+    const caption = (alt && alt.trim()) || guideTitle;
     images.push({
       src,
-      alt: alt || guideTitle,
+      alt: (alt && alt.trim()) || guideTitle,
       caption,
       guideTitle,
       guideLink,
       section: sectionLabel,
-      context,
+      context: closestHeading,
     });
+  };
+
+  // Inline images: ![alt](url)
+  visit(tree, "image", (node: any) => {
+    addImage(node.url, node.alt || "", node);
+  });
+
+  // Reference-style images: ![alt][id]
+  visit(tree, "imageReference", (node: any) => {
+    const id = String(node.identifier || "").toLowerCase();
+    const url = definitions.get(id);
+    addImage(url, node.alt || "", node);
+  });
+
+  // Helper to extract concatenated text from a mdast node
+  function extractText(node: any): string {
+    let text = "";
+    visit(node, "text", (t: any) => {
+      text += t.value || "";
+    });
+    return text;
   }
 }
 

@@ -3,6 +3,10 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import { visit } from "unist-util-visit";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -104,23 +108,54 @@ class LinkValidator {
     const content = await fs.readFile(filePath, "utf-8");
     const relativePath = path.relative(rootDir, filePath);
 
-    // Extract all markdown links
-    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-    let match;
+    // Parse markdown using remark to correctly handle nested/edge cases
+    const tree = unified().use(remarkParse).use(remarkGfm).parse(content);
 
-    while ((match = linkRegex.exec(content)) !== null) {
+    // Collect link definitions to resolve reference-style links
+    const definitions = new Map(); // id (lowercased) -> url
+    visit(tree, "definition", (node) => {
+      if (node.identifier && typeof node.url === "string") {
+        definitions.set(String(node.identifier).toLowerCase(), node.url);
+      }
+    });
+
+    const handle = async (url, text, node) => {
+      if (!url || typeof url !== "string") return;
       this.linksChecked++;
-      const [fullMatch, linkText, url] = match;
-      const lineNumber = this.getLineNumber(content, match.index);
-
+      const lineNumber = node?.position?.start?.line || 1;
+      const fullMatch = `${node.type === "image" || node.type === "imageReference" ? "!" : ""}[${text ?? ""}](${url})`;
       await this.validateLink(
         url,
-        linkText,
+        text ?? "",
         relativePath,
         lineNumber,
         fullMatch,
       );
-    }
+    };
+
+    // Visit inline links and images
+    visit(
+      tree,
+      (node) => node.type === "link" || node.type === "image",
+      (node) => {
+        const url = node.url;
+        const text = node.type === "link" ? extractText(node) : node.alt || "";
+        return handle(url, text, node);
+      },
+    );
+
+    // Visit reference-style links/images and resolve via definitions
+    visit(
+      tree,
+      (node) => node.type === "linkReference" || node.type === "imageReference",
+      (node) => {
+        const id = String(node.identifier || "").toLowerCase();
+        const defUrl = definitions.get(id);
+        const text =
+          node.type === "linkReference" ? extractText(node) : node.alt || "";
+        return handle(defUrl, text, node);
+      },
+    );
   }
 
   getLineNumber(content, index) {
@@ -327,3 +362,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 
 export { LinkValidator };
+
+// Helper: extract plain text from a node (for link text)
+function extractText(node) {
+  let text = "";
+  visit(node, "text", (t) => {
+    text += t.value || "";
+  });
+  return text;
+}
