@@ -1,0 +1,186 @@
+---
+import { getCollection } from "astro:content";
+import sections from "../../../content/guides/_sections.json";
+
+interface GalleryImage {
+  src: string;
+  alt: string;
+  caption: string;
+  guideTitle: string;
+  guideLink: string;
+  section: string;
+  context?: string;
+}
+
+// Build a lightweight gallery index from guides content
+const allGuides = await getCollection("guides");
+const images: GalleryImage[] = [];
+
+const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g; // markdown image
+const headingRegex = /^#{1,6}\s+(.+)$/gm; // headings for local context
+
+for (const guide of allGuides) {
+  // Skip index pages
+  if (guide.slug.endsWith("/index") || !guide.slug.includes("/")) continue;
+
+  const guideLink = `/guide/${guide.slug}`;
+  const guideTitle = guide.data.title;
+  const sectionSlug = guide.slug.split("/")[0];
+  const sectionData = sections[sectionSlug as keyof typeof sections];
+  const sectionLabel = sectionData?.label || sectionSlug;
+
+  const body = guide.body;
+
+  // Gather headings with positions to provide nearby context
+  const headings: { text: string; position: number }[] = [];
+  let headingMatch;
+  while ((headingMatch = headingRegex.exec(body)) !== null) {
+    headings.push({ text: headingMatch[1], position: headingMatch.index });
+  }
+
+  let match;
+  while ((match = imageRegex.exec(body)) !== null) {
+    const alt = match[1];
+    const src = match[2];
+    const imagePosition = match.index;
+
+    // Find closest previous heading for context
+    let closestHeading = "";
+    for (let i = headings.length - 1; i >= 0; i--) {
+      if (headings[i].position < imagePosition) {
+        closestHeading = headings[i].text;
+        break;
+      }
+    }
+
+    const caption = alt || guideTitle;
+    const context = closestHeading ? `${closestHeading}` : undefined;
+
+    images.push({
+      src,
+      alt: alt || guideTitle,
+      caption,
+      guideTitle,
+      guideLink,
+      section: sectionLabel,
+      context,
+    });
+  }
+}
+
+// Pick a random image (build-time randomness)
+const randomImage = images.length
+  ? images[Math.floor(Math.random() * images.length)]
+  : null;
+---
+
+{
+  randomImage && (
+    <div class="card gallery-widget">
+      <h3>🎴 From the Gallery</h3>
+      <a
+        href={randomImage.guideLink}
+        class="preview-link"
+        aria-label={`Open guide: ${randomImage.guideTitle}`}
+      >
+        <img
+          src={randomImage.src}
+          alt={randomImage.alt}
+          loading="lazy"
+          class="preview-image"
+        />
+        <div class="caption">
+          {randomImage.context && (
+            <div class="context">{randomImage.context}</div>
+          )}
+          <div class="title">{randomImage.caption}</div>
+          <div class="meta">from: {randomImage.guideTitle}</div>
+        </div>
+      </a>
+      <div class="cta">
+        <a href="/gallery" class="btn btn-secondary">
+          See all →
+        </a>
+      </div>
+    </div>
+  )
+}
+
+{
+  !randomImage && (
+    <div class="card gallery-widget">
+      <h3>🎴 From the Gallery</h3>
+      <p class="empty">
+        No images found yet. <a href="/contribute">Contribute</a> some visuals!
+      </p>
+    </div>
+  )
+}
+
+<style>
+  .gallery-widget h3 {
+    color: var(--color-accent);
+    font-size: var(--font-size-xl);
+    margin: 0 0 var(--space-sm) 0;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .preview-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .preview-image {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    display: block;
+    background-color: var(--color-surface-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-sm);
+  }
+
+  .caption {
+    margin-top: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .context {
+    color: var(--color-accent);
+    font-size: var(--font-size-xs);
+    opacity: 0.7;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .title {
+    color: var(--color-accent);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+  }
+
+  .meta {
+    color: var(--color-text-secondary);
+    opacity: 0.8;
+    font-size: var(--font-size-sm);
+    font-style: italic;
+  }
+
+  .cta {
+    margin-top: var(--space-md);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .empty {
+    color: var(--color-text-secondary);
+    opacity: 0.9;
+    font-size: var(--font-size-sm);
+    margin: 0;
+  }
+</style>

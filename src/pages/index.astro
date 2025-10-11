@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import LeftSidebar from "../components/sidebar/LeftSidebar.astro";
 import RightSidebar from "../components/sidebar/RightSidebar.astro";
 import { loadHomepageData } from "../utils/homepage-data";
+import RandomGalleryWidget from "../components/sidebar/widgets/RandomGalleryWidget.astro";
 
 const {
   spots,
@@ -43,6 +44,7 @@ const {
 
         {/** Mobile-only quick sections below the map */}
         <div class="mobile-home-sections">
+          <RandomGalleryWidget />
           <div class="card">
             <h3>🏄 Explore the Skills Guide</h3>
             <p class="about-text">

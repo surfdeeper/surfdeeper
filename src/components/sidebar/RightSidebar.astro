@@ -3,6 +3,7 @@ import AboutWidget from "./widgets/AboutWidget.astro";
 import SurfWisdomWidget from "./widgets/SurfWisdomWidget.astro";
 import RecentUpdatesWidget from "./widgets/RecentUpdatesWidget.astro";
 import RecentCommitsWidget from "./widgets/RecentCommitsWidget.astro";
+import RandomGalleryWidget from "./widgets/RandomGalleryWidget.astro";
 
 interface Props {
   recentlyUpdated: Array<{
@@ -24,6 +25,7 @@ const { recentlyUpdated, recentCommits } = Astro.props;
 <aside class="right-sidebar">
   <AboutWidget />
   <SurfWisdomWidget />
+  <RandomGalleryWidget />
   <RecentUpdatesWidget recentlyUpdated={recentlyUpdated} />
   <RecentCommitsWidget recentCommits={recentCommits} />
 </aside>
