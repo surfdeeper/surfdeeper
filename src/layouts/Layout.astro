@@ -3,6 +3,8 @@ import Navigation from "../components/Navigation.astro";
 import HeadMeta from "../components/HeadMeta.astro";
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import ThemeToggle from "../components/ThemeToggle.astro";
+import { Image } from "astro:assets";
+import logoV2 from "../assets/logo-v2.png";
 import "../styles/design-system.css";
 import "../styles/theme-dark.css";
 import "../styles/theme-light.css";
@@ -93,13 +95,15 @@ const canonicalURL = `${Astro.site}${path}`;
     <footer class="footer">
       <div class="footer-container">
         <div class="footer-logo">
-          <img
-            src="/logo-v2.png"
+          <Image
+            src={logoV2}
             alt="SurfDeeper logo"
             class="image-logo"
-            width="180"
-            height="108"
-            onerror="this.onerror=null;this.src='/favicon.svg';"
+            width={180}
+            height={108}
+            loading="lazy"
+            format="webp"
+            quality={85}
           />
           <span>Surf Deeper</span>
         </div>
