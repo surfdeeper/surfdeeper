@@ -141,7 +141,9 @@ const serializedSpot = serializeSpot(entry);
     import {
       createConditionsGrid,
       createLegend,
-      addLayerControls
+      addLayerControls,
+      gridParamsForZoom,
+      refreshConditionsOverlays
     } from '../../utils/map-overlays';
 
     async function loadConditions() {
@@ -211,12 +213,13 @@ const serializedSpot = serializeSpot(entry);
         document.getElementById('spot-map')?.appendChild(loadingDiv);
 
         try {
-          // Create grid of condition markers (3x3 grid, 0.1 degree spacing)
+          // Zoom-aware initial grid
+          const { gridSize, spacing } = gridParamsForZoom(map.getZoom(), spot.latitude);
           const { wind: windMarkers, swell: swellMarkers } = await createConditionsGrid(
             spot.latitude,
             spot.longitude,
-            3,
-            0.08
+            gridSize,
+            spacing
           );
 
           // Create layer groups
@@ -237,6 +240,11 @@ const serializedSpot = serializeSpot(entry);
           addLayerControls(map, windLayer, swellLayer, windLegend, swellLegend);
 
           loadingDiv.remove();
+
+          // Refresh overlays on zoom
+          map.on('zoomend', () => {
+            refreshConditionsOverlays(map, windLayer, swellLayer).catch((e) => console.error(e));
+          });
         } catch (error) {
           console.error('Failed to load map overlays:', error);
           loadingDiv.textContent = 'Failed to load overlays';

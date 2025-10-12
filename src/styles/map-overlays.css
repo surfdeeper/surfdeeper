@@ -8,12 +8,26 @@
   background: transparent !important;
   border: none !important;
   transition: transform 0.3s ease;
+  pointer-events: auto; /* allow hover + popup */
 }
 
 .wind-arrow-icon:hover,
 .swell-arrow-icon:hover {
   transform: scale(1.1);
   z-index: 1000 !important;
+}
+
+/* Slightly different z-order and opacity to distinguish layers */
+.wind-arrow-icon {
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.35));
+  opacity: 0.9;
+  z-index: 480; /* below swell by default */
+}
+
+.swell-arrow-icon {
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.45));
+  opacity: 0.95;
+  z-index: 490;
 }
 
 /* Legend */
@@ -99,6 +113,16 @@
   font-size: 14px;
   font-weight: 500;
 }
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.legend-dot.wind { background: #22c55e; }
+.legend-dot.swell { background: #8b5cf6; }
 
 .layer-toggle:hover .toggle-label {
   color: #00ff88;
