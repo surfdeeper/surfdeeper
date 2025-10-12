@@ -329,9 +329,15 @@ const serializedSpot = serializeSpot(entry);
               t = setTimeout(() => fn(...args), ms);
             };
           };
-          const refresh = debounced(() => refreshConditionsOverlays(map, windLayer, swellLayer).catch(console.error), 200);
-          map.on('zoomend', refresh);
-          map.on('moveend', refresh);
+          const refresh = debounced(
+            () =>
+              refreshConditionsOverlays(map, windLayer, swellLayer).catch(
+                console.error,
+              ),
+            200,
+          );
+          map.on("zoomend", refresh);
+          map.on("moveend", refresh);
         } catch (error) {
           console.error("Failed to load map overlays:", error);
           loadingDiv.textContent = "Failed to load overlays";

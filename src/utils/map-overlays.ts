@@ -37,7 +37,10 @@ async function fetchWithCache(
 }
 
 /** Determine grid size/spacing based on zoom (keeps points ~< 40) */
-export function gridParamsForZoom(zoom: number, latitude: number): { gridSize: number; spacing: number } {
+export function gridParamsForZoom(
+  zoom: number,
+  latitude: number,
+): { gridSize: number; spacing: number } {
   // Harmonic spacings (each ~halves) to keep existing points stable while revealing more on zoom-in.
   // Coarser at low zoom to avoid clutter.
   const cosLat = Math.max(Math.cos((latitude * Math.PI) / 180), 0.5);
@@ -86,7 +89,12 @@ function createWindSVG(mph: number, direction: number, size: number): string {
   `;
 }
 
-function createSwellSVG(color: string, period: number, direction: number, size: number): string {
+function createSwellSVG(
+  color: string,
+  period: number,
+  direction: number,
+  size: number,
+): string {
   const s = size;
   const value = `${Math.round(period)}s`;
   return `
@@ -155,7 +163,7 @@ export function createWindArrow(
     `,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
-    popupAnchor: [Math.round(size * 0.6), -Math.round(size * 0.6)]
+    popupAnchor: [Math.round(size * 0.6), -Math.round(size * 0.6)],
   });
 
   const marker = L.marker([lat, lng], { icon });
@@ -195,7 +203,7 @@ export function createSwellArrow(
     `,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
-    popupAnchor: [Math.round(size * 0.6), -Math.round(size * 0.6)]
+    popupAnchor: [Math.round(size * 0.6), -Math.round(size * 0.6)],
   });
 
   const marker = L.marker([lat, lng], { icon });
@@ -315,12 +323,13 @@ export async function createConditionsForBounds(
   south: number,
   east: number,
   west: number,
-  spacing: number
+  spacing: number,
 ): Promise<{ wind: any[]; swell: any[] }> {
   const windMarkers: any[] = [];
   const swellMarkers: any[] = [];
 
-  const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
+  const clamp = (v: number, min: number, max: number) =>
+    Math.max(min, Math.min(max, v));
 
   // Align to global lattice to keep stability across zoom/pan
   const startLat = Math.ceil(south / spacing) * spacing;
@@ -346,31 +355,66 @@ export async function createConditionsForBounds(
   }
 
   // Small helper to offset a lat/lng by a bearing (deg) and a tiny distance (deg)
-  const offsetByBearing = (lat: number, lng: number, bearingDeg: number, distDeg: number) => {
+  const offsetByBearing = (
+    lat: number,
+    lng: number,
+    bearingDeg: number,
+    distDeg: number,
+  ) => {
     const rad = (bearingDeg * Math.PI) / 180;
     const dLat = distDeg * Math.cos(rad);
-    const dLng = (distDeg * Math.sin(rad)) / Math.max(Math.cos((lat * Math.PI) / 180), 0.000001);
+    const dLng =
+      (distDeg * Math.sin(rad)) /
+      Math.max(Math.cos((lat * Math.PI) / 180), 0.000001);
     return { lat: lat + dLat, lng: lng + dLng };
   };
 
-  const results = await Promise.allSettled(points.map(async ({ lat, lng }) => {
-    const conditions = await fetchWithCache(lat, lng);
-    if (!conditions) return null;
-    const baseNudge = Math.min(spacing * 0.25, 0.04);
-    const swellBack = offsetByBearing(lat, lng, (conditions.swellDirection ?? 0) + 180, baseNudge);
-    const windFwd = offsetByBearing(lat, lng, (conditions.windDirection ?? 0), baseNudge * 0.6);
+  const results = await Promise.allSettled(
+    points.map(async ({ lat, lng }) => {
+      const conditions = await fetchWithCache(lat, lng);
+      if (!conditions) return null;
+      const baseNudge = Math.min(spacing * 0.25, 0.04);
+      const swellBack = offsetByBearing(
+        lat,
+        lng,
+        (conditions.swellDirection ?? 0) + 180,
+        baseNudge,
+      );
+      const windFwd = offsetByBearing(
+        lat,
+        lng,
+        conditions.windDirection ?? 0,
+        baseNudge * 0.6,
+      );
 
-    const windMarker = createWindArrow(null, windFwd.lat, windFwd.lng, conditions.windSpeed, conditions.windDirection);
+      const windMarker = createWindArrow(
+        null,
+        windFwd.lat,
+        windFwd.lng,
+        conditions.windSpeed,
+        conditions.windDirection,
+      );
 
-    let swellMarker: any | null = null;
-    if ((conditions.swellHeight ?? 0) > 0.05 || (conditions.waveHeight ?? 0) > 0.1) {
-      swellMarker = createSwellArrow(null, swellBack.lat, swellBack.lng, conditions.swellHeight, conditions.swellPeriod, conditions.swellDirection);
-    }
-    return { windMarker, swellMarker };
-  }));
+      let swellMarker: any | null = null;
+      if (
+        (conditions.swellHeight ?? 0) > 0.05 ||
+        (conditions.waveHeight ?? 0) > 0.1
+      ) {
+        swellMarker = createSwellArrow(
+          null,
+          swellBack.lat,
+          swellBack.lng,
+          conditions.swellHeight,
+          conditions.swellPeriod,
+          conditions.swellDirection,
+        );
+      }
+      return { windMarker, swellMarker };
+    }),
+  );
 
   for (const r of results) {
-    if (r.status === 'fulfilled' && r.value) {
+    if (r.status === "fulfilled" && r.value) {
       windMarkers.push(r.value.windMarker);
       if (r.value.swellMarker) swellMarkers.push(r.value.swellMarker);
     }
@@ -393,7 +437,7 @@ export async function refreshConditionsOverlays(
     b.getSouth(),
     b.getEast(),
     b.getWest(),
-    spacing
+    spacing,
   );
   windLayer.clearLayers();
   swellLayer.clearLayers();

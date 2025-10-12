@@ -195,14 +195,14 @@ const serializedSpots = serializeSpots(spots);
         const windLegend = createLegend("wind");
         const swellLegend = createLegend("swell");
 
-    // Add layers to map
-    windLayer.addTo(map);
-    swellLayer.addTo(map);
-    windLegend.addTo(map);
-    swellLegend.addTo(map);
+        // Add layers to map
+        windLayer.addTo(map);
+        swellLayer.addTo(map);
+        windLegend.addTo(map);
+        swellLegend.addTo(map);
 
-    // Populate overlays initially based on current viewport
-    await refreshConditionsOverlays(map, windLayer, swellLayer);
+        // Populate overlays initially based on current viewport
+        await refreshConditionsOverlays(map, windLayer, swellLayer);
 
         // Add layer controls
         addLayerControls(map, windLayer, swellLayer, windLegend, swellLegend);
@@ -215,9 +215,15 @@ const serializedSpots = serializeSpots(spots);
             t = setTimeout(() => fn(...args), ms);
           };
         };
-        const refresh = debounced(() => refreshConditionsOverlays(map, windLayer, swellLayer).catch(console.error), 200);
-        map.on('zoomend', refresh);
-        map.on('moveend', refresh);
+        const refresh = debounced(
+          () =>
+            refreshConditionsOverlays(map, windLayer, swellLayer).catch(
+              console.error,
+            ),
+          200,
+        );
+        map.on("zoomend", refresh);
+        map.on("moveend", refresh);
       } catch (error) {
         console.error("Failed to load map overlays:", error);
       }
