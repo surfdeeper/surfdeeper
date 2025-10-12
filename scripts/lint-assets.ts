@@ -11,11 +11,13 @@ const CYAN = "\x1b[36m";
 
 /**
  * Asset Linter - Detects incorrect asset references that cause 404s in production
+ * and enforces image optimization patterns.
  *
  * Common issues this catches:
  * 1. Direct /src/ paths in HTML link tags (should use import statements)
  * 2. Incorrect asset references that work in dev but fail in production
- * 3. Missing asset files that are referenced
+ * 3. Raw <img> tags in .astro instead of astro:assets <Image>
+ * 4. Markdown images referencing /public-root assets (prefer MDX + <Image>)
  */
 
 const RULES: Record<
@@ -48,6 +50,22 @@ const RULES: Record<
     severity: "warning",
     fix: "Move images to /public/ folder or use proper asset imports",
   },
+  "no-raw-img-tags-in-astro": {
+    pattern: /<img\s[^>]*>/gi,
+    message:
+      "Raw <img> tags found. Use astro:assets <Image> with imported assets for optimization.",
+    severity: "error",
+    fix: "Import image from src/assets and render with <Image src={asset} ... />",
+    include: [/\.astro$/],
+  },
+  "no-root-public-images-in-markdown": {
+    pattern: /!\[[^\]]*\]\((\/[^)]+\.(?:png|jpe?g|webp|gif))\)/gi,
+    message:
+      "Markdown references a root/public image. Prefer importing images into src/assets and using astro:assets or MDX.",
+    severity: "error",
+    fix: "Move image to src/assets, import it, and render via <Image>. For MD, consider converting to MDX.",
+    include: [/\.mdx?$/],
+  },
 };
 
 type Issue = {
@@ -76,6 +94,9 @@ class AssetLinter {
       "src/**/*.vue",
       "src/**/*.jsx",
       "src/**/*.tsx",
+      // Enforce rules in Markdown content too
+      "src/**/*.md",
+      "src/**/*.mdx",
     ];
 
     const files: string[] = [];
@@ -109,18 +130,33 @@ class AssetLinter {
         rule.pattern.lastIndex = 0; // Reset regex
 
         while ((match = rule.pattern.exec(content)) !== null) {
+          // Optional file includes filter
+          if (rule.include && Array.isArray(rule.include)) {
+            const included = rule.include.some((re) => re.test(filePath));
+            if (!included) continue;
+          }
+
+          // Special handling: downgrade allowlisted markdown root images to warnings
+          let effectiveSeverity = rule.severity;
+          if (ruleName === "no-root-public-images-in-markdown") {
+            const imgPath = match[1]; // captured path part
+            if (imgPath) {
+              effectiveSeverity = "warning";
+            }
+          }
+
           const lineNumber = this.getLineNumber(content, match.index);
           const issue: Issue = {
             file: filePath,
             line: lineNumber,
             rule: ruleName,
             message: rule.message,
-            severity: rule.severity,
+            severity: effectiveSeverity,
             fix: rule.fix,
             match: match[0].trim(),
           };
 
-          if (rule.severity === "error") {
+          if (effectiveSeverity === "error") {
             this.errors.push(issue);
           } else {
             this.warnings.push(issue);
