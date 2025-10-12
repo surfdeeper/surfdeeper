@@ -5,10 +5,28 @@ import {
   buildThreadSubgraph,
   loadGuides,
 } from "../../../utils/knowledge-graph";
+import { getCollection } from "astro:content";
+import ThreadViewSwitch from "../../../components/threads/ThreadViewSwitch.astro";
+
+export async function getStaticPaths() {
+  const [threadsMeta, guides] = await Promise.all([
+    getCollection("threads"),
+    getCollection("guides"),
+  ]);
+  const ids = new Set<string>();
+  for (const t of threadsMeta) ids.add(t.slug);
+  for (const g of guides) for (const t of g.data.threads || []) ids.add(t);
+  return Array.from(ids)
+    .sort((a, b) => a.localeCompare(b))
+    .map((thread) => ({ params: { thread } }));
+}
 
 const { params } = Astro;
 const entries = await loadGuides();
 const graph = buildGraph(entries);
+const threadsMeta = await getCollection("threads");
+const threadId = params.thread as string;
+const threadInfo = threadsMeta.find((t) => t.slug === threadId);
 const level = (Astro.url.searchParams.get("level") || undefined) as
   | "beginner"
   | "intermediate"
@@ -18,18 +36,20 @@ const kind = (Astro.url.searchParams.get("kind") || undefined) as
   | "section"
   | "concept"
   | undefined;
-const sub = buildThreadSubgraph(graph, params.thread as string, {
+const sub = buildThreadSubgraph(graph, threadId, {
   level,
   kind,
 });
 ---
 
 <Layout
-  title={`Thread: ${params.thread} – Grid`}
-  description={`Guides in the ${params.thread} thread.`}
+  title={`Thread: ${threadInfo?.data.title ?? threadId} – Grid`}
+  description={`Guides in the ${threadInfo?.data.title ?? threadId} thread.`}
 >
   <header class="page-header">
-    <h1 class="heading heading-md">Thread: {params.thread}</h1>
+    <h1 class="heading heading-md">
+      Thread: {threadInfo?.data.title ?? threadId}
+    </h1>
     <div class="filters">
       <form method="get" class="filters-form">
         <label>
@@ -51,17 +71,11 @@ const sub = buildThreadSubgraph(graph, params.thread as string, {
         </label>
         <button class="btn btn-secondary" type="submit">Apply</button>
       </form>
-      <nav class="view-switch">
-        <a
-          class="btn btn-secondary"
-          href={`/threads/${params.thread}/tree${Astro.url.search}`}>Tree</a
-        >
-        <a
-          class="btn btn-primary"
-          href={`/threads/${params.thread}/graph${Astro.url.search}`}
-          >3D Graph</a
-        >
-      </nav>
+      <ThreadViewSwitch
+        threadId={threadId}
+        active="grid"
+        search={Astro.url.search}
+      />
     </div>
   </header>
 

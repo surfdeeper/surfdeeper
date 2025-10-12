@@ -6,10 +6,21 @@ import {
   loadGuides,
   getGuidesByThread,
 } from "../../utils/knowledge-graph";
+import { getCollection } from "astro:content";
+import ThreadViewSwitch from "../../components/threads/ThreadViewSwitch.astro";
 
 const entries = await loadGuides();
 const graph = buildGraph(entries);
-const threads = getThreads(graph);
+const threadIds = getThreads(graph);
+const threadMeta = await getCollection("threads");
+const threads = threadIds.map((id) => {
+  const meta = threadMeta.find((t) => t.slug === id);
+  return {
+    id,
+    title: meta?.data.title || id,
+    description: meta?.data.description || "",
+  };
+});
 ---
 
 <Layout
@@ -31,11 +42,14 @@ const threads = getThreads(graph);
     ) : (
       <section class="threads-grid">
         {threads.map((t) => {
-          const items = getGuidesByThread(graph, t);
+          const items = getGuidesByThread(graph, t.id);
           return (
             <article class="card thread-card">
               <div class="thread-card-header">
-                <h2 class="heading heading-sm">{t}</h2>
+                <div>
+                  <h2 class="heading heading-sm">{t.title}</h2>
+                  {t.description && <p class="thread-desc">{t.description}</p>}
+                </div>
                 <span class="badge">{items.length}</span>
               </div>
               <ul class="preview links-neutral">
@@ -49,15 +63,7 @@ const threads = getThreads(graph);
                 )}
               </ul>
               <div class="actions">
-                <a class="btn btn-secondary" href={`/threads/${t}/grid`}>
-                  Grid
-                </a>
-                <a class="btn btn-secondary" href={`/threads/${t}/tree`}>
-                  Tree
-                </a>
-                <a class="btn btn-primary" href={`/threads/${t}/graph`}>
-                  3D Graph
-                </a>
+                <ThreadViewSwitch threadId={t.id} active="grid" search="" />
               </div>
             </article>
           );
@@ -81,6 +87,11 @@ const threads = getThreads(graph);
       font-size: var(--font-size-xl);
       opacity: 0.9;
       margin: 0;
+    }
+    .thread-desc {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
     }
     .threads-grid {
       display: grid;

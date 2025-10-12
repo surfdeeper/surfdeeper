@@ -44,4 +44,15 @@ const spots = defineCollection({
   }),
 });
 
-export const collections = { guides, spots };
+// Threads collection enables richer thread metadata (title, description, etc.)
+const threads = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    icon: z.string().optional(),
+    order: z.number().optional(),
+  }),
+});
+
+export const collections = { guides, spots, threads };

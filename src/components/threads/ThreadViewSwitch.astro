@@ -1,0 +1,39 @@
+---
+// Props: threadId (string), active ("grid" | "tree" | "graph"), and preserve current search string
+const {
+  threadId,
+  active,
+  search = "",
+} = Astro.props as {
+  threadId: string;
+  active: "grid" | "tree" | "graph";
+  search?: string;
+};
+const q = search || "";
+const id = encodeURIComponent(threadId);
+---
+
+<nav class="view-switch">
+  <a
+    class={`btn ${active === "grid" ? "btn-secondary" : "btn-secondary"}`}
+    href={`/threads/${id}/grid${q}`}
+    aria-current={active === "grid" ? "page" : undefined}>Grid</a
+  >
+  <a
+    class={`btn ${active === "tree" ? "btn-secondary" : "btn-secondary"}`}
+    href={`/threads/${id}/tree${q}`}
+    aria-current={active === "tree" ? "page" : undefined}>Tree</a
+  >
+  <a
+    class={`btn ${active === "graph" ? "btn-primary" : "btn-primary"}`}
+    href={`/threads/${id}/graph${q}`}
+    aria-current={active === "graph" ? "page" : undefined}>3D Graph</a
+  >
+</nav>
+
+<style>
+  .view-switch {
+    display: flex;
+    gap: var(--space-3);
+  }
+</style>
