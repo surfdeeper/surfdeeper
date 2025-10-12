@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "engines": {
-    "node": "20.19.5"
+    "node": "20.x"
   },
   "packageManager": "npm@10.8.2",
   "scripts": {
@@ -12,6 +12,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "prepare": "husky install",
     "lint:css": "stylelint \"src/**/*.{css,astro}\"",
     "typecheck": "astro check",
     "lint:links": "tsx scripts/validate-links.ts && node scripts/validate-concept-ids.js && node scripts/validate-paths.js && node scripts/validate-threads.js",
@@ -26,7 +27,7 @@
     "fix": "npm run fix:md",
     "format": "prettier --write .",
     "format:check": "prettier --check \"**/*.{md,js,json}\" && prettier --check \"**/*.astro\"",
-    "precommit": "npm run lint"
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

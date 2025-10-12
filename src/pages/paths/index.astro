@@ -78,27 +78,32 @@ const paths = pathIds.map((id) => {
       text-align: center;
       margin-bottom: var(--space-2xl);
     }
+
     .page-header h1 {
       color: var(--color-accent);
       font-size: var(--font-size-4xl);
       margin: 0 0 var(--space-sm) 0;
       font-weight: var(--font-weight-bold);
     }
+
     .page-subtitle {
       font-size: var(--font-size-xl);
       opacity: 0.9;
       margin: 0;
     }
+
     .thread-desc {
       margin: 0;
       color: var(--color-text-muted);
       font-size: var(--font-size-sm);
     }
+
     .threads-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: var(--space-lg);
     }
+
     .thread-card-header {
       display: flex;
       align-items: center;
@@ -115,6 +120,7 @@ const paths = pathIds.map((id) => {
     .thread-link:focus {
       text-decoration: underline;
     }
+
     .badge {
       display: inline-block;
       background: var(--bg-accent-weak);
@@ -124,6 +130,7 @@ const paths = pathIds.map((id) => {
       padding: 0 var(--space-2);
       font-size: var(--font-size-sm);
     }
+
     .preview {
       margin: 0 0 var(--space-md) 0;
     }
@@ -135,16 +142,20 @@ const paths = pathIds.map((id) => {
     .preview .more {
       color: var(--color-accent);
     }
+
     /* Make entire card clickable while preserving internal links */
     .thread-card {
       position: relative;
     }
+
     .thread-card .stretched {
       position: absolute;
       inset: 0;
       z-index: var(--z-1);
+
       /* no visual */
     }
+
     .thread-card .thread-card-header,
     .thread-card .preview {
       position: relative;
