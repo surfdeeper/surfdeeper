@@ -27,6 +27,8 @@ const RULES: Record<
     message: string;
     severity: "error" | "warning";
     fix: string;
+    // Optional: restrict rule to certain file patterns
+    include?: RegExp[];
   }
 > = {
   "no-src-link-tags": {
@@ -132,7 +134,9 @@ class AssetLinter {
         while ((match = rule.pattern.exec(content)) !== null) {
           // Optional file includes filter
           if (rule.include && Array.isArray(rule.include)) {
-            const included = rule.include.some((re) => re.test(filePath));
+            const included = rule.include.some((re: RegExp) =>
+              re.test(filePath),
+            );
             if (!included) continue;
           }
 
