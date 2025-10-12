@@ -8,8 +8,8 @@ A minimal Astro site.
 
 - Contributing: CONTRIBUTING.md
 - Knowledge model: docs/KNOWLEDGE_ARCHITECTURE.md
- - Design tokens & CSS rules: .stylelintrc.cjs and src/styles/design-system.css
- - Magic links: scripts/remark-magic-links.mjs
+- Design tokens & CSS rules: .stylelintrc.cjs and src/styles/design-system.css
+- Magic links: scripts/remark-magic-links.mjs
 
 ## Getting Started
 

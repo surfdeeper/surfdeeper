@@ -18,7 +18,10 @@ export async function loadHomepageData() {
 
   // Get all guides and organize by semantic section (frontmatter category)
   const allGuides = await getCollection("guides");
-  const guidesBySection: Record<string, Array<{ slug: string; title: string; url: string }>> = {};
+  const guidesBySection: Record<
+    string,
+    Array<{ slug: string; title: string; url: string }>
+  > = {};
   const comingSoonCountBySection: Record<string, number> = {};
 
   for (const guide of allGuides) {
@@ -41,7 +44,8 @@ export async function loadHomepageData() {
 
     // Initialize aggregates
     if (!guidesBySection[section]) guidesBySection[section] = [];
-    if (!comingSoonCountBySection[section]) comingSoonCountBySection[section] = 0;
+    if (!comingSoonCountBySection[section])
+      comingSoonCountBySection[section] = 0;
 
     // Count placeholders as "coming soon" and exclude from visible list
     if (isPlaceholderTodo(guide.body)) {
