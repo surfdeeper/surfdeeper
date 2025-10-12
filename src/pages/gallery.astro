@@ -39,14 +39,19 @@ const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
 const headingRegex = /^#{1,6}\s+(.+)$/gm;
 
 for (const guide of allGuides) {
-  // Skip index pages
-  if (guide.slug.endsWith("/index") || !guide.slug.includes("/")) {
-    continue;
+  // Skip section index pages entirely; gallery is for concept pages
+  if (guide.data.kind === "section") continue;
+
+  // Derive section from frontmatter category (preferred), fallback to legacy path
+  let sectionSlug = guide.data.category as string | undefined;
+  if (!sectionSlug) {
+    const slugParts = guide.slug.split("/");
+    if (slugParts.length > 1) sectionSlug = slugParts[0];
   }
+  if (!sectionSlug) continue;
 
   const guideLink = `/guide/${guide.slug}`;
   const guideTitle = guide.data.title;
-  const sectionSlug = guide.slug.split("/")[0];
   const sectionData = sections[sectionSlug as keyof typeof sections];
   const sectionLabel = sectionData?.label || sectionSlug;
 

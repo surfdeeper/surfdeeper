@@ -1,4 +1,6 @@
 import { defineConfig } from "astro/config";
+import remarkMagicLinks from "./scripts/remark-magic-links.mjs";
+import remarkLearningLinks from "./scripts/remark-learning-links.mjs";
 
 export default defineConfig({
   site: "https://surfdeeper.com",
@@ -10,5 +12,8 @@ export default defineConfig({
         limitInputPixels: false,
       },
     },
+  },
+  markdown: {
+    remarkPlugins: [remarkMagicLinks, remarkLearningLinks],
   },
 });

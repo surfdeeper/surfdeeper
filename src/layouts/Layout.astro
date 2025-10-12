@@ -210,6 +210,12 @@ const canonicalURL = `${Astro.site}${path}`;
         margin-bottom: var(--space-sm);
       }
 
+      .data-attribution a {
+        color: var(--color-primary);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
       .footer-section a {
         color: var(--color-text-primary);
         text-decoration: none;
@@ -264,12 +270,6 @@ const canonicalURL = `${Astro.site}${path}`;
         margin-top: var(--space-2);
         color: var(--color-text-dim);
         font-size: var(--font-size-xs);
-      }
-
-      .data-attribution a {
-        color: var(--color-primary);
-        text-decoration: underline;
-        text-underline-offset: 2px;
       }
 
       /* Leaflet Map Dark Theme - Prevent white flicker on tile load */

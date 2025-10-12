@@ -275,6 +275,29 @@ a:focus-visible {
   border-radius: 2px;
 }
 
+/* Navigation specific links - more specific selectors come first */
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--space-8);
+}
+
+.nav-links a {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-base);
+}
+
+.nav-links a:hover {
+  color: var(--color-primary);
+}
+
+/* General link styles - less specific selectors come after */
 a:not(.btn):hover {
   color: var(--color-primary-hover);
   text-decoration-color: var(--color-primary);
@@ -361,27 +384,6 @@ a.link-neutral:visited {
   color: var(--color-primary);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xl);
-}
-
-.nav-links {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  gap: var(--space-8);
-}
-
-.nav-links a {
-  color: var(--color-text-primary);
-  text-decoration: none;
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  transition: color var(--transition-base);
-}
-
-.nav-links a:hover {
-  color: var(--color-primary);
 }
 
 /* Footer */
@@ -529,4 +531,15 @@ a.link-neutral:visited {
 
 .shadow {
   box-shadow: var(--shadow-base);
+}
+
+/* Magic link diagnostics: show unresolved magic links clearly */
+a.broken-magic-link {
+  color: var(--color-warning);
+  text-decoration: none;
+  border-bottom: 2px dashed var(--color-warning);
+}
+
+a.broken-magic-link:hover {
+  opacity: 0.9;
 }

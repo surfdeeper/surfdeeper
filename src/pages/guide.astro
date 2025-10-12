@@ -2,6 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import sections from "../content/guides/_sections.json";
+// Provide a typed view for the JSON map so TS allows string indexing
+const sectionsMap = sections as Record<
+  string,
+  { order?: number; label?: string }
+>;
 import { isPlaceholderTodo } from "../utils/guide-filters";
 
 // Load all guides
@@ -9,11 +14,16 @@ const entries = await getCollection("guides");
 
 type EntryType = (typeof entries)[number];
 
-// Group by first path segment (supports nested folders later)
+// Group by frontmatter category (post-flatten). Fallback to id or slug for sections.
 const grouped = entries.reduce(
   (acc, e) => {
-    const [section] = e.slug.split("/");
-    (acc[section] ||= []).push(e);
+    if (e.data.kind === "section") {
+      const key = e.data.id || e.slug;
+      (acc[key] ||= []).push(e);
+    } else {
+      const key = e.data.category || "uncategorized";
+      (acc[key] ||= []).push(e);
+    }
     return acc;
   },
   {} as Record<string, EntryType[]>,
@@ -31,7 +41,9 @@ for (const key of Object.keys(grouped)) {
 const disabledSectionLinks = new Set<string>();
 for (const section of Object.keys(grouped)) {
   const sectionIndex = entries.find(
-    (e) => e.slug === section || e.slug === `${section}/index`,
+    (e) =>
+      e.data.kind === "section" &&
+      (e.data.id === section || e.slug === section),
   );
   if (sectionIndex && isPlaceholderTodo(sectionIndex.body)) {
     disabledSectionLinks.add(section);
@@ -55,7 +67,7 @@ for (const section of Object.keys(grouped)) {
         (Object.entries(grouped) as [string, EntryType[]][])
           .sort(
             ([a], [b]) =>
-              (sections[a]?.order ?? 999) - (sections[b]?.order ?? 999),
+              (sectionsMap[a]?.order ?? 999) - (sectionsMap[b]?.order ?? 999),
           )
           .map(([section, items]) => {
             const disabled = disabledSectionLinks.has(section);
@@ -68,7 +80,7 @@ for (const section of Object.keys(grouped)) {
               >
                 <div class="card-content">
                   <h3 class="heading heading-md">
-                    {sections[section]?.label ?? section}
+                    {sectionsMap[section]?.label ?? section}
                   </h3>
                   <p class="guide-count">
                     {items.length} {items.length === 1 ? "guide" : "guides"}
