@@ -55,6 +55,11 @@ export async function getStaticPaths() {
 
 This ensures `/threads/<id>` is generated for each entry in `src/content/threads/`.
 
+### Thread existence verification
+
+- Lint includes `scripts/validate-threads.js` which fails if any guide references a thread that has no content page under `src/content/threads/<thread>.md`.
+- Before adding a `threads: ["foo"]` tag to guides, create `src/content/threads/foo.md` with frontmatter (`title`, optional `description`, `icon`) and body content. The body renders on the thread page.
+
 ## Component Refactoring
 
 ⚠️ **CRITICAL: CSS MUST MOVE WITH COMPONENTS** ⚠️

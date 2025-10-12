@@ -24,6 +24,11 @@ const meta = threadMeta.find((t) => t.slug === id);
 const title = meta?.data.title || id;
 const description = meta?.data.description || "";
 const icon = meta?.data.icon || "";
+let Content: any = null;
+if (meta) {
+  const rendered = await meta.render();
+  Content = rendered.Content;
+}
 ---
 
 <Layout title={`${title} – Threads – SurfDeeper`} description={description}>
@@ -41,6 +46,12 @@ const icon = meta?.data.icon || "";
     </h1>
     {description && <p class="page-subtitle">{description}</p>}
   </header>
+
+  {Content && (
+    <article class="thread-body">
+      <Content />
+    </article>
+  )}
 
   {
     items.length === 0 ? (
@@ -94,6 +105,11 @@ const icon = meta?.data.icon || "";
 
     .guide-list li {
       margin-bottom: var(--space-3);
+    }
+
+    .thread-body {
+      max-width: 70ch;
+      margin: 0 auto var(--space-2xl) auto;
     }
   </style>
 </Layout>
