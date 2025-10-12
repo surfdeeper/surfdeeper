@@ -1,0 +1,89 @@
+name: Semantic PR Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  semantic-pr:
+    name: Validate Semantic Commits
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check commit messages
+        run: |
+          echo "🔍 Checking commit messages for semantic format..."
+
+          # Get all commits in the PR
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          # Get commit messages
+          COMMITS=$(git log --format="%H %s" ${BASE_SHA}..${HEAD_SHA})
+
+          # Define allowed prefixes
+          ALLOWED_PREFIXES="feat:|content:|fix:|chore:|refactor:|docs:|style:|test:|perf:|ci:|build:|revert:"
+
+          # Check each commit
+          FAILED=0
+          echo ""
+          echo "Commits in this PR:"
+          echo "==================="
+
+          while IFS= read -r line; do
+            if [ -z "$line" ]; then
+              continue
+            fi
+            
+            SHA=$(echo "$line" | awk '{print $1}')
+            MSG=$(echo "$line" | cut -d' ' -f2-)
+            SHORT_SHA=$(echo "$SHA" | cut -c1-7)
+            
+            echo ""
+            echo "Commit: $SHORT_SHA"
+            echo "Message: $MSG"
+            
+            # Check if message starts with allowed prefix
+            if echo "$MSG" | grep -qE "^($ALLOWED_PREFIXES)"; then
+              echo "✅ Valid semantic commit"
+            else
+              echo "❌ Invalid - must start with one of: feat:, content:, fix:, chore:, refactor:, docs:, style:, test:, perf:, ci:, build:, revert:"
+              FAILED=1
+            fi
+          done <<< "$COMMITS"
+
+          echo ""
+          echo "==================="
+
+          if [ $FAILED -eq 1 ]; then
+            echo ""
+            echo "❌ Some commits don't follow semantic commit format"
+            echo ""
+            echo "Required format: <type>: <description>"
+            echo ""
+            echo "Allowed types:"
+            echo "  • feat:      New feature"
+            echo "  • content:   Content changes (guides, spots)"
+            echo "  • fix:       Bug fix"
+            echo "  • chore:     Maintenance tasks"
+            echo "  • refactor:  Code refactoring"
+            echo "  • docs:      Documentation changes"
+            echo "  • style:     Code style changes"
+            echo "  • test:      Test changes"
+            echo "  • perf:      Performance improvements"
+            echo "  • ci:        CI/CD changes"
+            echo "  • build:     Build system changes"
+            echo "  • revert:    Revert previous commit"
+            echo ""
+            exit 1
+          else
+            echo ""
+            echo "✅ All commits follow semantic commit format!"
+          fi
