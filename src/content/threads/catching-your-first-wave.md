@@ -1,9 +1,8 @@
 ---
-# Note: slug is `longboarding` by filename
 # Title and description power the Threads UI
 id: catching-your-first-wave
-title: catching-your-first-wave
-description: catching-your-first-wave
+title: Catching Your First Wave
+description: One fluid sequence from paddle to pop-up to first bottom turn—start on broken waves, connect the motions, and build flow.
 icon: 🏄
 order: 0
 ---

@@ -8,7 +8,7 @@ order: 5
 id: avoid-pearling
 category: core-skills
 kind: concept
-threads: [longboarding]
+threads: [longboarding, catching-your-first-wave]
 ---
 
 # Avoiding Pearling
