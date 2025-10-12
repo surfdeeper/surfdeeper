@@ -1,6 +1,8 @@
 ---
 title: Bolinas Beach
 description: Classic Marin County beach break with powerful waves
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 latitude: 37.9089
 longitude: -122.6864
 skillLevels: ["intermediate", "advanced"]

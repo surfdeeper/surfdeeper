@@ -4,6 +4,8 @@ description: >-
   Master the art of angling down the line — from longboard push/pull to shortboard control, and flow with the wave’s energy.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 2
 id: angling-down-the-line
 category: core-skills

@@ -1,6 +1,8 @@
 ---
 title: Linda Mar Beach, Pacifica
 description: Popular Bay Area beach break in Pacifica, CA
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 latitude: 37.5938
 longitude: -122.5010
 skillLevels: ["beginner", "intermediate", "advanced"]

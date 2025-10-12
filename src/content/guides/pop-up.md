@@ -4,6 +4,8 @@ description: >-
   Master the fundamental pop-up technique — from lying to standing on your board.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 6
 id: pop-up
 category: core-skills

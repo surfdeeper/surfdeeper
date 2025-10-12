@@ -4,6 +4,8 @@ description: >-
   Master the cobra pose for precise longboard control — prevent pearling while maintaining speed and angle.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 3
 id: cobra-pose
 category: core-skills
