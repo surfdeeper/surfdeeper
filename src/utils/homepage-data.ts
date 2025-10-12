@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
-import { readdirSync } from "fs";
-import { join } from "path";
+import { execSync } from "node:child_process";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import { getCollection } from "astro:content";
 import { isPlaceholderTodo } from "./guide-filters";
 
@@ -72,7 +72,7 @@ export async function loadHomepageData() {
     const gitLog = execSync('git log -5 --pretty=format:"%h|%ai|%s"', {
       encoding: "utf-8",
     });
-    recentCommits = gitLog.split("\n").map((line) => {
+    recentCommits = gitLog.split("\n").map((line: string) => {
       const [hash, date, message] = line.split("|");
       return {
         hash,
