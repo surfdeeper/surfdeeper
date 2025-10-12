@@ -2,7 +2,7 @@
 
 SurfDeeper is built as a knowledge web, not a textbook. Surfing isn’t learned in a straight line — it’s a cyclical, interconnected discipline where each concept (like paddling, positioning, or getting out back) deepens and reappears across levels and styles.
 
-To reflect that, we use a graph-based model rather than a rigid hierarchy. Each concept is a node with relationships like depends on, leads to, and applies to. Pedagogical “levels” and thematic “threads” act as lenses — allowing us to dynamically project the same body of knowledge as:
+To reflect that, we use a graph-based model rather than a rigid hierarchy. Each concept is a node with relationships like depends on, leads to, and applies to. Pedagogical “levels” and thematic “paths” act as lenses — allowing us to dynamically project the same body of knowledge as:
 
 - a linear course for beginners,
 - a cross-sectional grid by skill and topic, or
@@ -27,11 +27,11 @@ In short: a tree teaches, a grid organizes, but a graph understands.
   - dependsOn: prerequisites that should be understood first
   - leadsTo: suggested next concepts or natural progressions
   - appliesTo: tags indicating where a concept is used (e.g., paddling, duck dive, longboard)
-- Lenses: Orthogonal views for learning and browsing (levels, threads, topics).
+- Lenses: Orthogonal views for learning and browsing (levels, paths, topics).
 
 # Knowledge Architecture (Graph-based, End State)
 
-SurfDeeper is a knowledge web, not a textbook. Surfing isn’t linear — concepts deepen and recur across levels and styles. Our content model is a graph: each concept is a node; relationships are edges; levels and threads are lenses.
+SurfDeeper is a knowledge web, not a textbook. Surfing isn’t linear — concepts deepen and recur across levels and styles. Our content model is a graph: each concept is a node; relationships are edges; levels and paths are lenses.
 
 In short: a tree teaches, a grid organizes, but a graph understands.
 
@@ -86,7 +86,7 @@ Relationships are declared in frontmatter using IDs:
 id: cobra-pose
 title: Cobra Pose
 level: beginner
-threads: [mobility, pop-up]
+paths: [mobility, pop-up]
 dependsOn: [warm-up-and-mobility]
 leadsTo: [pop-up, trimming-and-speed]
 appliesTo: [longboard, shortboard]
@@ -97,7 +97,7 @@ Notes:
 
 - `dependsOn`, `leadsTo` accept arrays of concept IDs.
 - `level` is a primary pedagogical lens (beginner|intermediate|advanced).
-- `threads` group related ideas across the graph (e.g., positioning, paddling, mobility).
+- `paths` group related ideas across the graph (e.g., positioning, paddling, mobility).
 - `appliesTo` are context tags (e.g., longboard, shortboard).
 
 ### 5) Derived URLs and navigation
@@ -126,7 +126,7 @@ id: unique-concept-id
 title: Human-readable Title
 description: Short summary for listings.
 level: beginner # or intermediate | advanced
-threads: [paddling, positioning]
+paths: [paddling, positioning]
 dependsOn: [some-prereq]
 leadsTo: [some-next-step]
 appliesTo: [shortboard]
@@ -137,7 +137,7 @@ Guidelines:
 
 - One concept per file.
 - Prefer 1–2 strong `dependsOn`/`leadsTo` edges over many weak ones.
-- Keep `threads` concise and reusable.
+- Keep `paths` concise and reusable.
 - Use `id` everywhere for relationships and magic links.
 
 ## Tooling expectations
@@ -156,7 +156,7 @@ File: `src/content/guides/pop-up.md`
 id: pop-up
 title: Pop-up Mechanics
 level: beginner
-threads: [pop-up, takeoff]
+paths: [pop-up, takeoff]
 dependsOn: [cobra-pose]
 leadsTo: [trimming-and-speed]
 ---

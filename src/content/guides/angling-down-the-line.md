@@ -10,6 +10,7 @@ order: 2
 id: angling-down-the-line
 category: core-skills
 kind: concept
+paths: [longboarding, catching-your-first-wave]
 ---
 
 # Angling Down the Line

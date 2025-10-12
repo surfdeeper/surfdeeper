@@ -2,6 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import sections from "../content/guides/_sections.json";
+// Provide a typed view for the JSON map so TS allows string indexing
+const sectionsMap = sections as Record<
+  string,
+  { order?: number; label?: string }
+>;
 import { isPlaceholderTodo } from "../utils/guide-filters";
 
 // Load all guides
@@ -62,7 +67,7 @@ for (const section of Object.keys(grouped)) {
         (Object.entries(grouped) as [string, EntryType[]][])
           .sort(
             ([a], [b]) =>
-              (sections[a]?.order ?? 999) - (sections[b]?.order ?? 999),
+              (sectionsMap[a]?.order ?? 999) - (sectionsMap[b]?.order ?? 999),
           )
           .map(([section, items]) => {
             const disabled = disabledSectionLinks.has(section);
@@ -75,7 +80,7 @@ for (const section of Object.keys(grouped)) {
               >
                 <div class="card-content">
                   <h3 class="heading heading-md">
-                    {sections[section]?.label ?? section}
+                    {sectionsMap[section]?.label ?? section}
                   </h3>
                   <p class="guide-count">
                     {items.length} {items.length === 1 ? "guide" : "guides"}

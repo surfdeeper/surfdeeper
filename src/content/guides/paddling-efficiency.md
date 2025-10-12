@@ -5,6 +5,7 @@ lastUpdated: 2025-10-12T03:11:48.844Z
 id: paddling-efficiency
 category: going-deeper
 kind: concept
+paths: [catching-your-first-wave]
 ---
 
 Coming soon.

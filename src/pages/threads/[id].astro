@@ -1,0 +1,24 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const { getCollection } = await import("astro:content");
+  const all = await getCollection("paths");
+  return all.map((p) => ({ params: { id: p.slug } }));
+}
+---
+
+<Layout title={`Threads`}>
+  <meta
+    http-equiv="refresh"
+    content={`0; url=/paths/${Astro.params?.id ?? ""}`}
+  />
+  <p>
+    Thread page moved to Paths. Redirecting to
+    {" "}
+    <a href={`/paths/${Astro.params?.id ?? ""}`}
+      >{`/paths/${Astro.params?.id ?? ""}`}</a
+    >
+    …
+  </p>
+</Layout>
