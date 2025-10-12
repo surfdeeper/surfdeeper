@@ -9,11 +9,16 @@ const entries = await getCollection("guides");
 
 type EntryType = (typeof entries)[number];
 
-// Group by first path segment (supports nested folders later)
+// Group by frontmatter category (post-flatten). Fallback to id or slug for sections.
 const grouped = entries.reduce(
   (acc, e) => {
-    const [section] = e.slug.split("/");
-    (acc[section] ||= []).push(e);
+    if (e.data.kind === "section") {
+      const key = e.data.id || e.slug;
+      (acc[key] ||= []).push(e);
+    } else {
+      const key = e.data.category || "uncategorized";
+      (acc[key] ||= []).push(e);
+    }
     return acc;
   },
   {} as Record<string, EntryType[]>,
@@ -31,7 +36,9 @@ for (const key of Object.keys(grouped)) {
 const disabledSectionLinks = new Set<string>();
 for (const section of Object.keys(grouped)) {
   const sectionIndex = entries.find(
-    (e) => e.slug === section || e.slug === `${section}/index`,
+    (e) =>
+      e.data.kind === "section" &&
+      (e.data.id === section || e.slug === section),
   );
   if (sectionIndex && isPlaceholderTodo(sectionIndex.body)) {
     disabledSectionLinks.add(section);

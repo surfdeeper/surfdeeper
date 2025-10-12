@@ -16,7 +16,7 @@ export async function loadHomepageData() {
   // Get all surf spots for the map preview
   const spots = await getCollection("spots");
 
-  // Get all guides and organize by section
+  // Get all guides and organize by semantic section (frontmatter category)
   const allGuides = await getCollection("guides");
   const guidesBySection: Record<
     string,
@@ -24,24 +24,30 @@ export async function loadHomepageData() {
   > = {};
   const comingSoonCountBySection: Record<string, number> = {};
 
-  // Group guides by their section (first part of slug)
   for (const guide of allGuides) {
-    const slugParts = guide.slug.split("/");
-    const section = slugParts[0];
-    const pageName = slugParts[1];
+    // Skip section index pages; sidebar lists concepts under each section
+    if (guide.data.kind === "section") continue;
 
-    // Skip index pages
-    if (pageName === "index") continue;
+    // Preferred: use explicit category from frontmatter
+    let section = guide.data.category as string | undefined;
 
-    // Initialize section arrays if they don't exist
-    if (!guidesBySection[section]) {
-      guidesBySection[section] = [];
+    // Fallback for legacy nested paths during migration
+    if (!section) {
+      const slugParts = guide.slug.split("/");
+      if (slugParts.length > 1) {
+        section = slugParts[0];
+      }
     }
-    if (!comingSoonCountBySection[section]) {
+
+    // If we still don't know the section, skip from sidebar to avoid mis-grouping
+    if (!section) continue;
+
+    // Initialize aggregates
+    if (!guidesBySection[section]) guidesBySection[section] = [];
+    if (!comingSoonCountBySection[section])
       comingSoonCountBySection[section] = 0;
-    }
 
-    // Check if this is a placeholder guide
+    // Count placeholders as "coming soon" and exclude from visible list
     if (isPlaceholderTodo(guide.body)) {
       comingSoonCountBySection[section]++;
       continue;
