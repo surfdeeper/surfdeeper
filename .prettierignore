@@ -35,3 +35,7 @@ surfdeeper3/
 # Memory logs and keepers
 memory/
 **/.gitkeep
+
+# Playwright reports and temp test outputs
+playwright-report/
+test-results/

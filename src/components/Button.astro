@@ -1,0 +1,20 @@
+---
+export interface Props {
+  label: string;
+  variant?: "primary" | "secondary";
+}
+
+const { label, variant = "primary" } = Astro.props;
+---
+
+<button class={`btn btn-${variant}`}>
+  {label}
+</button>
+
+<style>
+  /* Uses design system classes imported globally via layouts */
+  button {
+    /* Ensure consistent rendering for screenshots */
+    min-width: 120px;
+  }
+</style>
