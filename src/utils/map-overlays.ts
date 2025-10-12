@@ -37,22 +37,17 @@ async function fetchWithCache(
 }
 
 /** Determine grid size/spacing based on zoom (keeps points ~< 40) */
-export function gridParamsForZoom(
-  zoom: number,
-  latitude: number,
-): { gridSize: number; spacing: number } {
-  // Keep a rough constant screen density. Spacing is degrees; adjust by latitude
-  // to account for longitude convergence.
-  const cosLat = Math.max(Math.cos((latitude * Math.PI) / 180), 0.3);
-  if (zoom <= 6) return { gridSize: 3, spacing: 0.6 };
-  if (zoom <= 7) return { gridSize: 3, spacing: 0.4 };
-  if (zoom <= 8) return { gridSize: 5, spacing: 0.25 };
-  if (zoom <= 9) return { gridSize: 5, spacing: 0.18 };
-  if (zoom <= 10) return { gridSize: 5, spacing: 0.12 };
-  if (zoom <= 11) return { gridSize: 7, spacing: 0.08 };
-  if (zoom <= 12) return { gridSize: 7, spacing: 0.06 };
-  if (zoom <= 13) return { gridSize: 9, spacing: 0.045 };
-  return { gridSize: 9, spacing: 0.035 * cosLat };
+export function gridParamsForZoom(zoom: number, latitude: number): { gridSize: number; spacing: number } {
+  // Harmonic spacings (each ~halves) to keep existing points stable while revealing more on zoom-in.
+  // Coarser at low zoom to avoid clutter.
+  const cosLat = Math.max(Math.cos((latitude * Math.PI) / 180), 0.5);
+  if (zoom <= 5) return { gridSize: 3, spacing: 2.0 };
+  if (zoom <= 6) return { gridSize: 3, spacing: 1.0 };
+  if (zoom <= 7) return { gridSize: 3, spacing: 0.5 };
+  if (zoom <= 8) return { gridSize: 3, spacing: 0.25 };
+  if (zoom <= 10) return { gridSize: 3, spacing: 0.12 };
+  if (zoom <= 12) return { gridSize: 5, spacing: 0.06 };
+  return { gridSize: 5, spacing: 0.03 * cosLat };
 }
 
 /**
@@ -67,7 +62,7 @@ function windTextColor(mph: number): string {
   return "#ffffff";
 }
 
-function createWindSVG(mph: number, size: number): string {
+function createWindSVG(mph: number, direction: number, size: number): string {
   const s = size;
   const value = Math.round(mph).toString();
   const textColor = windTextColor(mph);
@@ -79,14 +74,19 @@ function createWindSVG(mph: number, size: number): string {
         </filter>
       </defs>
       <g filter="url(#shadow)">
-        <circle cx="12" cy="12" r="9.5" fill="#0b1321" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1"/>
+        <circle cx="12" cy="12" r="9.5" fill="#0b1321" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.2"/>
+      </g>
+      <g transform="rotate(${direction}, 12, 12)">
+        <path d="M12 12 L12 2" stroke="#000000" stroke-opacity="0.55" stroke-width="4" stroke-linecap="round"/>
+        <path d="M12 12 L12 2" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M12 1 L10 5 L14 5 Z" fill="#ffffff" stroke="#000000" stroke-opacity="0.6" stroke-width="1"/>
       </g>
       <text x="12" y="12.5" text-anchor="middle" dominant-baseline="middle" font-size="9" font-family="system-ui, sans-serif" font-weight="700" fill="${textColor}">${value}</text>
     </svg>
   `;
 }
 
-function createSwellSVG(color: string, period: number, size: number): string {
+function createSwellSVG(color: string, period: number, direction: number, size: number): string {
   const s = size;
   const value = `${Math.round(period)}s`;
   return `
@@ -97,7 +97,12 @@ function createSwellSVG(color: string, period: number, size: number): string {
         </filter>
       </defs>
       <g filter="url(#shadow)">
-        <circle cx="12" cy="12" r="9.5" fill="${color}" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1"/>
+        <circle cx="12" cy="12" r="9.5" fill="${color}" stroke="#0b1321" stroke-opacity="0.45" stroke-width="1.2"/>
+      </g>
+      <g transform="rotate(${direction}, 12, 12)">
+        <path d="M12 12 L12 2" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-opacity="0.6"/>
+        <path d="M12 12 L12 2" stroke="#0b1321" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M12 1 L10 5 L14 5 Z" fill="#0b1321" stroke="#ffffff" stroke-opacity="0.75" stroke-width="1"/>
       </g>
       <text x="12" y="12.5" text-anchor="middle" dominant-baseline="middle" font-size="8" font-family="system-ui, sans-serif" font-weight="800" fill="#ffffff">${value}</text>
     </svg>
@@ -145,11 +150,12 @@ export function createWindArrow(
     className: "wind-arrow-icon",
     html: `
       <div style="width: ${size}px; height: ${size}px;">
-        ${createWindSVG(windMph, size)}
+        ${createWindSVG(windMph, windDirection, size)}
       </div>
     `,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
+    popupAnchor: [Math.round(size * 0.6), -Math.round(size * 0.6)]
   });
 
   const marker = L.marker([lat, lng], { icon });
@@ -184,11 +190,12 @@ export function createSwellArrow(
     className: "swell-arrow-icon",
     html: `
       <div style="width: ${size}px; height: ${size}px;">
-        ${createSwellSVG(color, swellPeriod, size)}
+        ${createSwellSVG(color, swellPeriod, swellDirection, size)}
       </div>
     `,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
+    popupAnchor: [Math.round(size * 0.6), -Math.round(size * 0.6)]
   });
 
   const marker = L.marker([lat, lng], { icon });
@@ -232,14 +239,18 @@ export async function createConditionsGrid(
     return { lat: lat + dLat, lng: lng + dLng };
   };
 
+  // Align to a fixed world lattice so points don't jump when zoom changes
+  const baseLat = Math.round(centerLat / spacing) * spacing;
+  const baseLng = Math.round(centerLng / spacing) * spacing;
+
   // Cap maximum number of points and fetch in parallel so loading is fast
-  const MAX_POINTS = 25;
+  const MAX_POINTS = 16;
   const stride = Math.max(1, Math.ceil(gridSize / Math.sqrt(MAX_POINTS)));
   const points: Array<{ lat: number; lng: number }> = [];
   for (let i = 0; i < gridSize; i += stride) {
     for (let j = 0; j < gridSize; j += stride) {
-      const lat = centerLat + (i - offset) * spacing;
-      const lng = centerLng + (j - offset) * spacing;
+      const lat = baseLat + (i - offset) * spacing;
+      const lng = baseLng + (j - offset) * spacing;
       points.push({ lat, lng });
     }
   }
@@ -298,6 +309,75 @@ export async function createConditionsGrid(
   return { wind: windMarkers, swell: swellMarkers };
 }
 
+/** Build overlays across the current map viewport bounds */
+export async function createConditionsForBounds(
+  north: number,
+  south: number,
+  east: number,
+  west: number,
+  spacing: number
+): Promise<{ wind: any[]; swell: any[] }> {
+  const windMarkers: any[] = [];
+  const swellMarkers: any[] = [];
+
+  const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
+
+  // Align to global lattice to keep stability across zoom/pan
+  const startLat = Math.ceil(south / spacing) * spacing;
+  const endLat = Math.floor(north / spacing) * spacing;
+  const startLng = Math.ceil(west / spacing) * spacing;
+  const endLng = Math.floor(east / spacing) * spacing;
+
+  const latCount = Math.max(0, Math.floor((endLat - startLat) / spacing) + 1);
+  const lngCount = Math.max(0, Math.floor((endLng - startLng) / spacing) + 1);
+
+  // Cap total points for performance and declutter (targets ~48 points)
+  const MAX_POINTS = 48;
+  const total = Math.max(1, latCount * lngCount);
+  const stride = Math.max(1, Math.ceil(Math.sqrt(total / MAX_POINTS)));
+
+  const points: Array<{ lat: number; lng: number }> = [];
+  for (let i = 0; i < latCount; i += stride) {
+    const lat = startLat + i * spacing;
+    for (let j = 0; j < lngCount; j += stride) {
+      const lng = startLng + j * spacing;
+      points.push({ lat, lng });
+    }
+  }
+
+  // Small helper to offset a lat/lng by a bearing (deg) and a tiny distance (deg)
+  const offsetByBearing = (lat: number, lng: number, bearingDeg: number, distDeg: number) => {
+    const rad = (bearingDeg * Math.PI) / 180;
+    const dLat = distDeg * Math.cos(rad);
+    const dLng = (distDeg * Math.sin(rad)) / Math.max(Math.cos((lat * Math.PI) / 180), 0.000001);
+    return { lat: lat + dLat, lng: lng + dLng };
+  };
+
+  const results = await Promise.allSettled(points.map(async ({ lat, lng }) => {
+    const conditions = await fetchWithCache(lat, lng);
+    if (!conditions) return null;
+    const baseNudge = Math.min(spacing * 0.25, 0.04);
+    const swellBack = offsetByBearing(lat, lng, (conditions.swellDirection ?? 0) + 180, baseNudge);
+    const windFwd = offsetByBearing(lat, lng, (conditions.windDirection ?? 0), baseNudge * 0.6);
+
+    const windMarker = createWindArrow(null, windFwd.lat, windFwd.lng, conditions.windSpeed, conditions.windDirection);
+
+    let swellMarker: any | null = null;
+    if ((conditions.swellHeight ?? 0) > 0.05 || (conditions.waveHeight ?? 0) > 0.1) {
+      swellMarker = createSwellArrow(null, swellBack.lat, swellBack.lng, conditions.swellHeight, conditions.swellPeriod, conditions.swellDirection);
+    }
+    return { windMarker, swellMarker };
+  }));
+
+  for (const r of results) {
+    if (r.status === 'fulfilled' && r.value) {
+      windMarkers.push(r.value.windMarker);
+      if (r.value.swellMarker) swellMarkers.push(r.value.swellMarker);
+    }
+  }
+
+  return { wind: windMarkers, swell: swellMarkers };
+}
 /** Refresh existing layer groups according to current zoom */
 export async function refreshConditionsOverlays(
   map: any,
@@ -305,12 +385,15 @@ export async function refreshConditionsOverlays(
   swellLayer: any,
 ): Promise<void> {
   const center = map.getCenter();
-  const { gridSize, spacing } = gridParamsForZoom(map.getZoom(), center.lat);
-  const { wind, swell } = await createConditionsGrid(
-    center.lat,
-    center.lng,
-    gridSize,
-    spacing,
+  const zoom = map.getZoom();
+  const { spacing } = gridParamsForZoom(zoom, center.lat);
+  const b = map.getBounds();
+  const { wind, swell } = await createConditionsForBounds(
+    b.getNorth(),
+    b.getSouth(),
+    b.getEast(),
+    b.getWest(),
+    spacing
   );
   windLayer.clearLayers();
   swellLayer.clearLayers();

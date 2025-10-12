@@ -300,22 +300,9 @@ const serializedSpot = serializeSpot(entry);
         document.getElementById("spot-map")?.appendChild(loadingDiv);
 
         try {
-          // Zoom-aware initial grid
-          const { gridSize, spacing } = gridParamsForZoom(
-            map.getZoom(),
-            spot.latitude,
-          );
-          const { wind: windMarkers, swell: swellMarkers } =
-            await createConditionsGrid(
-              spot.latitude,
-              spot.longitude,
-              gridSize,
-              spacing,
-            );
-
-          // Create layer groups
-          const windLayer = (window as any).L.layerGroup(windMarkers);
-          const swellLayer = (window as any).L.layerGroup(swellMarkers);
+          // Create empty layer groups, then populate based on viewport bounds
+          const windLayer = (window as any).L.layerGroup();
+          const swellLayer = (window as any).L.layerGroup();
 
           // Create legends
           const windLegend = createLegend("wind");
@@ -330,14 +317,21 @@ const serializedSpot = serializeSpot(entry);
           // Add layer controls
           addLayerControls(map, windLayer, swellLayer, windLegend, swellLegend);
 
+          // Populate overlays initially based on current viewport
+          await refreshConditionsOverlays(map, windLayer, swellLayer);
           loadingDiv.remove();
 
-          // Refresh overlays on zoom
-          map.on("zoomend", () => {
-            refreshConditionsOverlays(map, windLayer, swellLayer).catch((e) =>
-              console.error(e),
-            );
-          });
+          // Refresh overlays on zoom/pan
+          const debounced = (fn, ms = 250) => {
+            let t;
+            return (...args) => {
+              clearTimeout(t);
+              t = setTimeout(() => fn(...args), ms);
+            };
+          };
+          const refresh = debounced(() => refreshConditionsOverlays(map, windLayer, swellLayer).catch(console.error), 200);
+          map.on('zoomend', refresh);
+          map.on('moveend', refresh);
         } catch (error) {
           console.error("Failed to load map overlays:", error);
           loadingDiv.textContent = "Failed to load overlays";
