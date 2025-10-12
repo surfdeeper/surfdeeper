@@ -10,6 +10,9 @@ order: 2
 id: angling-down-the-line
 category: core-skills
 kind: concept
+type: skill
+dependsOn: [paddling-efficiency]
+concepts: [buoyancy-trim, wave-energy-currents]
 paths: [longboarding, catching-your-first-wave]
 ---
 

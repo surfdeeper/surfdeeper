@@ -22,7 +22,7 @@ The takeoff is **one fluid motion**, not a checklist. Here's how the pieces conn
 
 ### 1. Strategic Paddling
 
-Learn proper [[paddling-efficiency|paddling technique]] to position yourself where the wave will carry you. Paddling isn't about brute force—it's about **strategic positioning**. Over-paddling exhausts you and puts you in the wrong spot, often resulting in the wave breaking on top of you.
+Learn proper [[paddling-efficiency|paddling technique]] to position yourself where the wave will carry you. Paddling isn't about brute force—it's about **strategic positioning**. Over-paddling exhausts you and puts you in the wrong spot, often resulting in the wave breaking on top of you. Understanding [[buoyancy-trim]] and how [[wave-energy-currents]] shape takeoff zones makes your paddling more effective.
 
 > **Key insight**: The phrase "catching a wave" is slightly misleading. You don't chase waves aggressively; you align with them and let them carry you.
 
