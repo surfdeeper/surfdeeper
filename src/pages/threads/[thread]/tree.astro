@@ -1,0 +1,82 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import {
+  buildGraph,
+  buildThreadSubgraph,
+  computeLayers,
+  loadGuides,
+} from "../../../utils/knowledge-graph";
+
+const { params } = Astro;
+const entries = await loadGuides();
+const graph = buildGraph(entries);
+const sub = buildThreadSubgraph(graph, params.thread as string);
+const layers = computeLayers(sub);
+---
+
+<Layout
+  title={`Thread: ${params.thread} – Tree`}
+  description={`Dependency tree for ${params.thread} thread.`}
+>
+  <header class="page-header">
+    <h1 class="heading heading-md">Thread: {params.thread} (Tree)</h1>
+    <nav class="view-switch">
+      <a class="btn btn-secondary" href={`/threads/${params.thread}/grid`}
+        >Grid</a
+      >
+      <a class="btn btn-primary" href={`/threads/${params.thread}/graph`}
+        >3D Graph</a
+      >
+    </nav>
+  </header>
+
+  {
+    layers.length === 0 ? (
+      <p>No guides found for this thread.</p>
+    ) : (
+      <div class="tree">
+        {layers.map((layer, i) => (
+          <div class="tree-layer">
+            <h3 class="layer-title">
+              {i === 0 ? "Foundations" : `Layer ${i + 1}`}
+            </h3>
+            <div class="layer-nodes">
+              {layer.map((n) => (
+                <a class="node card" href={n.url} title={n.title}>
+                  {n.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  <style>
+    .tree {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+    .tree-layer {
+    }
+    .layer-title {
+      color: var(--color-accent);
+      margin: 0 0 var(--space-sm) 0;
+      font-size: var(--font-size-xl);
+    }
+    .layer-nodes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+    .node {
+      text-decoration: none;
+      color: inherit;
+    }
+    .node:hover {
+      border-color: var(--color-border-accent);
+    }
+  </style>
+</Layout>

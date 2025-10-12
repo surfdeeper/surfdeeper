@@ -1,0 +1,105 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import {
+  buildGraph,
+  buildThreadSubgraph,
+  loadGuides,
+} from "../../../utils/knowledge-graph";
+
+const { params } = Astro;
+const entries = await loadGuides();
+const graph = buildGraph(entries);
+const sub = buildThreadSubgraph(graph, params.thread as string);
+---
+
+<Layout
+  title={`Thread: ${params.thread} – 3D Graph`}
+  description={`3D graph for ${params.thread} thread.`}
+  fullWidth={true}
+>
+  <header class="page-header">
+    <h1 class="heading heading-md">Thread: {params.thread} (3D Graph)</h1>
+    <nav class="view-switch">
+      <a class="btn btn-secondary" href={`/threads/${params.thread}/grid`}
+        >Grid</a
+      >
+      <a class="btn btn-secondary" href={`/threads/${params.thread}/tree`}
+        >Tree</a
+      >
+    </nav>
+  </header>
+
+  <div class="graph-card card">
+    <div id="graph-3d" class="graph-container" aria-label="3D knowledge graph">
+    </div>
+  </div>
+
+  <script
+    is:inline
+    type="application/json"
+    id="graph-data"
+    set:html={JSON.stringify({
+      nodes: sub.nodes.map((n) => ({
+        id: n.id,
+        name: n.title,
+        level: n.level,
+        kind: n.kind,
+        url: n.url,
+      })),
+      links: sub.edges.map((e) => ({
+        source: e.source,
+        target: e.target,
+        type: e.type,
+      })),
+    })}
+  />
+
+  <script is:inline>
+    const data = JSON.parse(document.getElementById("graph-data").textContent);
+    const container = document.getElementById("graph-3d");
+    const style = getComputedStyle(document.documentElement);
+    const accent =
+      style.getPropertyValue("--color-primary").trim() || "#febc08";
+    const surface =
+      style.getPropertyValue("--color-surface-secondary").trim() || "#132635";
+
+    const init = async () => {
+      const [{ default: ForceGraph3D }] = await Promise.all([
+        import(
+          "https://unpkg.com/3d-force-graph@1.73.4/dist/3d-force-graph.esm.js"
+        ),
+      ]);
+
+      const Graph = ForceGraph3D()(container)
+        .backgroundColor("rgba(0,0,0,0)")
+        .graphData(data)
+        .nodeLabel("name")
+        .nodeAutoColorBy("kind")
+        .nodeRelSize(6)
+        .linkColor(() => accent)
+        .linkOpacity(0.6)
+        .onNodeClick((node) => {
+          if (node.url) window.location.href = node.url;
+        });
+
+      // Fit to container
+      Graph.width(container.clientWidth);
+      Graph.height(container.clientHeight);
+      window.addEventListener("resize", () => {
+        Graph.width(container.clientWidth);
+        Graph.height(container.clientHeight);
+      });
+    };
+    init();
+  </script>
+
+  <style>
+    .graph-card {
+      height: 70vh;
+    }
+    .graph-container {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</Layout>

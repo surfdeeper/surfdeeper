@@ -1,0 +1,119 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import {
+  buildGraph,
+  getThreads,
+  loadGuides,
+  getGuidesByThread,
+} from "../../utils/knowledge-graph";
+
+const entries = await loadGuides();
+const graph = buildGraph(entries);
+const threads = getThreads(graph);
+---
+
+<Layout
+  title="Threads – SurfDeeper"
+  description="Explore knowledge threads like Longboarding across multiple views."
+>
+  <header class="page-header">
+    <h1>Threads</h1>
+    <p class="page-subtitle">
+      Collections of related guides you can view as a grid, tree, or 3D graph.
+    </p>
+  </header>
+
+  {
+    threads.length === 0 ? (
+      <p>
+        No threads tagged yet. Add threads to guides' frontmatter (threads: []).
+      </p>
+    ) : (
+      <section class="threads-grid">
+        {threads.map((t) => {
+          const items = getGuidesByThread(graph, t);
+          return (
+            <article class="card thread-card">
+              <div class="thread-card-header">
+                <h2 class="heading heading-sm">{t}</h2>
+                <span class="badge">{items.length}</span>
+              </div>
+              <ul class="preview links-neutral">
+                {items.slice(0, 4).map((n) => (
+                  <li>
+                    <a href={n.url}>{n.title}</a>
+                  </li>
+                ))}
+                {items.length > 4 && (
+                  <li class="more">+{items.length - 4} more</li>
+                )}
+              </ul>
+              <div class="actions">
+                <a class="btn btn-secondary" href={`/threads/${t}/grid`}>
+                  Grid
+                </a>
+                <a class="btn btn-secondary" href={`/threads/${t}/tree`}>
+                  Tree
+                </a>
+                <a class="btn btn-primary" href={`/threads/${t}/graph`}>
+                  3D Graph
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+    )
+  }
+
+  <style>
+    .page-header {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+    .page-header h1 {
+      color: var(--color-accent);
+      font-size: var(--font-size-4xl);
+      margin: 0 0 var(--space-sm) 0;
+      font-weight: var(--font-weight-bold);
+    }
+    .page-subtitle {
+      font-size: var(--font-size-xl);
+      opacity: 0.9;
+      margin: 0;
+    }
+    .threads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-lg);
+    }
+    .thread-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-md);
+    }
+    .badge {
+      display: inline-block;
+      background: var(--bg-accent-weak);
+      color: var(--color-accent);
+      border: 1px solid var(--color-border-accent);
+      border-radius: var(--radius-sm);
+      padding: 0 var(--space-2);
+      font-size: var(--font-size-sm);
+    }
+    .preview {
+      margin: 0 0 var(--space-md) 0;
+    }
+    .preview li {
+      margin-bottom: var(--space-2);
+    }
+    .preview .more {
+      color: var(--color-accent);
+    }
+    .actions {
+      display: flex;
+      gap: var(--space-3);
+    }
+  </style>
+</Layout>

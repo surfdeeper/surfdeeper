@@ -8,6 +8,7 @@ order: 3
 id: cobra-pose
 category: core-skills
 kind: concept
+threads: [longboarding]
 ---
 
 # The Cobra Pose

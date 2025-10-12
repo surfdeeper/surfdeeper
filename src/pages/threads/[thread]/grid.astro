@@ -1,0 +1,123 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import {
+  buildGraph,
+  buildThreadSubgraph,
+  loadGuides,
+} from "../../../utils/knowledge-graph";
+
+const { params } = Astro;
+const entries = await loadGuides();
+const graph = buildGraph(entries);
+const level = (Astro.url.searchParams.get("level") || undefined) as
+  | "beginner"
+  | "intermediate"
+  | "advanced"
+  | undefined;
+const kind = (Astro.url.searchParams.get("kind") || undefined) as
+  | "section"
+  | "concept"
+  | undefined;
+const sub = buildThreadSubgraph(graph, params.thread as string, {
+  level,
+  kind,
+});
+---
+
+<Layout
+  title={`Thread: ${params.thread} – Grid`}
+  description={`Guides in the ${params.thread} thread.`}
+>
+  <header class="page-header">
+    <h1 class="heading heading-md">Thread: {params.thread}</h1>
+    <div class="filters">
+      <form method="get" class="filters-form">
+        <label>
+          Level
+          <select name="level" class="form-input">
+            <option value="">All</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </label>
+        <label>
+          Kind
+          <select name="kind" class="form-input">
+            <option value="">All</option>
+            <option value="concept">Concept</option>
+            <option value="section">Section</option>
+          </select>
+        </label>
+        <button class="btn btn-secondary" type="submit">Apply</button>
+      </form>
+      <nav class="view-switch">
+        <a
+          class="btn btn-secondary"
+          href={`/threads/${params.thread}/tree${Astro.url.search}`}>Tree</a
+        >
+        <a
+          class="btn btn-primary"
+          href={`/threads/${params.thread}/graph${Astro.url.search}`}
+          >3D Graph</a
+        >
+      </nav>
+    </div>
+  </header>
+
+  {
+    sub.nodes.length === 0 ? (
+      <p>No guides match these filters.</p>
+    ) : (
+      <section class="cards-grid">
+        {sub.nodes.map((n) => (
+          <a class="card guide-card" href={n.url}>
+            <h3>{n.title}</h3>
+            <div class="meta">
+              {n.level && <span class="chip">{n.level}</span>}
+              {n.kind && <span class="chip">{n.kind}</span>}
+            </div>
+          </a>
+        ))}
+      </section>
+    )
+  }
+
+  <style>
+    .page-header {
+      margin-bottom: var(--space-lg);
+    }
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+    .filters-form {
+      display: flex;
+      gap: var(--space-4);
+      align-items: end;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-lg);
+    }
+    .guide-card h3 {
+      color: var(--color-accent);
+      margin: 0 0 var(--space-2) 0;
+    }
+    .meta {
+      display: flex;
+      gap: var(--space-2);
+    }
+    .chip {
+      border: 1px solid var(--color-border-accent);
+      padding: 0 var(--space-2);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-sm);
+      color: var(--color-accent);
+      background: var(--bg-accent-weak);
+    }
+  </style>
+</Layout>

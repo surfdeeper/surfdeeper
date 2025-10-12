@@ -8,6 +8,7 @@ order: 2
 id: angling-down-the-line
 category: core-skills
 kind: concept
+threads: [longboarding]
 ---
 
 # Angling Down the Line
