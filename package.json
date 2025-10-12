@@ -15,7 +15,6 @@
     "lint:md": "markdownlint src/content/**/*.md",
     "lint": "npm run lint:links && npm run lint:md && npm run lint:assets && npm run lint:css && npx prettier --check .",
     "check:duplicates": "node scripts/find-duplicate-content.js --threshold 0.78 --top 50",
-    "check:duplicates:ci": "node scripts/find-duplicate-content.js --threshold 0.8 --fail --json",
     "migrate:flatten-guides": "node scripts/migrate-flatten-guides.js",
     "migrate:links-to-magic": "node scripts/convert-path-links-to-magic.js && npm run format",
     "fix:md": "markdownlint --fix src/content/**/*.md",

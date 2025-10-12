@@ -117,8 +117,6 @@ You can scan Markdown content for near-duplicates (e.g., similar guides like "cu
 
 - Local, human-friendly output:
   - `npm run check:duplicates`
-- CI-friendly (JSON + nonzero exit on findings):
-  - `npm run check:duplicates:ci`
 
 Options (via direct script call):
 
