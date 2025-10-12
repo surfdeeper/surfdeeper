@@ -41,6 +41,22 @@ const RULES = {
     severity: "warning",
     fix: "Move images to /public/ folder or use proper asset imports",
   },
+  "no-raw-img-tags-in-astro": {
+    pattern: /<img\s[^>]*>/gi,
+    message:
+      "Raw <img> tags found. Use astro:assets <Image> with imported assets for optimization.",
+    severity: "error",
+    fix: "Import image from src/assets and render with <Image src={asset} ... />",
+    include: [/\.astro$/],
+  },
+  "no-root-public-images-in-markdown": {
+    pattern: /!\[[^\]]*\]\((\/[^)]+\.(?:png|jpe?g|webp|gif))\)/gi,
+    message:
+      "Markdown references a root/public image. Prefer importing images into src/assets and using astro:assets or MDX.",
+    severity: "error",
+    fix: "Move image to src/assets, import it, and render via <Image>. For MD, consider converting to MDX.",
+    include: [/\.mdx?$/],
+  },
 };
 
 class AssetLinter {
@@ -96,6 +112,13 @@ class AssetLinter {
         rule.pattern.lastIndex = 0; // Reset regex
 
         while ((match = rule.pattern.exec(content)) !== null) {
+          // Optional file includes filter
+          if (rule.include && Array.isArray(rule.include)) {
+            const included = rule.include.some((re) => re.test(filePath));
+            if (!included) continue;
+          }
+
+          // No allowlist: all matches are actionable
           const lineNumber = this.getLineNumber(content, match.index);
           const issue = {
             file: filePath,

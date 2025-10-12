@@ -98,7 +98,10 @@ for (const guide of allGuides) {
 }
 
 // Group images by section
-const imagesBySection = images.reduce(
+// Only use images that map to imported/optimized assets to satisfy asset lint rules
+const optimizedImages = images.filter((img) => assetMap[img.src]);
+
+const imagesBySection = optimizedImages.reduce(
   (acc, img) => {
     if (!acc[img.section]) {
       acc[img.section] = [];
@@ -122,10 +125,11 @@ const imagesBySection = images.reduce(
         All images from the surf guides in one place. Click any image to jump to
         the full guide where it appears.
         {
-          images.length > 0 && (
+          optimizedImages.length > 0 && (
             <span class="total-count">
               {" "}
-              — {images.length} total image{images.length !== 1 ? "s" : ""}
+              — {optimizedImages.length} total image
+              {optimizedImages.length !== 1 ? "s" : ""}
             </span>
           )
         }
@@ -133,7 +137,7 @@ const imagesBySection = images.reduce(
     </header>
 
     {
-      images.length === 0 ? (
+      optimizedImages.length === 0 ? (
         <div class="no-images">
           <p>
             No images found in the guides yet.{" "}
@@ -155,28 +159,17 @@ const imagesBySection = images.reduce(
                     <a href={image.guideLink} class="gallery-link">
                       {(() => {
                         const asset = assetMap[image.src];
-                        if (asset) {
-                          // Use Astro Image for known assets: single small width so opening in new tab isn't huge
-                          return (
-                            <Image
-                              src={asset}
-                              alt={image.alt}
-                              width={350}
-                              class="gallery-image"
-                              loading="lazy"
-                              decoding="async"
-                              format="webp"
-                              quality={80}
-                            />
-                          );
-                        }
-                        // Fallback for unknown/remote/public images
+                        // Use Astro Image for known assets
                         return (
-                          <img
-                            src={image.src}
+                          <Image
+                            src={asset}
                             alt={image.alt}
-                            loading="lazy"
+                            width={350}
                             class="gallery-image"
+                            loading="lazy"
+                            decoding="async"
+                            format="webp"
+                            quality={80}
                           />
                         );
                       })()}
