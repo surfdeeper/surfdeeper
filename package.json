@@ -18,6 +18,7 @@
     "lint:assets": "node scripts/lint-assets.js",
     "lint:md": "markdownlint src/content/**/*.md",
     "lint": "concurrently --group --names links,md,assets,css,prettier --prefix-colors blue,magenta,cyan,yellow,green \"npm:lint:links\" \"npm:lint:md\" \"npm:lint:assets\" \"npm:lint:css\" \"npx prettier --check .\"",
+    "export-graph": "node scripts/export-graph.js",
     "check:duplicates": "node scripts/find-duplicate-content.js --threshold 0.78 --top 50",
     "migrate:flatten-guides": "node scripts/migrate-flatten-guides.js",
     "migrate:links-to-magic": "node scripts/convert-path-links-to-magic.js && npm run format",
