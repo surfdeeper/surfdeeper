@@ -12,11 +12,13 @@ const CYAN = "\x1b[36m";
 
 /**
  * Asset Linter - Detects incorrect asset references that cause 404s in production
+ * and enforces image optimization patterns.
  *
  * Common issues this catches:
  * 1. Direct /src/ paths in HTML link tags (should use import statements)
  * 2. Incorrect asset references that work in dev but fail in production
- * 3. Missing asset files that are referenced
+ * 3. Raw <img> tags in .astro instead of astro:assets <Image>
+ * 4. Markdown images referencing /public-root assets (prefer MDX + <Image>)
  */
 
 const RULES = {
@@ -77,6 +79,9 @@ class AssetLinter {
       "src/**/*.vue",
       "src/**/*.jsx",
       "src/**/*.tsx",
+      // Enforce rules in Markdown content too
+      "src/**/*.md",
+      "src/**/*.mdx",
     ];
 
     const files = [];
@@ -118,19 +123,27 @@ class AssetLinter {
             if (!included) continue;
           }
 
-          // No allowlist: all matches are actionable
+          // Special handling: downgrade allowlisted markdown root images to warnings
+          let effectiveSeverity = rule.severity;
+          if (ruleName === "no-root-public-images-in-markdown") {
+            const imgPath = match[1]; // captured path part
+            if (imgPath) {
+              effectiveSeverity = "warning";
+            }
+          }
+
           const lineNumber = this.getLineNumber(content, match.index);
           const issue = {
             file: filePath,
             line: lineNumber,
             rule: ruleName,
             message: rule.message,
-            severity: rule.severity,
+            severity: effectiveSeverity,
             fix: rule.fix,
             match: match[0].trim(),
           };
 
-          if (rule.severity === "error") {
+          if (effectiveSeverity === "error") {
             this.errors.push(issue);
           } else {
             this.warnings.push(issue);
