@@ -1,0 +1,99 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import {
+  buildGraph,
+  loadGuides,
+  getGuidesByThread,
+} from "../../utils/knowledge-graph";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const threads = await getCollection("threads");
+  return threads.map((t) => ({ params: { id: t.slug } }));
+}
+
+const { id } = Astro.params as { id: string };
+
+const entries = await loadGuides();
+const graph = buildGraph(entries);
+const items = getGuidesByThread(graph, id);
+
+const threadMeta = await getCollection("threads");
+const meta = threadMeta.find((t) => t.slug === id);
+
+const title = meta?.data.title || id;
+const description = meta?.data.description || "";
+const icon = meta?.data.icon || "";
+---
+
+<Layout title={`${title} – Threads – SurfDeeper`} description={description}>
+  <header class="page-header">
+    <h1 class="heading heading-lg">
+      {
+        icon && (
+          <span class="icon" aria-hidden="true">
+            {icon}
+          </span>
+        )
+      }
+      <span class="sr-only">Thread:</span>
+      {title}
+    </h1>
+    {description && <p class="page-subtitle">{description}</p>}
+  </header>
+
+  {
+    items.length === 0 ? (
+      <p class="empty">No guides have been tagged with this thread yet.</p>
+    ) : (
+      <section aria-label="Guides in this thread">
+        <ul class="guide-list links-neutral">
+          {items.map((n) => (
+            <li>
+              <a href={n.url}>{n.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <style>
+    .page-header {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .heading {
+      color: var(--color-accent);
+      margin: 0 0 var(--space-sm) 0;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .icon {
+      margin-right: var(--space-2);
+    }
+
+    .page-subtitle {
+      font-size: var(--font-size-lg);
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    .empty {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-md);
+    }
+
+    .guide-list {
+      max-width: 60ch;
+      margin: 0 auto;
+      padding: 0;
+      list-style: none;
+    }
+
+    .guide-list li {
+      margin-bottom: var(--space-3);
+    }
+  </style>
+</Layout>
