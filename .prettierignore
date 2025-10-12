@@ -29,3 +29,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Memory logs and keepers
+memory/
+**/.gitkeep
