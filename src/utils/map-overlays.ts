@@ -2,8 +2,13 @@
  * Map overlay utilities for visualizing marine conditions
  */
 
-import { fetchMarineConditions, degreesToCardinal, metersToFeet } from './marine-weather';
-import type { MarineConditions } from './marine-weather';
+import {
+  fetchMarineConditions,
+  degreesToCardinal,
+  metersToFeet,
+} from "./marine-weather";
+import { WIND_THRESHOLDS } from "./condition-viz";
+import type { MarineConditions } from "./marine-weather";
 
 declare const L: any;
 
@@ -18,7 +23,10 @@ function cacheKey(lat: number, lng: number) {
   return `${r(lat)},${r(lng)}`;
 }
 
-async function fetchWithCache(lat: number, lng: number): Promise<MarineConditions | null> {
+async function fetchWithCache(
+  lat: number,
+  lng: number,
+): Promise<MarineConditions | null> {
   const key = cacheKey(lat, lng);
   const now = Date.now();
   const cached = conditionsCache.get(key);
@@ -29,7 +37,10 @@ async function fetchWithCache(lat: number, lng: number): Promise<MarineCondition
 }
 
 /** Determine grid size/spacing based on zoom (keeps points ~< 40) */
-export function gridParamsForZoom(zoom: number, latitude: number): { gridSize: number; spacing: number } {
+export function gridParamsForZoom(
+  zoom: number,
+  latitude: number,
+): { gridSize: number; spacing: number } {
   // Keep a rough constant screen density. Spacing is degrees; adjust by latitude
   // to account for longitude convergence.
   const cosLat = Math.max(Math.cos((latitude * Math.PI) / 180), 0.3);
@@ -50,9 +61,10 @@ export function gridParamsForZoom(zoom: number, latitude: number): { gridSize: n
  * - Swell: colored circle (heat) with period text (e.g. 16s)
  */
 function windTextColor(mph: number): string {
-  if (mph > 18) return '#ef4444'; // too strong
-  if (mph > 12) return '#fde047'; // strong
-  return '#ffffff';
+  // Use shared thresholds from condition-viz
+  if (mph > WIND_THRESHOLDS.ROUGH) return "#ef4444"; // too strong
+  if (mph > WIND_THRESHOLDS.GOOD) return "#fde047"; // strong
+  return "#ffffff";
 }
 
 function createWindSVG(mph: number, size: number): string {
@@ -95,21 +107,24 @@ function createSwellSVG(color: string, period: number, size: number): string {
 /**
  * Gets color based on intensity
  */
-export function getIntensityColor(value: number, type: 'swell' | 'wind'): string {
-  if (type === 'swell') {
+export function getIntensityColor(
+  value: number,
+  type: "swell" | "wind",
+): string {
+  if (type === "swell") {
     // Distinct purple scale for swell (feet)
-    if (value < 2) return '#c4b5fd'; // light purple
-    if (value < 4) return '#a78bfa';
-    if (value < 6) return '#8b5cf6';
-    if (value < 10) return '#7c3aed';
-    return '#6d28d9'; // darkest for huge
+    if (value < 2) return "#c4b5fd"; // light purple
+    if (value < 4) return "#a78bfa";
+    if (value < 6) return "#8b5cf6";
+    if (value < 10) return "#7c3aed";
+    return "#6d28d9"; // darkest for huge
   } else {
     // Distinct green scale for wind (mph)
-    if (value < 5) return '#bbf7d0'; // very light
-    if (value < 10) return '#86efac';
-    if (value < 15) return '#22c55e';
-    if (value < 20) return '#16a34a';
-    return '#15803d'; // very strong
+    if (value < 5) return "#bbf7d0"; // very light
+    if (value < 10) return "#86efac";
+    if (value < 15) return "#22c55e";
+    if (value < 20) return "#16a34a";
+    return "#15803d"; // very strong
   }
 }
 
@@ -121,20 +136,20 @@ export function createWindArrow(
   lat: number,
   lng: number,
   windSpeed: number,
-  windDirection: number
+  windDirection: number,
 ): any {
   const windMph = windSpeed * 0.621371;
   const size = 22 + Math.min(windSpeed * 1.2, 22); // compact circle marker
-  
+
   const icon = L.divIcon({
-    className: 'wind-arrow-icon',
+    className: "wind-arrow-icon",
     html: `
       <div style="width: ${size}px; height: ${size}px;">
         ${createWindSVG(windMph, size)}
       </div>
     `,
     iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2]
+    iconAnchor: [size / 2, size / 2],
   });
 
   const marker = L.marker([lat, lng], { icon });
@@ -146,7 +161,7 @@ export function createWindArrow(
     </div>
   `;
   marker.bindPopup(popup);
-  
+
   return marker;
 }
 
@@ -159,21 +174,21 @@ export function createSwellArrow(
   lng: number,
   swellHeight: number,
   swellPeriod: number,
-  swellDirection: number
+  swellDirection: number,
 ): any {
   const swellFt = metersToFeet(swellHeight);
-  const color = getIntensityColor(swellFt, 'swell');
+  const color = getIntensityColor(swellFt, "swell");
   const size = 22 + Math.min(swellHeight * 10, 26); // compact circle marker
-  
+
   const icon = L.divIcon({
-    className: 'swell-arrow-icon',
+    className: "swell-arrow-icon",
     html: `
       <div style="width: ${size}px; height: ${size}px;">
         ${createSwellSVG(color, swellPeriod, size)}
       </div>
     `,
     iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2]
+    iconAnchor: [size / 2, size / 2],
   });
 
   const marker = L.marker([lat, lng], { icon });
@@ -185,7 +200,7 @@ export function createSwellArrow(
     </div>
   `;
   marker.bindPopup(popup);
-  
+
   return marker;
 }
 
@@ -196,17 +211,24 @@ export async function createConditionsGrid(
   centerLat: number,
   centerLng: number,
   gridSize: number = 3,
-  spacing: number = 0.1
-): Promise<{ wind: any[], swell: any[] }> {
+  spacing: number = 0.1,
+): Promise<{ wind: any[]; swell: any[] }> {
   const windMarkers: any[] = [];
   const swellMarkers: any[] = [];
   const offset = Math.floor(gridSize / 2);
-  
+
   // Small helper to offset a lat/lng by a bearing (deg) and a tiny distance (deg)
-  const offsetByBearing = (lat: number, lng: number, bearingDeg: number, distDeg: number) => {
+  const offsetByBearing = (
+    lat: number,
+    lng: number,
+    bearingDeg: number,
+    distDeg: number,
+  ) => {
     const rad = (bearingDeg * Math.PI) / 180;
     const dLat = distDeg * Math.cos(rad);
-    const dLng = (distDeg * Math.sin(rad)) / Math.max(Math.cos((lat * Math.PI) / 180), 0.000001);
+    const dLng =
+      (distDeg * Math.sin(rad)) /
+      Math.max(Math.cos((lat * Math.PI) / 180), 0.000001);
     return { lat: lat + dLat, lng: lng + dLng };
   };
 
@@ -222,24 +244,52 @@ export async function createConditionsGrid(
     }
   }
 
-  const results = await Promise.allSettled(points.map(async ({ lat, lng }) => {
-    const conditions = await fetchWithCache(lat, lng);
-    if (!conditions) return null;
-    const baseNudge = Math.min(spacing * 0.25, 0.04);
-    const swellBack = offsetByBearing(lat, lng, (conditions.swellDirection ?? 0) + 180, baseNudge);
-    const windFwd = offsetByBearing(lat, lng, (conditions.windDirection ?? 0), baseNudge * 0.6);
+  const results = await Promise.allSettled(
+    points.map(async ({ lat, lng }) => {
+      const conditions = await fetchWithCache(lat, lng);
+      if (!conditions) return null;
+      const baseNudge = Math.min(spacing * 0.25, 0.04);
+      const swellBack = offsetByBearing(
+        lat,
+        lng,
+        (conditions.swellDirection ?? 0) + 180,
+        baseNudge,
+      );
+      const windFwd = offsetByBearing(
+        lat,
+        lng,
+        conditions.windDirection ?? 0,
+        baseNudge * 0.6,
+      );
 
-    const windMarker = createWindArrow(null, windFwd.lat, windFwd.lng, conditions.windSpeed, conditions.windDirection);
+      const windMarker = createWindArrow(
+        null,
+        windFwd.lat,
+        windFwd.lng,
+        conditions.windSpeed,
+        conditions.windDirection,
+      );
 
-    let swellMarker: any | null = null;
-    if ((conditions.swellHeight ?? 0) > 0.05 || (conditions.waveHeight ?? 0) > 0.1) {
-      swellMarker = createSwellArrow(null, swellBack.lat, swellBack.lng, conditions.swellHeight, conditions.swellPeriod, conditions.swellDirection);
-    }
-    return { windMarker, swellMarker };
-  }));
+      let swellMarker: any | null = null;
+      if (
+        (conditions.swellHeight ?? 0) > 0.05 ||
+        (conditions.waveHeight ?? 0) > 0.1
+      ) {
+        swellMarker = createSwellArrow(
+          null,
+          swellBack.lat,
+          swellBack.lng,
+          conditions.swellHeight,
+          conditions.swellPeriod,
+          conditions.swellDirection,
+        );
+      }
+      return { windMarker, swellMarker };
+    }),
+  );
 
   for (const r of results) {
-    if (r.status === 'fulfilled' && r.value) {
+    if (r.status === "fulfilled" && r.value) {
       windMarkers.push(r.value.windMarker);
       if (r.value.swellMarker) swellMarkers.push(r.value.swellMarker);
     }
@@ -252,11 +302,16 @@ export async function createConditionsGrid(
 export async function refreshConditionsOverlays(
   map: any,
   windLayer: any,
-  swellLayer: any
+  swellLayer: any,
 ): Promise<void> {
   const center = map.getCenter();
   const { gridSize, spacing } = gridParamsForZoom(map.getZoom(), center.lat);
-  const { wind, swell } = await createConditionsGrid(center.lat, center.lng, gridSize, spacing);
+  const { wind, swell } = await createConditionsGrid(
+    center.lat,
+    center.lng,
+    gridSize,
+    spacing,
+  );
   windLayer.clearLayers();
   swellLayer.clearLayers();
   wind.forEach((m) => windLayer.addLayer(m));
@@ -266,13 +321,13 @@ export async function refreshConditionsOverlays(
 /**
  * Creates a legend control for Leaflet
  */
-export function createLegend(type: 'wind' | 'swell'): any {
-  const legend = L.control({ position: 'bottomright' });
+export function createLegend(type: "wind" | "swell"): any {
+  const legend = L.control({ position: "bottomright" });
 
-  legend.onAdd = function() {
-    const div = L.DomUtil.create('div', 'map-legend');
-    
-    if (type === 'wind') {
+  legend.onAdd = function () {
+    const div = L.DomUtil.create("div", "map-legend");
+
+    if (type === "wind") {
       div.innerHTML = `
         <div class="legend-title">Wind (mph)</div>
         <div class="legend-item">Black circle shows speed</div>
@@ -290,7 +345,7 @@ export function createLegend(type: 'wind' | 'swell'): any {
         <div class="legend-item"><span style="background: #6d28d9;"></span> 10+ ft</div>
       `;
     }
-    
+
     return div;
   };
 
@@ -305,13 +360,13 @@ export function addLayerControls(
   windLayer: any,
   swellLayer: any,
   windLegend: any,
-  swellLegend: any
+  swellLegend: any,
 ): void {
   // Custom control for toggling layers
-  const layerControl = L.control({ position: 'topright' });
+  const layerControl = L.control({ position: "topright" });
 
-  layerControl.onAdd = function() {
-    const div = L.DomUtil.create('div', 'layer-control');
+  layerControl.onAdd = function () {
+    const div = L.DomUtil.create("div", "layer-control");
     div.innerHTML = `
       <div class="layer-control-content">
         <div class="layer-toggle">
@@ -330,10 +385,10 @@ export function addLayerControls(
         </div>
       </div>
     `;
-    
+
     // Prevent map interactions when clicking control
     L.DomEvent.disableClickPropagation(div);
-    
+
     return div;
   };
 
@@ -341,11 +396,15 @@ export function addLayerControls(
 
   // Add event listeners after control is added to DOM
   setTimeout(() => {
-    const windToggle = document.getElementById('toggle-wind') as HTMLInputElement;
-    const swellToggle = document.getElementById('toggle-swell') as HTMLInputElement;
+    const windToggle = document.getElementById(
+      "toggle-wind",
+    ) as HTMLInputElement;
+    const swellToggle = document.getElementById(
+      "toggle-swell",
+    ) as HTMLInputElement;
 
     if (windToggle) {
-      windToggle.addEventListener('change', (e) => {
+      windToggle.addEventListener("change", (e) => {
         const checked = (e.target as HTMLInputElement).checked;
         if (checked) {
           windLayer.addTo(map);
@@ -358,7 +417,7 @@ export function addLayerControls(
     }
 
     if (swellToggle) {
-      swellToggle.addEventListener('change', (e) => {
+      swellToggle.addEventListener("change", (e) => {
         const checked = (e.target as HTMLInputElement).checked;
         if (checked) {
           swellLayer.addTo(map);
@@ -371,4 +430,3 @@ export function addLayerControls(
     }
   }, 100);
 }
-

@@ -11,6 +11,7 @@ The condition visualization system provides color-coded, visual indicators for w
 ### Single Source of Truth
 
 All visualization logic lives in `/src/utils/condition-viz.ts`. This ensures:
+
 - Consistent ratings across the entire site
 - Easy updates to thresholds and colors
 - DRY code - no duplication of logic
@@ -77,7 +78,7 @@ export const WIND_THRESHOLDS = {
   IDEAL: 8,
   GOOD: 15,
   ROUGH: 25,
-  MAXED: 35,  // This is "100%" on the progress bar
+  MAXED: 35, // This is "100%" on the progress bar
 } as const;
 
 export const SWELL_PERIOD_THRESHOLDS = {
@@ -113,4 +114,3 @@ Ocean Beach: 4.2ft @ 14s 🙂 W • Wind 12mph 👍 NW ✨
 
 - **Wind**: Progress bar showing 34% (12 mph), colored light green, labeled "Good 👍"
 - **Swell Period**: "14s 🙂" in light green, labeled "Good"
-

@@ -1,18 +1,19 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getCollection, getEntryBySlug } from 'astro:content';
-import { serializeSpot } from '../../utils/spot-data';
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, getEntryBySlug } from "astro:content";
+import { serializeSpot } from "../../utils/spot-data";
+import "../../styles/map-overlays.css";
 
 export async function getStaticPaths() {
-  const entries = await getCollection('spots');
+  const entries = await getCollection("spots");
   return entries.map((e) => ({ params: { slug: e.slug } }));
 }
 
 const { slug } = Astro.params;
-const entry = await getEntryBySlug('spots', slug);
+const entry = await getEntryBySlug("spots", slug);
 
 if (!entry) {
-  throw Astro.redirect('/maps');
+  throw Astro.redirect("/maps");
 }
 
 const { Content } = await entry.render();
@@ -20,10 +21,14 @@ const { data } = entry;
 const serializedSpot = serializeSpot(entry);
 ---
 
-<Layout title={data.title} description={data.description} editPath={`src/content/spots/${entry.slug}.md`}>
+<Layout
+  title={data.title}
+  description={data.description}
+  editPath={`src/content/spots/${entry.slug}.md`}
+>
   <article class="spot-article">
     <h1>{data.title}</h1>
-    
+
     <div class="spot-description">
       <Content />
     </div>
@@ -32,9 +37,11 @@ const serializedSpot = serializeSpot(entry);
       <section class="detail-section">
         <h2>Skill Level</h2>
         <div class="skill-levels">
-          {data.skillLevels.map((level: string) => (
-            <span class={`skill-badge skill-${level}`}>{level}</span>
-          ))}
+          {
+            data.skillLevels.map((level: string) => (
+              <span class={`skill-badge skill-${level}`}>{level}</span>
+            ))
+          }
         </div>
       </section>
 
@@ -76,19 +83,27 @@ const serializedSpot = serializeSpot(entry);
         <dl>
           <dt>Parking</dt>
           <dd>{data.parking}</dd>
-          {data.facilities && (
-            <>
-              <dt>Facilities</dt>
-              <dd>{data.facilities}</dd>
-            </>
-          )}
+          {
+            data.facilities && (
+              <>
+                <dt>Facilities</dt>
+                <dd>{data.facilities}</dd>
+              </>
+            )
+          }
         </dl>
       </section>
 
       <section class="detail-section">
         <h2>Current Conditions</h2>
-        <div id="conditions-loading" class="conditions-loading">Loading conditions...</div>
-        <div id="conditions-data" class="conditions-data" style="display: none;">
+        <div id="conditions-loading" class="conditions-loading">
+          Loading conditions...
+        </div>
+        <div
+          id="conditions-data"
+          class="conditions-data"
+          style="display: none;"
+        >
           <div class="conditions-grid">
             <div class="condition-item">
               <div class="condition-label">Swell</div>
@@ -108,7 +123,11 @@ const serializedSpot = serializeSpot(entry);
           </div>
           <div class="conditions-updated" id="conditions-updated">--</div>
         </div>
-        <div id="conditions-error" class="conditions-error" style="display: none;">
+        <div
+          id="conditions-error"
+          class="conditions-error"
+          style="display: none;"
+        >
           Unable to load current conditions
         </div>
       </section>
@@ -123,47 +142,72 @@ const serializedSpot = serializeSpot(entry);
     </div>
   </article>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="/src/styles/map-overlays.css" />
-  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  />
+  <script
+    is:inline
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+    defer></script>
 
-  <script type="application/json" id="spot-data" set:html={JSON.stringify(serializedSpot)}></script>
-  
+  <script
+    type="application/json"
+    id="spot-data"
+    set:html={JSON.stringify(serializedSpot)}
+  />
+
   <script>
-    import { MAP_DEFAULTS, DEFAULT_THEME_SPOT } from '../../config/map-constants';
-    import { createBaseMap, waitForLeaflet, createMarkerWithPopup, getStoredTheme } from '../../utils/leaflet-setup';
-    import { getSpotDataFromElement } from '../../utils/spot-data';
-    import { 
-      fetchMarineConditions, 
-      degreesToCardinal, 
+    import {
+      MAP_DEFAULTS,
+      DEFAULT_THEME_SPOT,
+    } from "../../config/map-constants";
+    import {
+      createBaseMap,
+      waitForLeaflet,
+      createMarkerWithPopup,
+      getStoredTheme,
+    } from "../../utils/leaflet-setup";
+    import { getSpotDataFromElement } from "../../utils/spot-data";
+    import {
+      fetchMarineConditions,
+      degreesToCardinal,
       metersToFeet,
-      kmhToMph
-    } from '../../utils/marine-weather';
-    import { 
-      getWindRating, 
+      kmhToMph,
+    } from "../../utils/marine-weather";
+    import {
+      getWindRating,
       getSwellPeriodRating,
       createWindProgressBar,
-      createSwellPeriodIndicator
-    } from '../../utils/condition-viz';
-    import { getTheme, addThemeSwitcherToMap } from '../../utils/map-theme-switcher';
+      createSwellPeriodIndicator,
+    } from "../../utils/condition-viz";
+    import {
+      getTheme,
+      addThemeSwitcherToMap,
+    } from "../../utils/map-theme-switcher";
     import {
       createConditionsGrid,
       createLegend,
       addLayerControls,
       gridParamsForZoom,
-      refreshConditionsOverlays
-    } from '../../utils/map-overlays';
+      refreshConditionsOverlays,
+    } from "../../utils/map-overlays";
 
     async function loadConditions() {
-      const spot = getSpotDataFromElement('spot-data');
+      const spot = getSpotDataFromElement("spot-data");
       if (!spot) return;
 
       try {
-        const conditions = await fetchMarineConditions(spot.latitude, spot.longitude);
-        
+        const conditions = await fetchMarineConditions(
+          spot.latitude,
+          spot.longitude,
+        );
+
         if (!conditions) {
-          document.getElementById('conditions-loading')!.style.display = 'none';
-          document.getElementById('conditions-error')!.style.display = 'block';
+          document.getElementById("conditions-loading")!.style.display = "none";
+          document.getElementById("conditions-error")!.style.display = "block";
           return;
         }
 
@@ -175,17 +219,16 @@ const serializedSpot = serializeSpot(entry);
         const swellPeriodRating = getSwellPeriodRating(conditions.swellPeriod);
 
         // Swell display with color-coded period
-        document.getElementById('swell-height')!.textContent = `${swellFt} ft`;
-        const swellMetaEl = document.getElementById('swell-meta')!;
-        swellMetaEl.innerHTML = 
+        document.getElementById("swell-height")!.textContent = `${swellFt} ft`;
+        const swellMetaEl = document.getElementById("swell-meta")!;
+        swellMetaEl.innerHTML =
           `<span style="color: ${swellPeriodRating.color}; font-weight: 600;">${conditions.swellPeriod.toFixed(0)}s</span> ` +
           `<span style="font-size: 0.9em;">${swellPeriodRating.emoji}</span> ` +
           `@ ${degreesToCardinal(conditions.swellDirection)}`;
-        
+
         // Wind display with progress bar and rating
-        const windSpeedEl = document.getElementById('wind-speed')!;
-        windSpeedEl.innerHTML = 
-          `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
+        const windSpeedEl = document.getElementById("wind-speed")!;
+        windSpeedEl.innerHTML = `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
             <div>${Math.round(windMph)} mph</div>
             <div style="width: 100%; max-width: 120px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden;">
               <div style="width: ${windRating.percentage}%; height: 100%; background: ${windRating.color}; transition: width 0.3s ease;"></div>
@@ -194,42 +237,52 @@ const serializedSpot = serializeSpot(entry);
               ${windRating.emoji} ${windRating.label} (${windRating.percentage}%)
             </div>
           </div>`;
-        
-        const windDirEl = document.getElementById('wind-direction')!;
+
+        const windDirEl = document.getElementById("wind-direction")!;
         windDirEl.textContent = degreesToCardinal(conditions.windDirection);
-        
-        document.getElementById('wave-height')!.textContent = `${waveFt} ft`;
-        document.getElementById('wave-period')!.textContent = `${conditions.wavePeriod.toFixed(0)}s period`;
 
-        const time = new Date(conditions.timestamp).toLocaleTimeString('en-US', { 
-          hour: 'numeric', 
-          minute: '2-digit' 
-        });
-        document.getElementById('conditions-updated')!.textContent = `Updated ${time}`;
+        document.getElementById("wave-height")!.textContent = `${waveFt} ft`;
+        document.getElementById("wave-period")!.textContent =
+          `${conditions.wavePeriod.toFixed(0)}s period`;
 
-        document.getElementById('conditions-loading')!.style.display = 'none';
-        document.getElementById('conditions-data')!.style.display = 'block';
+        const time = new Date(conditions.timestamp).toLocaleTimeString(
+          "en-US",
+          {
+            hour: "numeric",
+            minute: "2-digit",
+          },
+        );
+        document.getElementById("conditions-updated")!.textContent =
+          `Updated ${time}`;
+
+        document.getElementById("conditions-loading")!.style.display = "none";
+        document.getElementById("conditions-data")!.style.display = "block";
       } catch (error) {
-        console.error('Error loading conditions:', error);
-        document.getElementById('conditions-loading')!.style.display = 'none';
-        document.getElementById('conditions-error')!.style.display = 'block';
+        console.error("Error loading conditions:", error);
+        document.getElementById("conditions-loading")!.style.display = "none";
+        document.getElementById("conditions-error")!.style.display = "block";
       }
     }
 
     async function initSpotMap() {
       waitForLeaflet(async () => {
-        const spot = getSpotDataFromElement('spot-data');
+        const spot = getSpotDataFromElement("spot-data");
         if (!spot) return;
 
         // Get the user's preferred theme or use default
         const currentThemeId = getStoredTheme(DEFAULT_THEME_SPOT);
         const theme = getTheme(currentThemeId, DEFAULT_THEME_SPOT);
 
-        const map = createBaseMap('spot-map', [spot.latitude, spot.longitude], MAP_DEFAULTS.SPOT_ZOOM, theme);
+        const map = createBaseMap(
+          "spot-map",
+          [spot.latitude, spot.longitude],
+          MAP_DEFAULTS.SPOT_ZOOM,
+          theme,
+        );
         if (!map) return;
 
         // Add theme switcher control
-        addThemeSwitcherToMap(map, DEFAULT_THEME_SPOT, 'topright');
+        addThemeSwitcherToMap(map, DEFAULT_THEME_SPOT, "topright");
 
         createMarkerWithPopup(
           map,
@@ -237,32 +290,36 @@ const serializedSpot = serializeSpot(entry);
           spot.longitude,
           spot.title,
           spot.description,
-          true
+          true,
         );
 
         // Add loading indicator
-        const loadingDiv = document.createElement('div');
-        loadingDiv.className = 'conditions-overlay-loading';
-        loadingDiv.textContent = 'Loading conditions...';
-        document.getElementById('spot-map')?.appendChild(loadingDiv);
+        const loadingDiv = document.createElement("div");
+        loadingDiv.className = "conditions-overlay-loading";
+        loadingDiv.textContent = "Loading conditions...";
+        document.getElementById("spot-map")?.appendChild(loadingDiv);
 
         try {
           // Zoom-aware initial grid
-          const { gridSize, spacing } = gridParamsForZoom(map.getZoom(), spot.latitude);
-          const { wind: windMarkers, swell: swellMarkers } = await createConditionsGrid(
+          const { gridSize, spacing } = gridParamsForZoom(
+            map.getZoom(),
             spot.latitude,
-            spot.longitude,
-            gridSize,
-            spacing
           );
+          const { wind: windMarkers, swell: swellMarkers } =
+            await createConditionsGrid(
+              spot.latitude,
+              spot.longitude,
+              gridSize,
+              spacing,
+            );
 
           // Create layer groups
           const windLayer = (window as any).L.layerGroup(windMarkers);
           const swellLayer = (window as any).L.layerGroup(swellMarkers);
 
           // Create legends
-          const windLegend = createLegend('wind');
-          const swellLegend = createLegend('swell');
+          const windLegend = createLegend("wind");
+          const swellLegend = createLegend("swell");
 
           // Add layers to map
           windLayer.addTo(map);
@@ -276,12 +333,14 @@ const serializedSpot = serializeSpot(entry);
           loadingDiv.remove();
 
           // Refresh overlays on zoom
-          map.on('zoomend', () => {
-            refreshConditionsOverlays(map, windLayer, swellLayer).catch((e) => console.error(e));
+          map.on("zoomend", () => {
+            refreshConditionsOverlays(map, windLayer, swellLayer).catch((e) =>
+              console.error(e),
+            );
           });
         } catch (error) {
-          console.error('Failed to load map overlays:', error);
-          loadingDiv.textContent = 'Failed to load overlays';
+          console.error("Failed to load map overlays:", error);
+          loadingDiv.textContent = "Failed to load overlays";
           setTimeout(() => loadingDiv.remove(), 3000);
         }
       });
@@ -292,10 +351,13 @@ const serializedSpot = serializeSpot(entry);
       initSpotMap();
     }
 
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    if (
+      document.readyState === "complete" ||
+      document.readyState === "interactive"
+    ) {
       init();
     } else {
-      document.addEventListener('DOMContentLoaded', init);
+      document.addEventListener("DOMContentLoaded", init);
     }
   </script>
 

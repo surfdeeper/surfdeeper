@@ -9,10 +9,10 @@
  * 25+ mph is dangerous for most surfers
  */
 export const WIND_THRESHOLDS = {
-  IDEAL: 8,      // 0-8 mph: glass/light offshore
-  GOOD: 15,      // 8-15 mph: manageable
-  ROUGH: 25,     // 15-25 mph: challenging
-  MAXED: 35,     // 25-35 mph: dangerous (this is our "100%")
+  IDEAL: 8, // 0-8 mph: glass/light offshore
+  GOOD: 15, // 8-15 mph: manageable
+  ROUGH: 25, // 15-25 mph: challenging
+  MAXED: 35, // 25-35 mph: dangerous (this is our "100%")
 } as const;
 
 /**
@@ -21,26 +21,26 @@ export const WIND_THRESHOLDS = {
  * Shorter periods = choppy, weak waves
  */
 export const SWELL_PERIOD_THRESHOLDS = {
-  TERRIBLE: 6,   // < 6s: wind chop, very poor
-  POOR: 9,       // 6-9s: weak swell, not ideal
-  FAIR: 12,      // 9-12s: decent swell
-  GOOD: 16,      // 12-16s: good swell
+  TERRIBLE: 6, // < 6s: wind chop, very poor
+  POOR: 9, // 6-9s: weak swell, not ideal
+  FAIR: 12, // 9-12s: decent swell
+  GOOD: 16, // 12-16s: good swell
   EXCELLENT: 20, // 16-20s: very good swell
-  EPIC: 25,      // 20s+: epic groundswell
+  EPIC: 25, // 20s+: epic groundswell
 } as const;
 
 export interface WindRating {
-  percentage: number;      // 0-100, where 100 = maxed out
-  color: string;          // CSS color
-  label: string;          // Text description
-  emoji: string;          // Visual indicator
+  percentage: number; // 0-100, where 100 = maxed out
+  color: string; // CSS color
+  label: string; // Text description
+  emoji: string; // Visual indicator
 }
 
 export interface SwellPeriodRating {
-  color: string;          // CSS color
-  label: string;          // Text description
-  emoji: string;          // Visual indicator
-  quality: 'terrible' | 'poor' | 'fair' | 'good' | 'excellent' | 'epic';
+  color: string; // CSS color
+  label: string; // Text description
+  emoji: string; // Visual indicator
+  quality: "terrible" | "poor" | "fair" | "good" | "excellent" | "epic";
 }
 
 /**
@@ -49,35 +49,38 @@ export interface SwellPeriodRating {
  * @returns Wind rating with color, percentage, and label
  */
 export function getWindRating(windSpeedMph: number): WindRating {
-  const percentage = Math.min(100, Math.round((windSpeedMph / WIND_THRESHOLDS.MAXED) * 100));
-  
+  const percentage = Math.min(
+    100,
+    Math.round((windSpeedMph / WIND_THRESHOLDS.MAXED) * 100),
+  );
+
   if (windSpeedMph <= WIND_THRESHOLDS.IDEAL) {
     return {
       percentage,
-      color: '#00ff88',      // Green - perfect
-      label: 'Ideal',
-      emoji: '✨',
+      color: "#00ff88", // Green - perfect
+      label: "Ideal",
+      emoji: "✨",
     };
   } else if (windSpeedMph <= WIND_THRESHOLDS.GOOD) {
     return {
       percentage,
-      color: '#a3e635',      // Light green - good
-      label: 'Good',
-      emoji: '👍',
+      color: "#a3e635", // Light green - good
+      label: "Good",
+      emoji: "👍",
     };
   } else if (windSpeedMph <= WIND_THRESHOLDS.ROUGH) {
     return {
       percentage,
-      color: '#fbbf24',      // Yellow/amber - challenging
-      label: 'Rough',
-      emoji: '⚠️',
+      color: "#fbbf24", // Yellow/amber - challenging
+      label: "Rough",
+      emoji: "⚠️",
     };
   } else {
     return {
       percentage,
-      color: '#f87171',      // Red - dangerous
-      label: 'Maxed',
-      emoji: '🚫',
+      color: "#f87171", // Red - dangerous
+      label: "Maxed",
+      emoji: "🚫",
     };
   }
 }
@@ -90,45 +93,45 @@ export function getWindRating(windSpeedMph: number): WindRating {
 export function getSwellPeriodRating(periodSeconds: number): SwellPeriodRating {
   if (periodSeconds < SWELL_PERIOD_THRESHOLDS.TERRIBLE) {
     return {
-      color: '#991b1b',      // Dark red
-      label: 'Terrible',
-      emoji: '💀',
-      quality: 'terrible',
+      color: "#991b1b", // Dark red
+      label: "Terrible",
+      emoji: "💀",
+      quality: "terrible",
     };
   } else if (periodSeconds < SWELL_PERIOD_THRESHOLDS.POOR) {
     return {
-      color: '#f87171',      // Red
-      label: 'Poor',
-      emoji: '😞',
-      quality: 'poor',
+      color: "#f87171", // Red
+      label: "Poor",
+      emoji: "😞",
+      quality: "poor",
     };
   } else if (periodSeconds < SWELL_PERIOD_THRESHOLDS.FAIR) {
     return {
-      color: '#fbbf24',      // Amber
-      label: 'Fair',
-      emoji: '😐',
-      quality: 'fair',
+      color: "#fbbf24", // Amber
+      label: "Fair",
+      emoji: "😐",
+      quality: "fair",
     };
   } else if (periodSeconds < SWELL_PERIOD_THRESHOLDS.GOOD) {
     return {
-      color: '#a3e635',      // Light green
-      label: 'Good',
-      emoji: '🙂',
-      quality: 'good',
+      color: "#a3e635", // Light green
+      label: "Good",
+      emoji: "🙂",
+      quality: "good",
     };
   } else if (periodSeconds < SWELL_PERIOD_THRESHOLDS.EXCELLENT) {
     return {
-      color: '#00ff88',      // Bright green
-      label: 'Excellent',
-      emoji: '😃',
-      quality: 'excellent',
+      color: "#00ff88", // Bright green
+      label: "Excellent",
+      emoji: "😃",
+      quality: "excellent",
     };
   } else {
     return {
-      color: '#0ea5e9',      // Blue - epic groundswell
-      label: 'Epic',
-      emoji: '🤩',
-      quality: 'epic',
+      color: "#0ea5e9", // Blue - epic groundswell
+      label: "Epic",
+      emoji: "🤩",
+      quality: "epic",
     };
   }
 }
@@ -171,7 +174,10 @@ export function createSwellPeriodIndicator(periodSeconds: number): string {
  * @param windDirection Cardinal direction
  * @returns Formatted HTML string
  */
-export function formatWindForMarquee(windSpeedMph: number, windDirection: string): string {
+export function formatWindForMarquee(
+  windSpeedMph: number,
+  windDirection: string,
+): string {
   const rating = getWindRating(windSpeedMph);
   const roundedSpeed = Math.round(windSpeedMph);
   return `Wind <span style="color: ${rating.color}; font-weight: 700;">${roundedSpeed}mph</span> ${windDirection} <span style="font-size: 0.9em;">${rating.emoji}</span>`;
@@ -206,8 +212,7 @@ export function formatSpotForMarquee(
   swellPeriod: number,
   swellDirection: string,
   windSpeedMph: number,
-  windDirection: string
+  windDirection: string,
 ): string {
   return `<a href="/maps/${spotSlug}" style="color: #00ff88; text-decoration: none; border-bottom: 1px dotted #00ff88;">${spotName}</a>: ${waveHeightFt}ft @ ${formatSwellPeriodForMarquee(swellPeriod)} ${swellDirection} • ${formatWindForMarquee(windSpeedMph, windDirection)}`;
 }
-

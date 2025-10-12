@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import { serializeSpots } from "../utils/spot-data";
 
 import "../styles/spot-guides.css";
+import "../styles/map-overlays.css";
 
 const spots = await getCollection("spots");
 const serializedSpots = serializeSpots(spots);
@@ -83,7 +84,6 @@ const serializedSpots = serializeSpots(spots);
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   crossorigin=""
 />
-<link rel="stylesheet" href="/src/styles/map-overlays.css" />
 <script
   is:inline
   src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

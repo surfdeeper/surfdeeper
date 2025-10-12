@@ -10,7 +10,7 @@ Added comprehensive data visualization for wind speeds and swell periods through
 
 A new utility module that provides:
 
-- **Wind Speed Ratings**: 
+- **Wind Speed Ratings**:
   - Calculates percentage (0-100%) where 35 mph = 100% (maxed out/dangerous)
   - Color codes: Green (ideal) → Light green (good) → Yellow (rough) → Red (dangerous)
   - Emoji indicators for quick visual recognition
@@ -39,6 +39,7 @@ Updated the surf ticker to include:
 - Uses `formatSpotForMarquee()` from the visualization utility
 
 **Example Output:**
+
 ```
 Ocean Beach: 4.2ft @ 14s 🙂 W • Wind 12mph 👍 NW
 ```
@@ -68,6 +69,7 @@ Added visual indicators to the "Current Conditions" section:
 ### Single Source of Truth
 
 All condition rating logic is centralized in `condition-viz.ts`:
+
 - Easy to update thresholds in one place
 - Consistent ratings across entire site
 - No duplication of logic
@@ -76,6 +78,7 @@ All condition rating logic is centralized in `condition-viz.ts`:
 ### Color Palette
 
 Colors chosen to match the site's existing theme:
+
 - Primary green (`#00ff88`) for ideal/excellent conditions
 - Gradient from green → yellow → red for degrading conditions
 - Blue for exceptional groundswell
@@ -85,12 +88,14 @@ Colors chosen to match the site's existing theme:
 Based on practical surfing experience:
 
 **Wind:**
+
 - 0-8 mph: Ideal (offshore/glass conditions)
 - 8-15 mph: Good (manageable for most surfers)
 - 15-25 mph: Rough (challenging, experienced surfers only)
 - 25-35 mph: Maxed (dangerous, should not surf)
 
 **Swell Period:**
+
 - < 6s: Wind chop, not worth it
 - 6-9s: Weak swell, beginners only
 - 9-12s: Decent, fun for most
@@ -116,6 +121,7 @@ Based on practical surfing experience:
 ## Future Enhancements
 
 Potential improvements:
+
 - Add wave height quality rating
 - Historical condition trends
 - Condition forecasts with visualizations
@@ -136,4 +142,3 @@ To verify the changes:
 3. **Build**: Run `npm run build` - should complete without errors
 
 4. **Dev**: Run `npm run dev` - test live updates of conditions
-

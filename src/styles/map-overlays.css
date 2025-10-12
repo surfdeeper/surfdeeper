@@ -19,13 +19,13 @@
 
 /* Slightly different z-order and opacity to distinguish layers */
 .wind-arrow-icon {
-  filter: drop-shadow(0 0 2px rgba(0,0,0,0.35));
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.35));
   opacity: 0.9;
   z-index: 480; /* below swell by default */
 }
 
 .swell-arrow-icon {
-  filter: drop-shadow(0 0 2px rgba(0,0,0,0.45));
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.45));
   opacity: 0.95;
   z-index: 490;
 }
@@ -121,8 +121,12 @@
   border-radius: 50%;
   margin-right: 8px;
 }
-.legend-dot.wind { background: #22c55e; }
-.legend-dot.swell { background: #8b5cf6; }
+.legend-dot.wind {
+  background: #22c55e;
+}
+.legend-dot.swell {
+  background: #8b5cf6;
+}
 
 .layer-toggle:hover .toggle-label {
   color: #00ff88;
@@ -175,7 +179,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -203,4 +208,3 @@
     font-size: 12px;
   }
 }
-
