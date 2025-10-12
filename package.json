@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "engines": {
-    "node": "20.19.5"
+    "node": "20.x"
   },
   "packageManager": "npm@10.8.2",
   "scripts": {
