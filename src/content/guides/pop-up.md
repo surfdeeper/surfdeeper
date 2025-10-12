@@ -8,7 +8,7 @@ order: 6
 id: pop-up
 category: core-skills
 kind: concept
-threads: [catching-your-first-wave]
+paths: [catching-your-first-wave]
 ---
 
 # The Pop-Up

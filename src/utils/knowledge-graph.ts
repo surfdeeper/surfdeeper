@@ -8,7 +8,7 @@ export type GuideNode = {
   url: string;
   level?: GuideEntry["data"]["level"];
   levels: GuideEntry["data"]["levels"];
-  threads: string[];
+  paths: string[];
   kind?: GuideEntry["data"]["kind"];
   category?: string;
 };
@@ -23,7 +23,7 @@ export type GuideGraph = {
   nodes: GuideNode[];
   edges: GuideEdge[];
   byId: Map<string, GuideNode>;
-  threadsIndex: Map<string, GuideNode[]>;
+  pathsIndex: Map<string, GuideNode[]>;
 };
 
 function normalizeId(entry: GuideEntry): string {
@@ -46,7 +46,7 @@ export function buildGraph(entries: GuideEntry[]): GuideGraph {
     url: toUrl(e),
     level: e.data.level,
     levels: e.data.levels || [],
-    threads: e.data.threads || [],
+    paths: e.data.paths || [],
     kind: e.data.kind,
     category: e.data.category,
   }));
@@ -72,42 +72,40 @@ export function buildGraph(entries: GuideEntry[]): GuideGraph {
     (e) => validIds.has(e.source) && validIds.has(e.target),
   );
 
-  // Build threads index
-  const threadsIndex = new Map<string, GuideNode[]>();
+  // Build paths index
+  const pathsIndex = new Map<string, GuideNode[]>();
   for (const n of nodes) {
-    for (const t of n.threads || []) {
-      const arr = threadsIndex.get(t) || [];
+    for (const t of n.paths || []) {
+      const arr = pathsIndex.get(t) || [];
       arr.push(n);
-      threadsIndex.set(t, arr);
+      pathsIndex.set(t, arr);
     }
   }
 
-  return { nodes, edges: filteredEdges, byId, threadsIndex };
+  return { nodes, edges: filteredEdges, byId, pathsIndex };
 }
 
-export function getThreads(graph: GuideGraph): string[] {
-  return Array.from(graph.threadsIndex.keys()).sort((a, b) =>
-    a.localeCompare(b),
-  );
+export function getPaths(graph: GuideGraph): string[] {
+  return Array.from(graph.pathsIndex.keys()).sort((a, b) => a.localeCompare(b));
 }
 
-export function getGuidesByThread(
+export function getGuidesByPath(
   graph: GuideGraph,
-  thread: string,
+  pathTag: string,
 ): GuideNode[] {
-  return (graph.threadsIndex.get(thread) || [])
+  return (graph.pathsIndex.get(pathTag) || [])
     .slice()
     .sort((a, b) => a.title.localeCompare(b.title));
 }
 
-export function buildThreadSubgraph(
+export function buildPathSubgraph(
   graph: GuideGraph,
-  thread: string,
+  pathTag: string,
   opts?: { level?: GuideNode["level"]; kind?: GuideNode["kind"] },
 ): GuideGraph {
   const { level, kind } = opts || {};
   const allowed = new Set(
-    getGuidesByThread(graph, thread)
+    getGuidesByPath(graph, pathTag)
       .filter((n) => (level ? n.level === level : true))
       .filter((n) => (kind ? n.kind === kind : true))
       .map((n) => n.id),
@@ -118,15 +116,15 @@ export function buildThreadSubgraph(
     (e) => allowed.has(e.source) && allowed.has(e.target),
   );
   const byId = new Map(nodes.map((n) => [n.id, n] as const));
-  const threadsIndex = new Map<string, GuideNode[]>();
+  const pathsIndex = new Map<string, GuideNode[]>();
   for (const n of nodes) {
-    for (const t of n.threads || []) {
-      const arr = threadsIndex.get(t) || [];
+    for (const t of n.paths || []) {
+      const arr = pathsIndex.get(t) || [];
       arr.push(n);
-      threadsIndex.set(t, arr);
+      pathsIndex.set(t, arr);
     }
   }
-  return { nodes, edges, byId, threadsIndex };
+  return { nodes, edges, byId, pathsIndex };
 }
 
 export function computeLayers(subgraph: GuideGraph): GuideNode[][] {

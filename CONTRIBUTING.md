@@ -17,7 +17,7 @@ SurfDeeper is a knowledge web, not a textbook — for details see docs/KNOWLEDGE
 
 - Location: `src/content/guides/` (flat folder; one concept per file)
 - Required frontmatter: `id`, `title`
-- Recommended frontmatter: `description`, `level`, `threads[]`, `dependsOn[]`, `leadsTo[]`, `appliesTo[]`
+- Recommended frontmatter: `description`, `level`, `paths[]`, `dependsOn[]`, `leadsTo[]`, `appliesTo[]`
 
 Relationships and links use concept IDs (not paths):
 
@@ -27,7 +27,7 @@ Relationships and links use concept IDs (not paths):
 Tips:
 
 - Prefer 1–2 strong `dependsOn`/`leadsTo` edges
-- Keep `threads` concise and reusable
+- Keep `paths` concise and reusable
 
 ## Spots content
 
@@ -51,7 +51,7 @@ Spots live under `src/content/spots/` with structured frontmatter (see `src/cont
 ## PR guidelines
 
 - Keep PRs small and focused
-- If you introduce new tags (`threads`, `appliesTo`), keep them concise; we’ll normalize vocab during review
+- If you introduce new tags (`paths`, `appliesTo`), keep them concise; we’ll normalize vocab during review
 - If you must change a route, update inbound references and relationship lists
 
 ## Reference

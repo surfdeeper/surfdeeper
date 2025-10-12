@@ -4,11 +4,8 @@ import path from "path";
 import matter from "gray-matter";
 
 const ROOT = process.cwd();
-console.warn(
-  "[deprecation] validate-threads.js is deprecated. Use scripts/validate-paths.js instead.",
-);
 const GUIDES_DIR = path.join(ROOT, "src/content/guides");
-const THREADS_DIR = path.join(ROOT, "src/content/threads");
+const PATHS_DIR = path.join(ROOT, "src/content/paths");
 
 function walk(dir) {
   const files = [];
@@ -20,13 +17,13 @@ function walk(dir) {
   return files;
 }
 
-function collectGuideThreadsWithSources() {
+function collectGuidePathsWithSources() {
   const files = walk(GUIDES_DIR);
   /** @type {Map<string, Set<string>>} */
   const map = new Map();
   for (const f of files) {
     const fm = matter.read(f);
-    const list = Array.isArray(fm.data.threads) ? fm.data.threads : [];
+    const list = Array.isArray(fm.data.paths) ? fm.data.paths : [];
     for (const t of list) {
       const key = String(t);
       if (!map.has(key)) map.set(key, new Set());
@@ -37,17 +34,17 @@ function collectGuideThreadsWithSources() {
   return map;
 }
 
-function collectExistingThreadSlugs() {
-  if (!fs.existsSync(THREADS_DIR)) return new Set();
+function collectExistingPathSlugs() {
+  if (!fs.existsSync(PATHS_DIR)) return new Set();
   const files = fs
-    .readdirSync(THREADS_DIR)
+    .readdirSync(PATHS_DIR)
     .filter((n) => n.endsWith(".md"))
     .map((n) => n.replace(/\.md$/, ""));
   return new Set(files);
 }
 
 /**
- * Extract [[guide-id]] references from thread content
+ * Extract [[guide-id]] references from path content
  * @param {string} content - The markdown content
  * @returns {Set<string>} Set of guide IDs referenced in the content
  */
@@ -66,7 +63,7 @@ function extractLearningLinks(content) {
 
 /**
  * Build a map of guide ID -> guide metadata
- * @returns {Map<string, {slug: string, threads: string[], path: string}>}
+ * @returns {Map<string, {slug: string, paths: string[], path: string}>}
  */
 function buildGuideMap() {
   const files = walk(GUIDES_DIR);
@@ -76,11 +73,11 @@ function buildGuideMap() {
     const fm = matter.read(f);
     const slug = path.basename(f, ".md");
     const id = fm.data.id || slug;
-    const threads = Array.isArray(fm.data.threads) ? fm.data.threads : [];
+    const paths = Array.isArray(fm.data.paths) ? fm.data.paths : [];
 
     map.set(id, {
       slug,
-      threads,
+      paths,
       path: path.relative(ROOT, f),
     });
   }
@@ -89,64 +86,67 @@ function buildGuideMap() {
 }
 
 /**
- * Validate bidirectional links between threads and guides
+ * Validate bidirectional links between paths and guides
  * @returns {{errors: number, warnings: number}}
  */
 function validateBidirectionalLinks() {
-  if (!fs.existsSync(THREADS_DIR)) {
+  if (!fs.existsSync(PATHS_DIR)) {
     console.warn(
-      "⚠️  No threads directory found, skipping bidirectional validation",
+      "⚠️  No paths directory found, skipping bidirectional validation",
     );
     return { errors: 0, warnings: 0 };
   }
 
-  const threadFiles = fs
-    .readdirSync(THREADS_DIR)
+  const pathFiles = fs
+    .readdirSync(PATHS_DIR)
     .filter((n) => n.endsWith(".md"))
-    .map((n) => path.join(THREADS_DIR, n));
+    .map((n) => path.join(PATHS_DIR, n));
 
   const guideMap = buildGuideMap();
   let errors = 0;
   let warnings = 0;
 
-  for (const threadFile of threadFiles) {
-    const threadSlug = path.basename(threadFile, ".md");
-    const threadContent = fs.readFileSync(threadFile, "utf8");
-    const fm = matter(threadContent);
+  for (const pathFile of pathFiles) {
+    const pathSlug = path.basename(pathFile, ".md");
+    const pathContent = fs.readFileSync(pathFile, "utf8");
+    const fm = matter(pathContent);
     const linkedGuides = extractLearningLinks(fm.content);
 
     if (linkedGuides.size === 0) {
       console.warn(
-        `⚠️  Thread '${threadSlug}' has no inline [[guide-id]] learning links`,
+        `⚠️  Path '${pathSlug}' has no inline [[guide-id]] learning links`,
       );
       console.warn(
-        `   ↳ Consider adding [[guide-id]] links in: ${path.relative(ROOT, threadFile)}`,
+        `   ↳ Consider adding [[guide-id]] links in: ${path.relative(
+          ROOT,
+          pathFile,
+        )}`,
       );
       warnings++;
     }
 
-    // Check each linked guide exists and references this thread back
+    // Check each linked guide exists and references this path back
     for (const guideId of linkedGuides) {
       const guide = guideMap.get(guideId);
 
       if (!guide) {
         console.error(
-          `❌ Thread '${threadSlug}' references guide [[${guideId}]] but no guide with that ID exists`,
+          `❌ Path '${pathSlug}' references guide [[${guideId}]] but no guide with that ID exists`,
         );
-        console.error(`   ↳ Referenced in: ${path.relative(ROOT, threadFile)}`);
+        console.error(`   ↳ Referenced in: ${path.relative(ROOT, pathFile)}`);
         errors++;
         continue;
       }
 
-      // Check bidirectional link: guide must reference thread in frontmatter
-      if (!guide.threads.includes(threadSlug)) {
+      // Check bidirectional link: guide must reference path in frontmatter
+      if (!guide.paths.includes(pathSlug)) {
         console.error(
-          `❌ Broken bidirectional link: Thread '${threadSlug}' references [[${guideId}]], but guide doesn't reference thread back`,
+          `❌ Broken bidirectional link: Path '${pathSlug}' references [[${guideId}]], but guide doesn't reference path back`,
         );
-        console.error(`   ↳ Thread: ${path.relative(ROOT, threadFile)}`);
+        console.error(`   ↳ Path: ${path.relative(ROOT, pathFile)}`);
         console.error(`   ↳ Guide: ${guide.path}`);
         console.error(
-          `   ↳ Fix: Add 'threads: [${threadSlug}]' to guide frontmatter`,
+          `   ↳ Fix: Add 'paths: [${pathSlug}]' to guide frontmatter`,
         );
         errors++;
       }
@@ -156,18 +156,18 @@ function validateBidirectionalLinks() {
   return { errors, warnings };
 }
 
-const referenced = collectGuideThreadsWithSources();
-const existing = collectExistingThreadSlugs();
+const referenced = collectGuidePathsWithSources();
+const existing = collectExistingPathSlugs();
 
 let errors = 0;
 
-// Check that all referenced threads have content files
+// Check that all referenced paths have content files
 for (const [t, sourcesSet] of referenced) {
   if (!existing.has(t)) {
     const sources = Array.from(sourcesSet).sort();
     const list = sources.map((s) => `     - ${s}`).join("\n");
     console.error(
-      `❌ Thread '${t}' is referenced in guides but missing content file: src/content/threads/${t}.md` +
+      `❌ Path '${t}' is referenced in guides but missing content file: src/content/paths/${t}.md` +
         (sources.length ? `\n   ↳ Referenced in:\n${list}` : ""),
     );
     errors++;
@@ -179,13 +179,13 @@ const { errors: bidirErrors, warnings } = validateBidirectionalLinks();
 errors += bidirErrors;
 
 if (errors) {
-  console.error(`\n❌ Thread validation failed with ${errors} error(s).`);
+  console.error(`\n❌ Path validation failed with ${errors} error(s).`);
   if (warnings) {
     console.warn(`⚠️  ${warnings} warning(s) found.`);
   }
   process.exit(1);
 } else {
-  console.log("✅ All referenced threads have content pages.");
+  console.log("✅ All referenced paths have content pages.");
   console.log("✅ All bidirectional links are valid.");
   if (warnings) {
     console.warn(`⚠️  ${warnings} warning(s) found (non-blocking).`);

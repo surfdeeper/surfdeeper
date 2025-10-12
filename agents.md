@@ -37,28 +37,28 @@ Rules:
 
 Checklist when adding a dynamic page:
 
-1. Add the page file, e.g. `src/pages/threads/[id].astro`.
+1. Add the page file, e.g. `src/pages/paths/[id].astro`.
 2. Export `getStaticPaths()` that returns the list of `id`s.
 3. In the page, read `Astro.params` and render accordingly.
 4. Run `npm run build` to verify.
 
-Example (threads):
+Example (paths):
 
 ```ts
-// src/pages/threads/[id].astro (top of file)
+// src/pages/paths/[id].astro (top of file)
 export async function getStaticPaths() {
   const { getCollection } = await import("astro:content");
-  const threads = await getCollection("threads");
-  return threads.map((t) => ({ params: { id: t.slug } }));
+  const paths = await getCollection("paths");
+  return paths.map((t) => ({ params: { id: t.slug } }));
 }
 ```
 
-This ensures `/threads/<id>` is generated for each entry in `src/content/threads/`.
+This ensures `/paths/<id>` is generated for each entry in `src/content/paths/`.
 
 ### Thread existence verification
 
-- Lint includes `scripts/validate-threads.js` which fails if any guide references a thread that has no content page under `src/content/threads/<thread>.md`.
-- Before adding a `threads: ["foo"]` tag to guides, create `src/content/threads/foo.md` with frontmatter (`title`, optional `description`, `icon`) and body content. The body renders on the thread page.
+- Lint includes `scripts/validate-paths.js` which fails if any guide references a path that has no content page under `src/content/paths/<path>.md`.
+- Before adding a `paths: ["foo"]` tag to guides, create `src/content/paths/foo.md` with frontmatter (`title`, optional `description`, `icon`) and body content. The body renders on the path page.
 
 ## Component Refactoring
 
@@ -92,12 +92,12 @@ End-state model:
 - Flat folder: put all concept guides under `src/content/guides/` (one concept per file).
 - Stable IDs: every guide has an immutable `id` in frontmatter; relationships and links use IDs.
 - Magic links: link by `:id` in Markdown, e.g., `[Cobra Pose](:cobra-pose)`.
-- Relationships by ID: `dependsOn`, `leadsTo`, `threads`, `level`, `appliesTo` in frontmatter.
+- Relationships by ID: `dependsOn`, `leadsTo`, `paths`, `level`, `appliesTo` in frontmatter.
 
 Behavioral guidelines:
 
 - Add 1–2 strong relationships per concept (`dependsOn`/`leadsTo`).
-- Keep `threads` concise and reusable; avoid inventing categories — use tags.
+- Keep `paths` concise and reusable; avoid inventing categories — use tags.
 - Prefer precise concepts; split multi-idea docs.
 
 Reference: `docs/KNOWLEDGE_ARCHITECTURE.md`.

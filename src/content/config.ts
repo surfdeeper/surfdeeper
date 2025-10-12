@@ -15,7 +15,7 @@ const guides = defineCollection({
       .array(z.enum(["beginner", "intermediate", "advanced"]))
       .optional()
       .default([]),
-    threads: z.array(z.string()).optional().default([]),
+    paths: z.array(z.string()).optional().default([]),
     dependsOn: z.array(z.string()).optional().default([]),
     leadsTo: z.array(z.string()).optional().default([]),
     appliesTo: z.array(z.string()).optional().default([]),
@@ -44,8 +44,8 @@ const spots = defineCollection({
   }),
 });
 
-// Threads collection enables richer thread metadata (title, description, etc.)
-const threads = defineCollection({
+// Paths collection enables richer path metadata (title, description, etc.)
+const paths = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
@@ -55,4 +55,4 @@ const threads = defineCollection({
   }),
 });
 
-export const collections = { guides, spots, threads };
+export const collections = { guides, spots, paths };

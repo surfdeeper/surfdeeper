@@ -32,7 +32,7 @@ A minimal Astro site.
 Content is organized as a simple knowledge graph:
 
 - Each guide in `src/content/guides/*.md` may define a stable `id` in frontmatter. If omitted, the file slug is used as the implicit id.
-- Relationships can be expressed in frontmatter using arrays: `dependsOn`, `leadsTo`, `threads`, `appliesTo`, and optional `aliases`.
+- Relationships can be expressed in frontmatter using arrays: `dependsOn`, `leadsTo`, `paths`, `appliesTo`, and optional `aliases`.
 - Markdown supports "magic links" to other guides using an id: `[Angling](:angling-down-the-line)`.
 
 How it works:
