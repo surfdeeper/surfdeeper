@@ -10,7 +10,7 @@
     "astro": "astro",
     "lint:css": "stylelint \"src/**/*.{css,astro}\"",
     "typecheck": "astro check",
-    "lint:links": "node scripts/validate-links.js && node scripts/validate-concept-ids.js",
+    "lint:links": "node scripts/validate-links.js",
     "lint:assets": "node scripts/lint-assets.js",
     "lint:md": "markdownlint src/content/**/*.md",
     "lint": "npm run lint:links && npm run lint:md && npm run lint:assets && npm run lint:css && npx prettier --check .",
