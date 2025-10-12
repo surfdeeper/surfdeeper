@@ -17,7 +17,7 @@
     "lint:links": "node scripts/validate-links.js && node scripts/validate-concept-ids.js && node scripts/validate-paths.js",
     "lint:assets": "node scripts/lint-assets.js",
     "lint:md": "markdownlint src/content/**/*.md",
-    "lint": "npm run lint:links && npm run lint:md && npm run lint:assets && npm run lint:css && npx prettier --check .",
+    "lint": "concurrently --group --names links,md,assets,css,prettier --prefix-colors blue,magenta,cyan,yellow,green \"npm:lint:links\" \"npm:lint:md\" \"npm:lint:assets\" \"npm:lint:css\" \"npx prettier --check .\"",
     "check:duplicates": "node scripts/find-duplicate-content.js --threshold 0.78 --top 50",
     "migrate:flatten-guides": "node scripts/migrate-flatten-guides.js",
     "migrate:links-to-magic": "node scripts/convert-path-links-to-magic.js && npm run format",
@@ -36,6 +36,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
+    "concurrently": "^9.0.0",
     "@types/node": "^20.19.21",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.0",
