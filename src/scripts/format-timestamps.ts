@@ -1,6 +1,6 @@
 // Format timestamps to user's local timezone
-export function formatTimestamps() {
-  const dateElements = document.querySelectorAll(
+export function formatTimestamps(): void {
+  const dateElements = document.querySelectorAll<HTMLElement>(
     ".update-date[data-timestamp]",
   );
   dateElements.forEach((element) => {
@@ -25,14 +25,15 @@ export function formatTimestamps() {
         .split(" ")
         .pop();
       // Update the element with formatted date and timezone
-      element.textContent = `${formattedDate} ${timezone}`;
+      element.textContent = `${formattedDate} ${timezone ?? ""}`.trim();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error formatting date:", error);
     }
   });
 }
 
-export function runFormatTimestampsOnReady() {
+export function runFormatTimestampsOnReady(): void {
   if (
     document.readyState === "complete" ||
     document.readyState === "interactive"
