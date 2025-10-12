@@ -9,6 +9,8 @@ const guides = defineCollection({
     description: z.string().optional(),
     category: z.string().optional(),
     kind: z.enum(["section", "concept"]).optional(),
+    // New typed model: prefer `type` (concept|skill); keep `kind` for legacy usage
+    type: z.enum(["concept", "skill"]).optional(),
     order: z.number().optional(),
     level: z.enum(["beginner", "intermediate", "advanced"]).optional(),
     levels: z
@@ -18,6 +20,8 @@ const guides = defineCollection({
     paths: z.array(z.string()).optional().default([]),
     dependsOn: z.array(z.string()).optional().default([]),
     leadsTo: z.array(z.string()).optional().default([]),
+    // Skills can reference conceptual prerequisites explicitly
+    concepts: z.array(z.string()).optional().default([]),
     appliesTo: z.array(z.string()).optional().default([]),
     aliases: z.array(z.string()).optional().default([]),
   }),

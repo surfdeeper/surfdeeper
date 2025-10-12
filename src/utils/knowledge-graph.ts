@@ -1,4 +1,13 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+/**
+ * Knowledge graph builder
+ * - Nodes come from `guides` collection. New fields:
+ *   - data.type: "concept" | "skill" (preferred). Legacy `kind: "concept"` maps to type=concept.
+ *   - data.concepts: string[]; for skills, creates dependsOn edges from concept -> skill.
+ * - Edges:
+ *   - dependsOn: A -> B means B depends on A (edge source=A, target=B)
+ *   - leadsTo: A -> B means A leads to B (edge source=A, target=B)
+ */
 
 export type GuideEntry = CollectionEntry<"guides">;
 
@@ -10,6 +19,8 @@ export type GuideNode = {
   levels: GuideEntry["data"]["levels"];
   paths: string[];
   kind?: GuideEntry["data"]["kind"];
+  // New typed content model: concept or skill (falls back to legacy `kind` when absent)
+  type?: GuideEntry["data"]["type"];
   category?: string;
 };
 
@@ -48,6 +59,7 @@ export function buildGraph(entries: GuideEntry[]): GuideGraph {
     levels: e.data.levels || [],
     paths: e.data.paths || [],
     kind: e.data.kind,
+    type: e.data.type || (e.data.kind === "concept" ? "concept" : undefined),
     category: e.data.category,
   }));
 
@@ -63,6 +75,15 @@ export function buildGraph(entries: GuideEntry[]): GuideGraph {
     for (const nxt of e.data.leadsTo || []) {
       // Edge from this guide to the next guide
       edges.push({ source: id, target: nxt, type: "leadsTo" });
+    }
+    // Conceptual prerequisites for skills: concept -> skill edge as dependsOn
+    if (
+      (e.data.type || (e.data.kind === "concept" ? "concept" : undefined)) !==
+      "concept"
+    ) {
+      for (const c of e.data.concepts || []) {
+        edges.push({ source: c, target: id, type: "dependsOn" });
+      }
     }
   }
 
@@ -98,16 +119,31 @@ export function getGuidesByPath(
     .sort((a, b) => a.title.localeCompare(b.title));
 }
 
+export function getByType(
+  graph: GuideGraph,
+  type: GuideNode["type"],
+): GuideNode[] {
+  return graph.nodes
+    .filter((n) => n.type === type)
+    .slice()
+    .sort((a, b) => a.title.localeCompare(b.title));
+}
+
 export function buildPathSubgraph(
   graph: GuideGraph,
   pathTag: string,
-  opts?: { level?: GuideNode["level"]; kind?: GuideNode["kind"] },
+  opts?: {
+    level?: GuideNode["level"];
+    kind?: GuideNode["kind"];
+    type?: GuideNode["type"];
+  },
 ): GuideGraph {
-  const { level, kind } = opts || {};
+  const { level, kind, type } = opts || {};
   const allowed = new Set(
     getGuidesByPath(graph, pathTag)
       .filter((n) => (level ? n.level === level : true))
       .filter((n) => (kind ? n.kind === kind : true))
+      .filter((n) => (type ? n.type === type : true))
       .map((n) => n.id),
   );
 
