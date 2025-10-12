@@ -1,6 +1,8 @@
 ---
 title: Ocean Beach, San Francisco
 description: Powerful San Francisco beach break, advanced surfers only
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 latitude: 37.7598
 longitude: -122.5109
 skillLevels: ["advanced"]

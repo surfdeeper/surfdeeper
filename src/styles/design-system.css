@@ -233,21 +233,18 @@ body {
 /* Links - Variable-driven single source of truth */
 /* Base link behavior reads from CSS variables with sensible defaults.
    Regions or elements can override via container classes that set these vars. */
-
 a:not(.btn) {
   color: var(--link-color);
   text-decoration: var(--link-underline);
   text-decoration-color: var(--link-decoration-color);
   text-underline-offset: var(--link-underline-offset);
-  transition: var(--link-transition);
   opacity: var(--link-opacity);
+  transition: var(--link-transition);
 }
 
 a:not(.btn):hover {
   color: var(--link-hover-color);
   text-decoration: var(--link-hover-underline);
-  text-decoration-color: var(--link-decoration-color);
-  text-underline-offset: var(--link-underline-offset);
   opacity: var(--link-hover-opacity);
 }
 
@@ -255,10 +252,52 @@ a:not(.btn):visited {
   color: var(--link-visited-color);
 }
 
+/* Accessibility focus state */
 a:focus-visible {
   outline: 2px dashed var(--color-primary);
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+/* Navigation specific links - more specific selectors come first */
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--space-8);
+}
+
+.nav-links a {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-base);
+}
+
+.nav-links a:hover {
+  color: var(--color-primary);
+}
+
+/* General link styles - less specific selectors come after */
+/* Covered by variable-driven rules above */
+
+/* Link containers for consistent variants */
+.links-accent a:not(.btn) {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--color-primary);
+  text-underline-offset: 3px;
+  transition: color var(--transition-base);
+}
+
+.links-neutral a:not(.btn) {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
 }
 
 /* Region presets */
@@ -327,27 +366,6 @@ a:focus-visible {
   color: var(--color-primary);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xl);
-}
-
-.nav-links {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  gap: var(--space-8);
-}
-
-.nav-links a {
-  color: var(--color-text-primary);
-  text-decoration: none;
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  transition: color var(--transition-base);
-}
-
-.nav-links a:hover {
-  color: var(--color-primary);
 }
 
 /* Footer */
@@ -495,4 +513,15 @@ a:focus-visible {
 
 .shadow {
   box-shadow: var(--shadow-base);
+}
+
+/* Magic link diagnostics: show unresolved magic links clearly */
+a.broken-magic-link {
+  color: var(--color-warning);
+  text-decoration: none;
+  border-bottom: 2px dashed var(--color-warning);
+}
+
+a.broken-magic-link:hover {
+  opacity: 0.9;
 }

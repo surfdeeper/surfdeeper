@@ -122,6 +122,8 @@ const {
   @import "../styles/homepage.css";
 </style>
 
+<!-- Removed page-level attribution; attribution now lives in global footer -->
+
 <script
   type="application/json"
   id="spots-data"
@@ -146,7 +148,7 @@ const {
 <script>
   import { updateSurfTicker } from "../scripts/surf-ticker";
 
-  // Initialize surf ticker
+  // Initialize surf ticker once; script module manages its own refresh cadence
   if (
     document.readyState === "complete" ||
     document.readyState === "interactive"
@@ -155,7 +157,4 @@ const {
   } else {
     document.addEventListener("DOMContentLoaded", updateSurfTicker);
   }
-
-  // Refresh every 15 minutes
-  setInterval(updateSurfTicker, 15 * 60 * 1000);
 </script>
