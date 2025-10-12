@@ -8,6 +8,7 @@
   --color-surface-primary: #fff;
   --color-surface-secondary: #f6f7f9;
   --color-surface-tertiary: #eef1f5;
+
   /* Override dark-leaning surfaces from base design-system */
   --color-surface-deep: #f6f7f9;
   --color-surface-dark: #eef1f5;
@@ -48,6 +49,7 @@
   --link-underline-offset: 3px;
   --link-decoration-color: var(--color-primary);
   --link-transition: color var(--transition-base);
+
   color-scheme: light;
 }
 
@@ -87,6 +89,7 @@
     --link-underline-offset: 3px;
     --link-decoration-color: var(--color-primary);
     --link-transition: color var(--transition-base);
+
     color-scheme: light;
   }
 }

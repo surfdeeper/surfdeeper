@@ -15,18 +15,27 @@
 </div>
 
 <script>
+  // @ts-nocheck
   (function () {
     const root = document.documentElement;
     const STORAGE_KEY = "theme"; // "auto"|"light"|"dark"
 
+    /**
+     * @typedef {"auto" | "light" | "dark"} ThemeMode
+     */
+
+    /** @returns {ThemeMode} */
     function getSaved() {
       try {
-        return localStorage.getItem(STORAGE_KEY) || "auto";
+        return (
+          /** @type {ThemeMode} */ (localStorage.getItem(STORAGE_KEY)) || "auto"
+        );
       } catch {
         return "auto";
       }
     }
 
+    /** @param {ThemeMode} value */
     function setTheme(value) {
       try {
         localStorage.setItem(STORAGE_KEY, value);
@@ -35,6 +44,7 @@
       reflectState(value);
     }
 
+    /** @param {ThemeMode} value */
     function reflectState(value) {
       document.querySelectorAll(".theme-toggle").forEach((grp) => {
         const buttons = grp.querySelectorAll("button[data-value]");
@@ -53,12 +63,14 @@
       reflectState(current);
       document.querySelectorAll(".theme-toggle").forEach((grp) => {
         grp.addEventListener("click", (e) => {
-          const target = (e.target &&
-            (e.target as Element).closest?.(
+          /** @type {HTMLButtonElement | null} */
+          const target =
+            e.target &&
+            /** @type {Element} */ (/** @type {any} */ (e.target)).closest?.(
               "button[data-value]",
-            )) as HTMLButtonElement | null;
+            );
           if (target && target.dataset.value) {
-            setTheme(target.dataset.value);
+            setTheme(/** @type {ThemeMode} */ (target.dataset.value));
           }
         });
       });

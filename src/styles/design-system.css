@@ -231,6 +231,7 @@ body {
 }
 
 /* Links - Variable-driven single source of truth */
+
 /* Base link behavior reads from CSS variables with sensible defaults.
    Regions or elements can override via container classes that set these vars. */
 a:not(.btn) {
@@ -240,16 +241,6 @@ a:not(.btn) {
   text-underline-offset: var(--link-underline-offset);
   opacity: var(--link-opacity);
   transition: var(--link-transition);
-}
-
-a:not(.btn):hover {
-  color: var(--link-hover-color);
-  text-decoration: var(--link-hover-underline);
-  opacity: var(--link-hover-opacity);
-}
-
-a:not(.btn):visited {
-  color: var(--link-visited-color);
 }
 
 /* Accessibility focus state */
@@ -281,7 +272,18 @@ a:focus-visible {
   color: var(--color-primary);
 }
 
+a:not(.btn):hover {
+  color: var(--link-hover-color);
+  text-decoration: var(--link-hover-underline);
+  opacity: var(--link-hover-opacity);
+}
+
+a:not(.btn):visited {
+  color: var(--link-visited-color);
+}
+
 /* General link styles - less specific selectors come after */
+
 /* Covered by variable-driven rules above */
 
 /* Link containers for consistent variants */

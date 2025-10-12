@@ -83,6 +83,7 @@
     --link-underline-offset: 3px;
     --link-decoration-color: var(--color-primary);
     --link-transition: color var(--transition-base);
+
     color-scheme: dark;
   }
 }
