@@ -52,11 +52,71 @@ Validation:
 - Run `npm run lint` to validate links, concepts, assets, CSS tokens, and formatting.
 - Run `npm run dev` to preview; production build with `npm run build`.
 
+## Export Knowledge Graph
+
+You can export the entire knowledge graph as JSON using:
+
+```bash
+npm run export-graph
+```
+
+This generates a `graph.json` file in the project root containing:
+
+- **concepts**: All guides with `kind: "concept"` (or no kind specified)
+- **skills**: All guides with `kind: "skill"`
+- **sections**: All guides with `kind: "section"`
+- **paths**: All path definitions from `src/content/paths/`
+
+Each entry includes:
+
+- `id`, `title`, `description`
+- Relationships: `dependsOn`, `leadsTo`, `appliesTo`
+- Metadata: `category`, `level`, `paths`, `aliases`, `tags`
+
+The script validates all references and reports errors/warnings:
+
+- ❌ **Errors**: Missing dependencies or broken references (exits with code 1)
+- ⚠️ **Warnings**: Unidirectional links or path references to missing guides (non-blocking)
+
+Output structure:
+
+```json
+{
+  "concepts": [
+    {
+      "id": "angling-down-the-line",
+      "title": "Angling Down the Line",
+      "description": "Master the art of angling...",
+      "dependsOn": [],
+      "leadsTo": [],
+      "paths": ["longboarding", "catching-your-first-wave"]
+    }
+  ],
+  "skills": [...],
+  "paths": [
+    {
+      "id": "longboarding",
+      "title": "Longboarding",
+      "description": "Flowing style, trim, and classic maneuvers",
+      "nodes": ["choose-your-first-board", "cobra-pose", ...]
+    }
+  ],
+  "sections": [...],
+  "metadata": {
+    "exportedAt": "2025-10-12T23:44:19.429Z",
+    "totalConcepts": 49,
+    "totalSkills": 0,
+    "totalPaths": 2
+  }
+}
+```
+
 ## Available Scripts
 
 - `npm run dev` - Start the development server
 - `npm run build` - Build the site for production
 - `npm run preview` - Preview the production build locally
+- `npm run export-graph` - Export the knowledge graph to `graph.json`
 
 ## Project Structure
 
