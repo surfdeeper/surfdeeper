@@ -78,3 +78,20 @@ Only use `public/js/` for:
 - Legacy code that can't be easily migrated
 
 **Files in `public/` are served as-is without processing, bundling, or TypeScript compilation.**
+
+## Duplicate content check
+
+You can scan Markdown content for near-duplicates (e.g., similar guides like "cutbacks" and "cutback mechanics"):
+
+- Local, human-friendly output:
+  - `npm run check:duplicates`
+- CI-friendly (JSON + nonzero exit on findings):
+  - `npm run check:duplicates:ci`
+
+Options (via direct script call):
+
+- `--threshold <0..1>`: higher is stricter (default 0.78)
+- `--top <N>`: limit pairs shown (default 50)
+- `--path <dir>`: add custom dir(s) to scan (defaults to `src/content/guides` and `src/content/spots`)
+- `--fail`: exit 1 when any pair >= threshold
+- `--json`: JSON output
