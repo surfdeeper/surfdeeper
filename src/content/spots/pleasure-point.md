@@ -1,6 +1,8 @@
 ---
 title: Pleasure Point, Santa Cruz
 description: World-class Santa Cruz reef and point break with multiple peaks
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 latitude: 36.9614
 longitude: -121.9739
 skillLevels: ["intermediate", "advanced"]

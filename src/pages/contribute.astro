@@ -4,7 +4,7 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout
   title="Contribute - Surf Deeper"
-  description="How to contribute guides and spots using our content system: folders, sections, ordering, and Markdown formatting."
+  description="How to contribute guides and spots: flat guides folder, concept IDs, magic links, and simple PRs."
 >
   <header class="page-header">
     <h1>Contribute</h1>
@@ -123,33 +123,37 @@ import Layout from "../layouts/Layout.astro";
 
   <section class="article">
     <h2>How it works</h2>
-    <p>Keep it simple. Follow existing patterns. That’s it.</p>
+    <p>
+      Guides live in a flat folder and use concept IDs with magic links. Each
+      guide is one concept. Link concepts by ID instead of paths.
+    </p>
     <ul>
+      <li>Guides: place files in <code>src/content/guides/</code> (flat)</li>
       <li>
-        Put guides in <code
-          >src/content/guides/&lt;section&gt;/&lt;slug&gt;.md</code
-        >
+        Frontmatter: <code>id</code> (required), <code>title</code> (required),
+        <code>description</code> (optional),
+        <code>level</code>, <code>threads[]</code>, <code>dependsOn[]</code>,
+        <code>leadsTo[]</code>, <code>appliesTo[]</code>
       </li>
       <li>
-        Frontmatter: <code>title</code> (required), <code>description</code> and
-        <code>order</code> (optional)
+        Magic links in Markdown: <code>[Label](:concept-id)</code>
       </li>
       <li>
-        Sections = folder names; display labels and order live in <a
-          href="https://github.com/surfdeeper/surfdeeper/blob/main/src/content/guides/_sections.json"
-          target="_blank">_sections.json</a
-        >
+        Relationships by ID: <code>dependsOn: [some-id]</code>,
+        <code>leadsTo: [next-id]</code>
       </li>
-      <li>Sorting: by <code>order</code>, then by <code>title</code></li>
     </ul>
     <p>
-      Schema lives in <a
-        href="https://github.com/surfdeeper/surfdeeper/blob/main/src/content/config.ts"
-        target="_blank">content config</a
-      >. Browse existing files in the <a
-        href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/guides"
-        target="_blank">guides folder</a
-      > and copy the closest example.
+      See the canonical docs for details and examples:
+      <a
+        href="https://github.com/surfdeeper/surfdeeper/blob/main/CONTRIBUTING.md"
+        target="_blank">Contributing</a
+      >
+      ·
+      <a
+        href="https://github.com/surfdeeper/surfdeeper/blob/main/docs/KNOWLEDGE_ARCHITECTURE.md"
+        target="_blank">Knowledge Architecture</a
+      >.
     </p>
   </section>
 
@@ -162,13 +166,12 @@ import Layout from "../layouts/Layout.astro";
           target="_blank">guides folder</a
         >.
       </li>
+      <li>Copy an existing guide into <code>src/content/guides/</code>.</li>
       <li>
-        Copy an existing file in the right section; rename with a clear slug.
+        Set a unique <code>id</code> in frontmatter and edit the
+        <code>title</code> and content.
       </li>
-      <li>
-        Edit the <code>title</code> and content; add <code>order</code> if you want
-        to control position.
-      </li>
+      <li>Use magic links like <code>[Pop-up](:pop-up)</code> in content.</li>
       <li>Open a PR. We’ll review quickly.</li>
     </ol>
   </section>

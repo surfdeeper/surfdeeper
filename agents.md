@@ -48,3 +48,20 @@ Example: When extracting a sidebar component, move all `.sidebar-*`, `.nested-li
 
 - Adding new design tokens or abstractions
 - When lint rules seem too restrictive for a use case
+
+## Content Architecture (for AI + Editors)
+
+End-state model:
+
+- Flat folder: put all concept guides under `src/content/guides/` (one concept per file).
+- Stable IDs: every guide has an immutable `id` in frontmatter; relationships and links use IDs.
+- Magic links: link by `:id` in Markdown, e.g., `[Cobra Pose](:cobra-pose)`.
+- Relationships by ID: `dependsOn`, `leadsTo`, `threads`, `level`, `appliesTo` in frontmatter.
+
+Behavioral guidelines:
+
+- Add 1–2 strong relationships per concept (`dependsOn`/`leadsTo`).
+- Keep `threads` concise and reusable; avoid inventing categories — use tags.
+- Prefer precise concepts; split multi-idea docs.
+
+Reference: `docs/KNOWLEDGE_ARCHITECTURE.md`.

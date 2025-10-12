@@ -10,10 +10,13 @@
     "astro": "astro",
     "lint:css": "stylelint \"src/**/*.{css,astro}\"",
     "typecheck": "astro check",
-    "lint:links": "node scripts/validate-links.js",
+    "lint:links": "node scripts/validate-links.js && node scripts/validate-concept-ids.js",
     "lint:assets": "node scripts/lint-assets.js",
     "lint:md": "markdownlint src/content/**/*.md",
     "lint": "npm run lint:links && npm run lint:md && npm run lint:assets && npm run lint:css && npx prettier --check .",
+    "check:duplicates": "node scripts/find-duplicate-content.js --threshold 0.78 --top 50",
+    "migrate:flatten-guides": "node scripts/migrate-flatten-guides.js",
+    "migrate:links-to-magic": "node scripts/convert-path-links-to-magic.js && npm run format",
     "fix:md": "markdownlint --fix src/content/**/*.md",
     "fix": "npm run fix:md",
     "format": "prettier --write .",
@@ -28,6 +31,7 @@
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
     "unified": "^11.0.5",
+    "gray-matter": "^4.0.3",
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {

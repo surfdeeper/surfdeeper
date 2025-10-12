@@ -1,0 +1,35 @@
+---
+title: "Surf Gear Basics: What You Actually Need"
+description: >-
+  Beginner-friendly surf gear overview: wetsuits, leashes, wax/traction, and beginner board choices.
+
+
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
+order: 1
+id: surf-gear-basics
+category: gear
+kind: concept
+---
+
+# Surf Gear Basics: What You Actually Need
+
+## Wetsuits
+
+- Thickness by water temperature
+- Fit tips and flexibility
+
+## Leashes
+
+- Length/thickness by board type
+- Inspect for wear regularly
+
+## Wax & Traction
+
+- How to wax properly
+- Alternatives: traction pads, spray-on
+
+## Boards for Beginners
+
+- Soft-top vs fiberglass
+- Longboard vs funboard

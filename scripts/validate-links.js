@@ -210,7 +210,11 @@ class LinkValidator {
         fullMatch,
       );
     } else {
-      // Relative links
+      // Allow magic links like :concept-id
+      if (url.startsWith(":")) {
+        return;
+      }
+      // Relative links (non-magic)
       this.addWarning(
         `Relative link found (consider using absolute paths): ${url}`,
         filePath,
