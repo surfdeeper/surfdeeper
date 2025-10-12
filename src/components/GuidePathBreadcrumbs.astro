@@ -1,0 +1,216 @@
+---
+import { getCollection } from "astro:content";
+import {
+  loadGuides,
+  buildGraph,
+  buildPathSubgraph,
+  type GuideGraph,
+  type GuideNode,
+} from "../utils/knowledge-graph";
+
+export interface Props {
+  guideId: string; // entry.data.id || entry.slug
+  guidePaths: string[]; // entry.data.paths
+}
+
+const { guideId, guidePaths } = Astro.props as Props;
+
+let pathCrumbs: {
+  id: string;
+  title: string;
+  icon?: string;
+  sequence: { id: string; title: string; url: string; isCurrent: boolean }[];
+}[] = [];
+
+if (guidePaths && guidePaths.length > 0) {
+  const [allGuides, pathsMeta] = await Promise.all([
+    loadGuides(),
+    getCollection("paths" as const),
+  ]);
+  const graph: GuideGraph = buildGraph(allGuides);
+  const metaById: Map<string, { title: string; icon?: string }> = new Map();
+  for (const p of pathsMeta)
+    metaById.set(p.slug, { title: p.data.title, icon: p.data.icon });
+
+  function orderByLeadsTo(sub: GuideGraph): GuideNode[] {
+    const nodes = sub.nodes;
+    const idToNode = new Map(nodes.map((n) => [n.id, n] as const));
+    const leads = sub.edges.filter((e) => e.type === "leadsTo");
+    const indeg = new Map<string, number>();
+    for (const n of nodes) indeg.set(n.id, 0);
+    for (const e of leads) indeg.set(e.target, (indeg.get(e.target) || 0) + 1);
+
+    const queue: string[] = Array.from(indeg.entries())
+      .filter(([, d]) => d === 0)
+      .map(([id]) => id)
+      .sort((a, b) =>
+        (idToNode.get(a)?.title || a).localeCompare(
+          idToNode.get(b)?.title || b,
+        ),
+      );
+
+    const result: GuideNode[] = [];
+    const adj = new Map<string, string[]>();
+    for (const e of leads) {
+      const arr = adj.get(e.source) || [];
+      arr.push(e.target);
+      adj.set(e.source, arr);
+    }
+
+    while (queue.length) {
+      const id = queue.shift()!;
+      const node = idToNode.get(id);
+      if (node) result.push(node);
+      for (const nxt of adj.get(id) || []) {
+        indeg.set(nxt, Math.max(0, (indeg.get(nxt) || 0) - 1));
+        if ((indeg.get(nxt) || 0) === 0) queue.push(nxt);
+      }
+      queue.sort((a, b) =>
+        (idToNode.get(a)?.title || a).localeCompare(
+          idToNode.get(b)?.title || b,
+        ),
+      );
+    }
+
+    if (result.length < nodes.length) {
+      const inResult = new Set(result.map((n) => n.id));
+      const rest = nodes
+        .filter((n) => !inResult.has(n.id))
+        .sort((a, b) => a.title.localeCompare(b.title));
+      result.push(...rest);
+    }
+    return result;
+  }
+
+  pathCrumbs = guidePaths.map((pathId) => {
+    const sub = buildPathSubgraph(graph, pathId, { kind: "concept" });
+    const ordered = orderByLeadsTo(sub);
+    const sequence = ordered.map((n) => ({
+      id: n.id,
+      title: n.title,
+      url: n.url,
+      isCurrent: n.id === guideId,
+    }));
+    const meta = metaById.get(pathId);
+    return {
+      id: pathId,
+      title: meta?.title || pathId,
+      icon: meta?.icon,
+      sequence,
+    };
+  });
+}
+---
+
+{
+  pathCrumbs.length > 0 && (
+    <section class="path-breadcrumbs">
+      {pathCrumbs.map((p) => (
+        <div class="path-row">
+          <div class="path-meta">
+            <a class="path-title" href={`/paths/${p.id}`}>
+              {p.icon && (
+                <span class="path-icon" aria-hidden="true">
+                  {p.icon}
+                </span>
+              )}
+              {p.title}
+            </a>
+          </div>
+          <nav class="crumbs" aria-label={`Path progression: ${p.title}`}>
+            {p.sequence.map((s, idx) => (
+              <span class={`crumb${s.isCurrent ? " is-current" : ""}`}>
+                <a href={s.url} aria-current={s.isCurrent ? "page" : undefined}>
+                  {s.title}
+                </a>
+                {idx < p.sequence.length - 1 && (
+                  <span class="sep" aria-hidden="true">
+                    →
+                  </span>
+                )}
+              </span>
+            ))}
+          </nav>
+        </div>
+      ))}
+    </section>
+  )
+}
+
+<style>
+  .path-breadcrumbs {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 2px solid var(--color-border);
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .path-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    align-items: start;
+  }
+
+  .path-meta {
+    text-align: center;
+  }
+
+  .path-title {
+    color: var(--color-accent);
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+  }
+
+  .path-title:hover {
+    text-decoration: underline;
+  }
+
+  .path-icon {
+    margin-right: var(--space-2);
+  }
+
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+    line-height: 1.6;
+  }
+
+  .crumb a {
+    color: var(--color-text);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 1px;
+  }
+
+  .crumb a:hover {
+    border-bottom-color: var(--color-border);
+  }
+
+  .crumb.is-current a {
+    color: var(--color-accent);
+    font-weight: var(--font-weight-semibold);
+    border-bottom-color: var(--color-accent-transparent);
+  }
+
+  .sep {
+    margin: 0 var(--space-1);
+    opacity: 0.6;
+  }
+
+  @media (min-width: 768px) {
+    .path-row {
+      grid-template-columns: 220px 1fr;
+    }
+    .path-meta {
+      text-align: right;
+      padding-right: var(--space-3);
+    }
+    .crumbs {
+      justify-content: flex-start;
+    }
+  }
+</style>

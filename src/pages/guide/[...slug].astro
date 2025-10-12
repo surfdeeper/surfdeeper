@@ -1,7 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getCollection, getEntryBySlug } from "astro:content";
+import {
+  getCollection,
+  getEntryBySlug,
+  type CollectionEntry,
+} from "astro:content";
 import { isPlaceholderTodo } from "../../utils/guide-filters";
+import GuidePathBreadcrumbs from "../../components/GuidePathBreadcrumbs.astro";
 
 export async function getStaticPaths() {
   const entries = await getCollection("guides");
@@ -24,6 +29,12 @@ if (!entry) {
 const { Content } = await entry.render();
 const { data } = entry;
 
+// Common identifiers used across render
+const currentId = (entry.data.id || entry.slug).trim();
+const guidePaths: string[] = Array.isArray(entry.data.paths)
+  ? entry.data.paths
+  : [];
+
 // Determine section vs concept using frontmatter (post-flatten)
 const isSectionPage = entry.data.kind === "section";
 let sectionGuides: any[] = [];
@@ -39,6 +50,8 @@ for (const e of allGuides) {
 type RelatedLink = { id: string; title: string; slug: string };
 let prerequisites: RelatedLink[] = [];
 let leadsTo: RelatedLink[] = [];
+
+// Path breadcrumbs are rendered by GuidePathBreadcrumbs component
 
 if (isSectionPage) {
   // Get all guides with matching category, excluding section files
@@ -79,6 +92,8 @@ if (isSectionPage) {
       title: e!.data.title,
       slug: e!.slug,
     }));
+
+  // Nothing additional; breadcrumb props are computed above
 }
 ---
 
@@ -89,6 +104,12 @@ if (isSectionPage) {
 >
   <article class="guide-article">
     <Content />
+
+    {
+      !isSectionPage && (
+        <GuidePathBreadcrumbs guideId={currentId} guidePaths={guidePaths} />
+      )
+    }
 
     {
       isSectionPage && sectionGuides.length > 0 && (
@@ -274,5 +295,7 @@ if (isSectionPage) {
         grid-template-columns: 1fr 1fr;
       }
     }
+
+    /* Breadcrumb styles live in GuidePathBreadcrumbs component */
   </style>
 </Layout>
