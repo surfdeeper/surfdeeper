@@ -7,7 +7,6 @@ import {
   getGuidesByThread,
 } from "../../utils/knowledge-graph";
 import { getCollection } from "astro:content";
-import ThreadViewSwitch from "../../components/threads/ThreadViewSwitch.astro";
 
 const entries = await loadGuides();
 const graph = buildGraph(entries);

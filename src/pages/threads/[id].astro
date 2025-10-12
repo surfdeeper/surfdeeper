@@ -47,11 +47,13 @@ if (meta) {
     {description && <p class="page-subtitle">{description}</p>}
   </header>
 
-  {Content && (
-    <article class="thread-body">
-      <Content />
-    </article>
-  )}
+  {
+    Content && (
+      <article class="thread-body">
+        <Content />
+      </article>
+    )
+  }
 
   {
     items.length === 0 ? (

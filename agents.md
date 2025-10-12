@@ -47,9 +47,9 @@ Example (threads):
 ```ts
 // src/pages/threads/[id].astro (top of file)
 export async function getStaticPaths() {
-	const { getCollection } = await import("astro:content");
-	const threads = await getCollection("threads");
-	return threads.map((t) => ({ params: { id: t.slug } }));
+  const { getCollection } = await import("astro:content");
+  const threads = await getCollection("threads");
+  return threads.map((t) => ({ params: { id: t.slug } }));
 }
 ```
 

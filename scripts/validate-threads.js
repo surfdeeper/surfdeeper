@@ -17,15 +17,21 @@ function walk(dir) {
   return files;
 }
 
-function collectGuideThreads() {
+function collectGuideThreadsWithSources() {
   const files = walk(GUIDES_DIR);
-  const tags = new Set();
+  /** @type {Map<string, Set<string>>} */
+  const map = new Map();
   for (const f of files) {
     const fm = matter.read(f);
     const list = Array.isArray(fm.data.threads) ? fm.data.threads : [];
-    for (const t of list) tags.add(String(t));
+    for (const t of list) {
+      const key = String(t);
+      if (!map.has(key)) map.set(key, new Set());
+      // store relative path for cleaner output
+      map.get(key).add(path.relative(ROOT, f));
+    }
   }
-  return tags;
+  return map;
 }
 
 function collectExistingThreadSlugs() {
@@ -37,14 +43,17 @@ function collectExistingThreadSlugs() {
   return new Set(files);
 }
 
-const referenced = collectGuideThreads();
+const referenced = collectGuideThreadsWithSources();
 const existing = collectExistingThreadSlugs();
 
 let errors = 0;
-for (const t of referenced) {
+for (const [t, sourcesSet] of referenced) {
   if (!existing.has(t)) {
+    const sources = Array.from(sourcesSet).sort();
+    const list = sources.map((s) => `     - ${s}`).join("\n");
     console.error(
-      `❌ Thread '${t}' is referenced in guides but missing content file: src/content/threads/${t}.md`,
+      `❌ Thread '${t}' is referenced in guides but missing content file: src/content/threads/${t}.md` +
+        (sources.length ? `\n   ↳ Referenced in:\n${list}` : ""),
     );
     errors++;
   }
