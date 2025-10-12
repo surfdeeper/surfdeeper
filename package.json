@@ -2,6 +2,10 @@
   "name": "surfdeeper",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": "20.19.5"
+  },
+  "packageManager": "npm@10.8.2",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -10,11 +14,14 @@
     "astro": "astro",
     "lint:css": "stylelint \"src/**/*.{css,astro}\"",
     "typecheck": "astro check",
-    "lint:links": "tsx scripts/validate-links.ts",
+    "lint:links": "tsx scripts/validate-links.ts && node scripts/validate-concept-ids.js && node scripts/validate-paths.js && node scripts/validate-threads.js",
     "lint:assets": "tsx scripts/lint-assets.ts",
     "lint:no-js": "tsx scripts/no-js-in-src.ts",
     "lint:md": "markdownlint src/content/**/*.md",
     "lint": "npm run lint:no-js && npm run lint:links && npm run lint:md && npm run lint:assets && npm run lint:css && npx prettier --check .",
+    "check:duplicates": "node scripts/find-duplicate-content.js --threshold 0.78 --top 50",
+    "migrate:flatten-guides": "node scripts/migrate-flatten-guides.js",
+    "migrate:links-to-magic": "node scripts/convert-path-links-to-magic.js && npm run format",
     "fix:md": "markdownlint --fix src/content/**/*.md",
     "fix": "npm run fix:md",
     "format": "prettier --write .",
@@ -24,16 +31,19 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "astro": "^4.0.0",
-    "typescript": "^5.9.3"
+    "gray-matter": "^4.0.3",
+    "typescript": "^5.9.3",
+    "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
+    "@types/node": "^20.19.21",
     "tsx": "^4.19.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.0",
     "markdownlint-cli": "^0.37.0",
+    "postcss-html": "^1.7.0",
     "prettier": "^3.0.0",
     "prettier-plugin-astro": "^0.12.0",
-    "postcss-html": "^1.7.0",
     "stylelint": "^16.9.0",
     "stylelint-config-standard": "^36.0.1",
     "stylelint-declaration-strict-value": "^1.10.4"

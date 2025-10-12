@@ -29,3 +29,9 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Ignore experimental v3 workspace with WIP merge conflicts
+surfdeeper3/
+# Memory logs and keepers
+memory/
+**/.gitkeep

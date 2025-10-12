@@ -1,0 +1,19 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+
+[*.md]
+# Do not auto-wrap or strip trailing spaces used for hard line breaks
+trim_trailing_whitespace = false
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.{js,ts,tsx,jsx,astro,css,json}]
+indent_size = 2
