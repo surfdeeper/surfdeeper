@@ -3,6 +3,7 @@ title: Swimming Fundamentals for Surfers
 description: >-
   Front‑quadrant timing, two‑beat kick, streamline, and RPE management to paddle farther with less fatigue.
 
+
 order: 2
 id: total-immersion
 category: preface

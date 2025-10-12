@@ -3,6 +3,7 @@ title: Avoiding Pearling
 description: >-
   Learn to prevent nose-diving when catching waves. Master positioning, speed, and control to stay on top of the wave.
 
+
 order: 5
 id: avoid-pearling
 category: core-skills

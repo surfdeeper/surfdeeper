@@ -530,3 +530,14 @@ a.link-neutral:visited {
 .shadow {
   box-shadow: var(--shadow-base);
 }
+
+/* Magic link diagnostics: show unresolved magic links clearly */
+a.broken-magic-link {
+  color: var(--color-warning);
+  text-decoration: none;
+  border-bottom: 2px dashed var(--color-warning);
+}
+
+a.broken-magic-link:hover {
+  opacity: 0.9;
+}

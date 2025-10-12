@@ -28,9 +28,20 @@ const { data } = entry;
 const isSectionPage = entry.data.kind === "section";
 let sectionGuides: any[] = [];
 
+// Build an ID -> entry map for graph relationships
+const allGuides = await getCollection("guides");
+const idToEntry = new Map<string, (typeof allGuides)[number]>();
+for (const e of allGuides) {
+  const id = (e.data.id || e.slug).trim();
+  if (!idToEntry.has(id)) idToEntry.set(id, e);
+}
+
+type RelatedLink = { id: string; title: string; slug: string };
+let prerequisites: RelatedLink[] = [];
+let leadsTo: RelatedLink[] = [];
+
 if (isSectionPage) {
   // Get all guides with matching category, excluding section files
-  const allGuides = await getCollection("guides");
   const sectionId = entry.data.id || entry.slug;
   sectionGuides = allGuides
     .filter(
@@ -42,6 +53,32 @@ if (isSectionPage) {
         (a.data.order ?? 999) - (b.data.order ?? 999) ||
         a.data.title.localeCompare(b.data.title),
     );
+} else {
+  // Concept page: resolve dependsOn and leadsTo graph links by ID
+  const dependsOnIds = Array.isArray(entry.data.dependsOn)
+    ? entry.data.dependsOn
+    : [];
+  const leadsToIds = Array.isArray(entry.data.leadsTo)
+    ? entry.data.leadsTo
+    : [];
+
+  prerequisites = dependsOnIds
+    .map((id) => idToEntry.get(id))
+    .filter(Boolean)
+    .map((e) => ({
+      id: e!.data.id || e!.slug,
+      title: e!.data.title,
+      slug: e!.slug,
+    }));
+
+  leadsTo = leadsToIds
+    .map((id) => idToEntry.get(id))
+    .filter(Boolean)
+    .map((e) => ({
+      id: e!.data.id || e!.slug,
+      title: e!.data.title,
+      slug: e!.slug,
+    }));
 }
 ---
 
@@ -81,6 +118,37 @@ if (isSectionPage) {
               );
             })}
           </ul>
+        </section>
+      )
+    }
+
+    {
+      !isSectionPage && (prerequisites.length > 0 || leadsTo.length > 0) && (
+        <section class="graph-links">
+          {prerequisites.length > 0 && (
+            <div class="graph-block">
+              <h2 class="graph-heading">Prerequisites</h2>
+              <ul class="graph-list">
+                {prerequisites.map((g) => (
+                  <li>
+                    <a href={`/guide/${g.slug}`}>{g.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {leadsTo.length > 0 && (
+            <div class="graph-block">
+              <h2 class="graph-heading">Leads to</h2>
+              <ul class="graph-list">
+                {leadsTo.map((g) => (
+                  <li>
+                    <a href={`/guide/${g.slug}`}>{g.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
       )
     }
@@ -161,6 +229,50 @@ if (isSectionPage) {
       margin: var(--space-2) 0 0 0;
       line-height: var(--line-height-relaxed);
       font-size: var(--font-size-sm);
+    }
+
+    /* Knowledge graph related links */
+    .graph-links {
+      margin-top: var(--space-12);
+      padding-top: var(--space-8);
+      border-top: 2px solid var(--color-border);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .graph-heading {
+      color: var(--color-accent);
+      font-size: var(--font-size-2xl);
+      margin: 0 0 var(--space-4) 0;
+      text-align: center;
+    }
+
+    .graph-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .graph-list li {
+      margin-bottom: var(--space-3);
+      padding-left: var(--space-6);
+      position: relative;
+    }
+
+    .graph-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+      font-weight: bold;
+      font-size: var(--font-size-lg);
+    }
+
+    @media (min-width: 768px) {
+      .graph-links {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   </style>
 </Layout>

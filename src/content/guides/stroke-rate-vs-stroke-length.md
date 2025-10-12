@@ -3,6 +3,7 @@ title: Stroke Rate vs Stroke Length
 description: >-
   Understand cadence and distance per stroke — and balance them for surf efficiency.
 
+
 order: 3
 id: stroke-rate-vs-stroke-length
 category: preface
