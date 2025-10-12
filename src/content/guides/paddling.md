@@ -5,6 +5,7 @@ order: 4
 id: paddling
 category: paddling
 kind: section
+paths: [beginner]
 ---
 
 # Paddling
