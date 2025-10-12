@@ -83,6 +83,7 @@ const serializedSpots = serializeSpots(spots);
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   crossorigin=""
 />
+<link rel="stylesheet" href="/src/styles/map-overlays.css" />
 <script
   is:inline
   src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -112,9 +113,16 @@ const serializedSpots = serializeSpots(spots);
     setupMarkerInteractions,
   } from "../scripts/spot-guides-helpers";
   import { getTheme, addThemeSwitcherToMap } from "../utils/map-theme-switcher";
+  import {
+    createConditionsGrid,
+    createLegend,
+    addLayerControls,
+    gridParamsForZoom,
+    refreshConditionsOverlays,
+  } from "../utils/map-overlays";
 
   function initMap() {
-    waitForLeaflet(() => {
+    waitForLeaflet(async () => {
       const spots = getSpotsDataFromElement("spots-data");
 
       // Get the user's preferred theme or use default
@@ -176,6 +184,48 @@ const serializedSpots = serializeSpots(spots);
           );
         }
       });
+
+      // Add conditions overlays
+      try {
+        // Zoom-aware initial grid
+        const { gridSize, spacing } = gridParamsForZoom(
+          map.getZoom(),
+          MAP_DEFAULTS.CENTER[0],
+        );
+        const { wind: windMarkers, swell: swellMarkers } =
+          await createConditionsGrid(
+            MAP_DEFAULTS.CENTER[0],
+            MAP_DEFAULTS.CENTER[1],
+            gridSize,
+            spacing,
+          );
+
+        // Create layer groups
+        const windLayer = L.layerGroup(windMarkers);
+        const swellLayer = L.layerGroup(swellMarkers);
+
+        // Create legends
+        const windLegend = createLegend("wind");
+        const swellLegend = createLegend("swell");
+
+        // Add layers to map
+        windLayer.addTo(map);
+        swellLayer.addTo(map);
+        windLegend.addTo(map);
+        swellLegend.addTo(map);
+
+        // Add layer controls
+        addLayerControls(map, windLayer, swellLayer, windLegend, swellLegend);
+
+        // Refresh overlays when user zooms
+        map.on("zoomend", () => {
+          refreshConditionsOverlays(map, windLayer, swellLayer).catch((e) =>
+            console.error(e),
+          );
+        });
+      } catch (error) {
+        console.error("Failed to load map overlays:", error);
+      }
     });
   }
 
