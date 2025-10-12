@@ -4,6 +4,8 @@ description: >-
   A pragmatic look at SWOLF, stroke rate, stroke length, and pace — what actually matters for surfers.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 4
 id: swimming-metrics-for-surfers
 category: preface

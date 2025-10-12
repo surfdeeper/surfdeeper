@@ -4,6 +4,8 @@ description: >-
   Front‑quadrant timing, two‑beat kick, streamline, and RPE management to paddle farther with less fatigue.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 2
 id: total-immersion
 category: preface

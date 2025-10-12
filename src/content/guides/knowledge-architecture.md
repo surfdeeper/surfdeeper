@@ -1,6 +1,8 @@
 ---
 title: Knowledge Architecture Philosophy
 description: Why SurfDeeper is a knowledge web — not a rigid outline.
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 2
 id: knowledge-architecture
 category: preface

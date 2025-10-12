@@ -4,6 +4,8 @@ description: >-
   Understand cadence and distance per stroke — and balance them for surf efficiency.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 3
 id: stroke-rate-vs-stroke-length
 category: preface

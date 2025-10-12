@@ -4,6 +4,8 @@ description: >-
   Master surf paddling with efficient stroke mechanics, smart body position, and calm breathing.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 1
 id: paddling-paddling
 category: paddling

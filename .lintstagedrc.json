@@ -4,6 +4,5 @@
     "node scripts/validate-links.js",
     "markdownlint --fix"
   ],
-  "*.{js,json}": ["prettier --write"],
-  "*.*": ["prettier --write"]
+  "*.{js,json,css,astro,yml,yaml}": ["prettier --write"]
 }

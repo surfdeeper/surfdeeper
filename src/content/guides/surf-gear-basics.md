@@ -4,6 +4,8 @@ description: >-
   Beginner-friendly surf gear overview: wetsuits, leashes, wax/traction, and beginner board choices.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 1
 id: surf-gear-basics
 category: gear

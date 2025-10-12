@@ -4,6 +4,8 @@ description: >-
   Learn to feel and read waves. Stay in the pocket, find steeper sections, and use cutbacks to maintain position.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 1
 id: wave-riding
 category: core-skills

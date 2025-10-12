@@ -124,6 +124,12 @@ const canonicalURL = `${Astro.site}${path}`;
         </div>
         <div class="footer-bottom">
           <p>&copy; 2024 Surf Deeper. Community-driven surf knowledge.</p>
+          <p class="data-attribution" aria-label="Data attribution">
+            Weather data by
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener"
+              >Open‑Meteo</a
+            >
+          </p>
         </div>
       </div>
     </footer>
@@ -200,6 +206,12 @@ const canonicalURL = `${Astro.site}${path}`;
         margin-bottom: var(--space-sm);
       }
 
+      .data-attribution a {
+        color: var(--color-primary);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
       .footer-section a {
         color: var(--color-text-primary);
         text-decoration: none;
@@ -248,6 +260,12 @@ const canonicalURL = `${Astro.site}${path}`;
         color: var(--color-text-primary);
         margin: 0;
         font-size: var(--font-size-sm);
+      }
+
+      .data-attribution {
+        margin-top: var(--space-2);
+        color: var(--color-text-dim);
+        font-size: var(--font-size-xs);
       }
 
       /* Leaflet Map Dark Theme - Prevent white flicker on tile load */

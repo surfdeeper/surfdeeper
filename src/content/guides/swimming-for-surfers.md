@@ -4,6 +4,8 @@ description: >-
   Why swimming is the secret sauce for surfing: efficiency, safety, calm. Clear outlines and training ideas that translate to surfing.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 1
 id: swimming-for-surfers
 category: preface

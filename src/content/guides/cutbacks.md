@@ -1,6 +1,8 @@
 ---
 title: Cutbacks
 description: Master the cutback to stay in the pocket and maintain position on the wave.
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 4
 id: cutbacks
 category: core-skills
