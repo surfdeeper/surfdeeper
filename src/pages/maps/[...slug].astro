@@ -1,0 +1,454 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntryBySlug } from 'astro:content';
+import { serializeSpot } from '../../utils/spot-data';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('spots');
+  return entries.map((e) => ({ params: { slug: e.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntryBySlug('spots', slug);
+
+if (!entry) {
+  throw Astro.redirect('/maps');
+}
+
+const { Content } = await entry.render();
+const { data } = entry;
+const serializedSpot = serializeSpot(entry);
+---
+
+<Layout title={data.title} description={data.description} editPath={`src/content/spots/${entry.slug}.md`}>
+  <article class="spot-article">
+    <h1>{data.title}</h1>
+    
+    <div class="spot-description">
+      <Content />
+    </div>
+
+    <div class="spot-details">
+      <section class="detail-section">
+        <h2>Skill Level</h2>
+        <div class="skill-levels">
+          {data.skillLevels.map((level: string) => (
+            <span class={`skill-badge skill-${level}`}>{level}</span>
+          ))}
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2>Wave Characteristics</h2>
+        <dl>
+          <dt>Type</dt>
+          <dd>{data.waveType}</dd>
+          <dt>Bottom</dt>
+          <dd>{data.bottom}</dd>
+          <dt>Best Size</dt>
+          <dd>{data.bestSize}</dd>
+          <dt>Swell Direction</dt>
+          <dd>{data.swellDirection}</dd>
+        </dl>
+      </section>
+
+      <section class="detail-section">
+        <h2>Best Conditions</h2>
+        <dl>
+          <dt>Tide</dt>
+          <dd>{data.bestTide}</dd>
+          <dt>Wind</dt>
+          <dd>{data.bestWind}</dd>
+          <dt>Season</dt>
+          <dd>{data.bestSeason}</dd>
+        </dl>
+      </section>
+
+      <section class="detail-section">
+        <h2>Hazards</h2>
+        <ul class="hazards-list">
+          {data.hazards.map((hazard: string) => <li>{hazard}</li>)}
+        </ul>
+      </section>
+
+      <section class="detail-section">
+        <h2>Access</h2>
+        <dl>
+          <dt>Parking</dt>
+          <dd>{data.parking}</dd>
+          {data.facilities && (
+            <>
+              <dt>Facilities</dt>
+              <dd>{data.facilities}</dd>
+            </>
+          )}
+        </dl>
+      </section>
+
+      <section class="detail-section">
+        <h2>Current Conditions</h2>
+        <div id="conditions-loading" class="conditions-loading">Loading conditions...</div>
+        <div id="conditions-data" class="conditions-data" style="display: none;">
+          <div class="conditions-grid">
+            <div class="condition-item">
+              <div class="condition-label">Swell</div>
+              <div class="condition-value" id="swell-height">--</div>
+              <div class="condition-meta" id="swell-meta">--</div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-label">Wind</div>
+              <div class="condition-value" id="wind-speed">--</div>
+              <div class="condition-meta" id="wind-direction">--</div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-label">Wave Height</div>
+              <div class="condition-value" id="wave-height">--</div>
+              <div class="condition-meta" id="wave-period">--</div>
+            </div>
+          </div>
+          <div class="conditions-updated" id="conditions-updated">--</div>
+        </div>
+        <div id="conditions-error" class="conditions-error" style="display: none;">
+          Unable to load current conditions
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2>Location</h2>
+        <p class="coordinates">
+          {data.latitude.toFixed(4)}, {data.longitude.toFixed(4)}
+        </p>
+        <div id="spot-map" class="spot-map"></div>
+      </section>
+    </div>
+  </article>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+
+  <script type="application/json" id="spot-data" set:html={JSON.stringify(serializedSpot)}></script>
+  
+  <script>
+    import { MAP_DEFAULTS, DEFAULT_THEME_SPOT } from '../../config/map-constants';
+    import { createBaseMap, waitForLeaflet, createMarkerWithPopup, getStoredTheme } from '../../utils/leaflet-setup';
+    import { getSpotDataFromElement } from '../../utils/spot-data';
+    import { 
+      fetchMarineConditions, 
+      degreesToCardinal, 
+      metersToFeet,
+      kmhToMph
+    } from '../../utils/marine-weather';
+    import { 
+      getWindRating, 
+      getSwellPeriodRating,
+      createWindProgressBar,
+      createSwellPeriodIndicator
+    } from '../../utils/condition-viz';
+    import { getTheme, addThemeSwitcherToMap } from '../../utils/map-theme-switcher';
+
+    async function loadConditions() {
+      const spot = getSpotDataFromElement('spot-data');
+      if (!spot) return;
+
+      try {
+        const conditions = await fetchMarineConditions(spot.latitude, spot.longitude);
+        
+        if (!conditions) {
+          document.getElementById('conditions-loading')!.style.display = 'none';
+          document.getElementById('conditions-error')!.style.display = 'block';
+          return;
+        }
+
+        // Update UI with data visualization
+        const swellFt = metersToFeet(conditions.swellHeight).toFixed(1);
+        const waveFt = metersToFeet(conditions.waveHeight).toFixed(1);
+        const windMph = kmhToMph(conditions.windSpeed);
+        const windRating = getWindRating(windMph);
+        const swellPeriodRating = getSwellPeriodRating(conditions.swellPeriod);
+
+        // Swell display with color-coded period
+        document.getElementById('swell-height')!.textContent = `${swellFt} ft`;
+        const swellMetaEl = document.getElementById('swell-meta')!;
+        swellMetaEl.innerHTML = 
+          `<span style="color: ${swellPeriodRating.color}; font-weight: 600;">${conditions.swellPeriod.toFixed(0)}s</span> ` +
+          `<span style="font-size: 0.9em;">${swellPeriodRating.emoji}</span> ` +
+          `@ ${degreesToCardinal(conditions.swellDirection)}`;
+        
+        // Wind display with progress bar and rating
+        const windSpeedEl = document.getElementById('wind-speed')!;
+        windSpeedEl.innerHTML = 
+          `<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
+            <div>${Math.round(windMph)} mph</div>
+            <div style="width: 100%; max-width: 120px; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden;">
+              <div style="width: ${windRating.percentage}%; height: 100%; background: ${windRating.color}; transition: width 0.3s ease;"></div>
+            </div>
+            <div style="font-size: 0.75rem; color: ${windRating.color}; font-weight: 600;">
+              ${windRating.emoji} ${windRating.label} (${windRating.percentage}%)
+            </div>
+          </div>`;
+        
+        const windDirEl = document.getElementById('wind-direction')!;
+        windDirEl.textContent = degreesToCardinal(conditions.windDirection);
+        
+        document.getElementById('wave-height')!.textContent = `${waveFt} ft`;
+        document.getElementById('wave-period')!.textContent = `${conditions.wavePeriod.toFixed(0)}s period`;
+
+        const time = new Date(conditions.timestamp).toLocaleTimeString('en-US', { 
+          hour: 'numeric', 
+          minute: '2-digit' 
+        });
+        document.getElementById('conditions-updated')!.textContent = `Updated ${time}`;
+
+        document.getElementById('conditions-loading')!.style.display = 'none';
+        document.getElementById('conditions-data')!.style.display = 'block';
+      } catch (error) {
+        console.error('Error loading conditions:', error);
+        document.getElementById('conditions-loading')!.style.display = 'none';
+        document.getElementById('conditions-error')!.style.display = 'block';
+      }
+    }
+
+    function initSpotMap() {
+      waitForLeaflet(() => {
+        const spot = getSpotDataFromElement('spot-data');
+        if (!spot) return;
+
+        // Get the user's preferred theme or use default
+        const currentThemeId = getStoredTheme(DEFAULT_THEME_SPOT);
+        const theme = getTheme(currentThemeId, DEFAULT_THEME_SPOT);
+
+        const map = createBaseMap('spot-map', [spot.latitude, spot.longitude], MAP_DEFAULTS.SPOT_ZOOM, theme);
+        if (!map) return;
+
+        // Add theme switcher control
+        addThemeSwitcherToMap(map, DEFAULT_THEME_SPOT, 'topright');
+
+        createMarkerWithPopup(
+          map,
+          spot.latitude,
+          spot.longitude,
+          spot.title,
+          spot.description,
+          true
+        );
+      });
+    }
+
+    function init() {
+      loadConditions();
+      initSpotMap();
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      init();
+    } else {
+      document.addEventListener('DOMContentLoaded', init);
+    }
+  </script>
+
+  <style>
+    .spot-article {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #00ff88;
+    }
+
+    .spot-description {
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #1e293b;
+      border-left: 4px solid #00ff88;
+      border-radius: 4px;
+      color: #cbd5e1;
+    }
+
+    .spot-details {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .detail-section {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .detail-section h2 {
+      font-size: 1.25rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: #00ff88;
+      border-bottom: 2px solid #334155;
+      padding-bottom: 0.5rem;
+    }
+
+    .skill-levels {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .skill-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: capitalize;
+      font-size: 0.875rem;
+    }
+
+    .skill-beginner {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .skill-intermediate {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .skill-advanced {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0.75rem 1rem;
+      margin: 0;
+    }
+
+    dt {
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    dd {
+      margin: 0;
+      color: #cbd5e1;
+    }
+
+    .hazards-list {
+      margin: 0;
+      padding-left: 1.5rem;
+      color: #cbd5e1;
+    }
+
+    .hazards-list li {
+      margin-bottom: 0.5rem;
+    }
+
+    .coordinates {
+      font-family: monospace;
+      font-size: 1rem;
+      color: #94a3b8;
+      margin: 0 0 1rem 0;
+    }
+
+    .spot-map {
+      width: 100%;
+      height: 400px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #334155;
+      background-color: #1a1f2e;
+    }
+
+    .conditions-loading,
+    .conditions-error {
+      color: #94a3b8;
+      font-style: italic;
+      padding: 1rem 0;
+    }
+
+    .conditions-error {
+      color: #f87171;
+    }
+
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .condition-item {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .condition-label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .condition-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #00ff88;
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+
+    .condition-meta {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .conditions-updated {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #334155;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      dl {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+      }
+
+      dt {
+        margin-top: 0.5rem;
+      }
+
+      .spot-article {
+        padding: 1rem;
+      }
+
+      .conditions-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .condition-value {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</Layout>
