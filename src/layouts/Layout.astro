@@ -2,9 +2,12 @@
 import Navigation from "../components/Navigation.astro";
 import HeadMeta from "../components/HeadMeta.astro";
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
 import { Image } from "astro:assets";
 import logoV2 from "../assets/logo-v2.png";
 import "../styles/design-system.css";
+import "../styles/theme-dark.css";
+import "../styles/theme-light.css";
 
 export interface Props {
   title: string;
@@ -40,6 +43,19 @@ const canonicalURL = `${Astro.site}${path}`;
       canonicalURL={canonicalURL}
     />
     <GoogleAnalytics />
+    <script>
+      // Initialize theme as early as possible to avoid flash of incorrect theme
+      (function () {
+        try {
+          const saved = localStorage.getItem("theme"); // "auto" | "light" | "dark" | null
+          const root = document.documentElement;
+          const value = saved || "auto";
+          root.setAttribute("data-theme", value);
+        } catch (_) {
+          // no-op
+        }
+      })();
+    </script>
   </head>
   <body>
     <Navigation />
@@ -128,6 +144,9 @@ const canonicalURL = `${Astro.site}${path}`;
         </div>
         <div class="footer-bottom">
           <p>&copy; 2024 Surf Deeper. Community-driven surf knowledge.</p>
+          <div class="footer-controls">
+            <ThemeToggle />
+          </div>
           <p class="data-attribution" aria-label="Data attribution">
             Weather data by
             <a href="https://open-meteo.com/" target="_blank" rel="noopener"
@@ -179,19 +198,6 @@ const canonicalURL = `${Astro.site}${path}`;
         color: var(--color-accent);
         font-weight: var(--font-weight-bold);
         font-size: var(--font-size-xl);
-      }
-
-      .footer-logo .image-logo {
-        width: 180px;
-        height: auto;
-        display: block;
-      }
-
-      .footer-links {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: var(--space-lg);
-        margin-bottom: var(--space-lg);
       }
 
       .footer-section h4 {
@@ -257,13 +263,21 @@ const canonicalURL = `${Astro.site}${path}`;
       .footer-bottom {
         border-top: 1px solid var(--color-border);
         padding-top: var(--space-4);
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
       }
 
       .footer-bottom p {
         color: var(--color-text-primary);
         margin: 0;
         font-size: var(--font-size-sm);
+      }
+
+      .footer-controls {
+        display: flex;
+        align-items: center;
       }
 
       .data-attribution {
