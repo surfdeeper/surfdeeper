@@ -1,7 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import { getCollection } from "astro:content";
 import sections from "../content/guides/_sections.json";
+
+// Import known diagram assets from src/assets so Astro can optimize them
+import spillingWaveImg from "../assets/spilling-wave.png";
+import plungingWaveImg from "../assets/plunging-wave.png";
+import surgingWaveImg from "../assets/surging-wave.png";
 
 interface GalleryImage {
   src: string;
@@ -17,6 +24,13 @@ interface GalleryImage {
 const allGuides = await getCollection("guides");
 
 const images: GalleryImage[] = [];
+
+// Map of markdown src path -> imported asset for optimization
+const assetMap: Record<string, ImageMetadata> = {
+  "/spilling-wave.png": spillingWaveImg,
+  "/plunging-wave.png": plungingWaveImg,
+  "/surging-wave.png": surgingWaveImg,
+};
 
 // Regular expression to match markdown images: ![alt text](image-path)
 const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
@@ -139,12 +153,33 @@ const imagesBySection = images.reduce(
                 {sectionImages.map((image, idx) => (
                   <article class="card">
                     <a href={image.guideLink} class="gallery-link">
-                      <img
-                        src={image.src}
-                        alt={image.alt}
-                        loading="lazy"
-                        class="gallery-image"
-                      />
+                      {(() => {
+                        const asset = assetMap[image.src];
+                        if (asset) {
+                          // Use Astro Image for known assets: single small width so opening in new tab isn't huge
+                          return (
+                            <Image
+                              src={asset}
+                              alt={image.alt}
+                              width={350}
+                              class="gallery-image"
+                              loading="lazy"
+                              decoding="async"
+                              format="webp"
+                              quality={80}
+                            />
+                          );
+                        }
+                        // Fallback for unknown/remote/public images
+                        return (
+                          <img
+                            src={image.src}
+                            alt={image.alt}
+                            loading="lazy"
+                            class="gallery-image"
+                          />
+                        );
+                      })()}
                       <div class="image-details">
                         <div class="image-caption">
                           {image.context && (
