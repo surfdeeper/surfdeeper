@@ -18,12 +18,10 @@ Pearling is usually a mix of speed, angle, and weight placement. This path targe
 
 ## Learn in Order
 
+- [[avoid-pearling]]
 - [[cobra-pose]]
 - [[paddling-efficiency]]
 - [[angling-down-the-line]]
-
-## Extra Credit
-
 - [[trimming-and-speed]]
 
 ## Avoiding Pearling

@@ -15,6 +15,14 @@ nodes:
   - avoid-pearling
 ---
 
+## Learn in Order
+
+- [[paddling-efficiency]]
+- [[cobra-pose]]
+- [[angling-down-the-line]]
+- [[pop-up]]
+- [[avoid-pearling]]
+
 ## What Makes a Good First Wave?
 
 Catching your first wave isn't about random luck—it's about understanding the **connected flow** from paddling to standing to riding. Think of it as one continuous motion, not isolated steps. Each part flows naturally into the next: paddle position → [[cobra-pose]] → angle → [[pop-up]] → bottom turn.
@@ -53,7 +61,7 @@ Even with perfect flow, takeoffs can be tricky. Here's how to troubleshoot witho
 
 ### Pearling (Nose Dives)
 
-Learn to [avoid pearling](:stop-pearling) by understanding **all the variables**: board length, speed, timing, position, and angle. Simple advice like "lean back more" might fix pearling but can stall your board if speed is lacking. The solution is rarely a single tweak—it's finding the right balance between speed, angle, and weight distribution.
+Learn to [avoid pearling](:avoid-pearling) — and see the focused path [Stop Pearling](:stop-pearling) — by understanding **all the variables**: board length, speed, timing, position, and angle. Simple advice like "lean back more" might fix pearling but can stall your board if speed is lacking. The solution is rarely a single tweak—it's finding the right balance between speed, angle, and weight distribution.
 
 ### Late Catches
 
