@@ -25,6 +25,48 @@ if (meta) {
   const rendered = await meta.render();
   Content = rendered.Content;
 }
+
+// Build a path-ordered list of items (concepts + skills) to number inline links consistently with the sidebar
+const concepts = (await getCollection(
+  "concepts",
+)) as CollectionEntry<"concepts">[];
+const skills = (await getCollection("skills")) as CollectionEntry<"skills">[];
+const all = [...concepts, ...skills];
+const idToEntry = new Map<string, (typeof all)[number]>();
+for (const e of all) {
+  const eid = ((e.data as any).id || e.slug) as string;
+  if (!idToEntry.has(eid)) idToEntry.set(eid, e);
+}
+const derivedIds = all
+  .filter(
+    (e) =>
+      Array.isArray((e.data as any).paths) &&
+      (e.data as any).paths.includes(id),
+  )
+  .map((e) => ((e.data as any).id || e.slug) as string)
+  .sort((a, b) => {
+    const ea = idToEntry.get(a)!;
+    const eb = idToEntry.get(b)!;
+    return (ea.data.title || "").localeCompare(eb.data.title || "");
+  });
+const orderedIds =
+  (nodes as string[]).length > 0 ? (nodes as string[]) : derivedIds;
+const orderedItems = orderedIds
+  .map((nid) => idToEntry.get(nid))
+  .filter(Boolean)
+  .map((e) => ({
+    slug: e!.slug as string,
+    type: ((e!.data as any).type ||
+      ((e!.collection as string) === "concepts"
+        ? "concept"
+        : "skill")) as string,
+  }));
+const numberMap: Record<string, string> = Object.fromEntries(
+  orderedItems.map((it, i) => [
+    `/${it.type}/${it.slug}`,
+    String(i + 1).padStart(2, "0"),
+  ]),
+);
 ---
 
 <Layout
@@ -217,10 +259,29 @@ if (meta) {
       border-bottom: 2px solid var(--color-accent-transparent);
       padding-bottom: 2px;
       transition: border-color 0.2s;
+      display: inline-flex;
+      align-items: baseline;
+      gap: var(--space-2);
     }
 
     .thread-body :global(.learning-link:hover) {
       border-bottom-color: var(--color-accent);
+    }
+
+    /* SSR number badge to correlate with sidebar order */
+    .thread-body :global(.learning-link[data-number])::before {
+      content: attr(data-number);
+      display: inline-block;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-accent);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-accent-transparent);
+      border-radius: 6px;
+      padding: 0 var(--space-2);
+      line-height: 1.6;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      margin-right: var(--space-2);
     }
 
     .thread-body :global(.broken-learning-link) {

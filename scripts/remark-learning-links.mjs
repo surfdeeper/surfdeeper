@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import matter from "gray-matter";
 import { visit } from "unist-util-visit";
 
 const CONCEPTS_DIR = path.resolve(process.cwd(), "src/content/concepts");
@@ -11,9 +12,49 @@ const SKILLS_DIR = path.resolve(process.cwd(), "src/content/skills");
  * Resolves to typed routes: /concept/:slug or /skill/:slug with special styling.
  */
 export default function remarkLearningLinks() {
-  const { map, alias } = buildIdMap();
+  const { map, alias, slugToId } = buildIdMap();
 
-  return (tree) => {
+  return (tree, file) => {
+    // If rendering a path page markdown, build a numbering map from its frontmatter nodes
+    let canonicalNodes = [];
+    try {
+      const filePath = file?.path || file?.history?.[0];
+      const isPathMd =
+        typeof filePath === "string" &&
+        filePath.includes(
+          `${path.sep}src${path.sep}content${path.sep}paths${path.sep}`,
+        ) &&
+        filePath.endsWith(".md");
+      if (isPathMd) {
+        const src = fs.readFileSync(filePath, "utf8");
+        const fm = matter(src);
+        const nodes = Array.isArray(fm.data?.nodes) ? fm.data.nodes : [];
+        // Map nodes to canonical IDs (prefer id, else slug)
+        canonicalNodes = nodes
+          .map((n) => {
+            const key = String(n).trim();
+            if (map.has(key)) return key; // it's an id
+            if (slugToId.has(key)) return slugToId.get(key);
+            return null;
+          })
+          .filter(Boolean);
+      }
+    } catch {}
+
+    const numberFor = (idOrSlug) => {
+      if (!canonicalNodes || canonicalNodes.length === 0) return null;
+      // normalize to id
+      let id = null;
+      if (map.has(idOrSlug))
+        id = idOrSlug; // id
+      else if (alias.has(idOrSlug)) id = alias.get(idOrSlug);
+      else if (slugToId.has(idOrSlug)) id = slugToId.get(idOrSlug);
+      if (!id) return null;
+      const idx = canonicalNodes.indexOf(id);
+      if (idx === -1) return null;
+      return String(idx + 1).padStart(2, "0");
+    };
+
     visit(tree, "text", (node, index, parent) => {
       if (!node.value || typeof node.value !== "string") return;
       if (!node.value.includes("[[")) return;
@@ -49,12 +90,14 @@ export default function remarkLearningLinks() {
         }
 
         if (resolved) {
+          const num = numberFor(idPart);
           parts.push({
             type: "link",
             url: `/${resolved.base}/${resolved.slug}`,
             data: {
               hProperties: {
                 class: "learning-link",
+                ...(num ? { "data-number": num } : {}),
               },
             },
             children: [{ type: "text", value: label }],
@@ -96,6 +139,7 @@ export default function remarkLearningLinks() {
 function buildIdMap() {
   const map = new Map(); // id -> { slug, base }
   const alias = new Map(); // alias -> id
+  const slugToId = new Map(); // slug -> id
 
   function walk(dir, base) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -122,11 +166,12 @@ function buildIdMap() {
         }
         const key = (id || slug).trim();
         if (!map.has(key)) map.set(key, { slug, base });
+        if (!slugToId.has(slug)) slugToId.set(slug, key);
       }
     }
   }
 
   if (fs.existsSync(CONCEPTS_DIR)) walk(CONCEPTS_DIR, "concept");
   if (fs.existsSync(SKILLS_DIR)) walk(SKILLS_DIR, "skill");
-  return { map, alias };
+  return { map, alias, slugToId };
 }
