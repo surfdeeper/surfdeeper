@@ -4,13 +4,7 @@ import LeftSidebar from "../components/sidebar/LeftSidebar.astro";
 import RightSidebar from "../components/sidebar/RightSidebar.astro";
 import { loadHomepageData } from "../utils/homepage-data";
 
-const {
-  spots,
-  guidesBySection,
-  comingSoonCountBySection,
-  recentCommits,
-  recentlyUpdated,
-} = await loadHomepageData();
+const { spots, recentCommits, recentlyUpdated } = await loadHomepageData();
 ---
 
 <Layout
@@ -94,10 +88,7 @@ const {
       </section>
 
       <!-- Left Sidebar -->
-      <LeftSidebar
-        guidesBySection={guidesBySection}
-        comingSoonCountBySection={comingSoonCountBySection}
-      />
+      <LeftSidebar />
 
       <!-- Right Sidebar -->
       <RightSidebar

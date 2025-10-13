@@ -1,27 +1,14 @@
 ---
 import LeftSidebarSection from "./LeftSidebarSection.astro";
-import { prepareSidebarSections } from "../../utils/sidebar-data";
-import type { SidebarData } from "../../utils/sidebar-data";
+import { buildSidebarSections } from "../../utils/sidebar-data";
 
-interface Props {
-  guidesBySection: Record<string, Array<{ title: string; url: string }>>;
-  comingSoonCountBySection: Record<string, number>;
-}
-
-const { guidesBySection, comingSoonCountBySection } = Astro.props;
-
-// Process the sidebar data using the utility function
-const sidebarData: SidebarData = {
-  guidesBySection,
-  comingSoonCountBySection,
-};
-
-const sections = prepareSidebarSections(sidebarData);
+// Compute sections from knowledge graph: paths, skills, concepts
+const sections = await buildSidebarSections();
 ---
 
 <aside class="left-sidebar">
   <div class="card">
-    <h3>🏄 Skills Guide</h3>
+    <h3>🏄 Guides</h3>
     <ul class="sidebar-links nested-guide links-neutral">
       {sections.map((section) => <LeftSidebarSection section={section} />)}
     </ul>

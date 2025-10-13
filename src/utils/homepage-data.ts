@@ -3,6 +3,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { getCollection } from "astro:content";
 import { isPlaceholderTodo } from "./guide-filters";
+import { buildGraph, loadGuides } from "./knowledge-graph";
 
 export interface UpdatedPage {
   title: string;
@@ -16,22 +17,18 @@ export async function loadHomepageData() {
   // Get all surf spots for the map preview
   const spots = await getCollection("spots");
 
-  // Get all typed guides and organize by semantic section (frontmatter category)
-  const concepts = await getCollection("concepts");
-  const skills = await getCollection("skills");
-  const allGuides = [...concepts, ...skills];
+  // Get all guides via knowledge graph and organize by semantic section (frontmatter category)
+  const entries = await loadGuides();
+  const graph = buildGraph(entries);
   const guidesBySection: Record<
     string,
     Array<{ slug: string; title: string; url: string }>
   > = {};
   const comingSoonCountBySection: Record<string, number> = {};
 
-  for (const guide of allGuides) {
-    // Typed entries have category in frontmatter
-    let section = (guide.data as any).category as string | undefined;
-
-    // If we still don't know the section, skip from sidebar to avoid mis-grouping
-    if (!section) continue;
+  for (const node of graph.nodes) {
+    const section = (node as any).category as string | undefined;
+    if (!section) continue; // Only include nodes with a category for sidebar sections
 
     // Initialize aggregates
     if (!guidesBySection[section]) guidesBySection[section] = [];
@@ -39,15 +36,16 @@ export async function loadHomepageData() {
       comingSoonCountBySection[section] = 0;
 
     // Count placeholders as "coming soon" and exclude from visible list
-    if (isPlaceholderTodo(guide.body)) {
+    if (node.isPlaceholder) {
       comingSoonCountBySection[section]++;
       continue;
     }
 
+    // Use knowledge graph URL which normalizes to /guide/<slug>
     guidesBySection[section].push({
-      slug: guide.slug,
-      title: guide.data.title,
-      url: `/guide/${guide.slug}`,
+      slug: node.id,
+      title: node.title,
+      url: node.url,
     });
   }
 

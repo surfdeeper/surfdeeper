@@ -7,25 +7,10 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 // sections are now derived dynamically from content categories
 
 export async function getStaticPaths() {
-  // Build paths from typed content and known section slugs
+  // Only build paths for typed content
   const concepts = await getCollection("concepts");
   const skills = await getCollection("skills");
-
-  const contentPaths = [...concepts, ...skills].map((e) => ({
-    params: { slug: e.slug },
-  }));
-
-  // Also include section pages derived from categories present in typed content
-  const knownSections = new Set(
-    [...concepts, ...skills]
-      .map((e) => (e.data as any).category)
-      .filter((s): s is string => typeof s === "string" && !!s),
-  );
-  const sectionPaths = Array.from(knownSections).map((slug) => ({
-    params: { slug },
-  }));
-
-  return [...contentPaths, ...sectionPaths];
+  return [...concepts, ...skills].map((e) => ({ params: { slug: e.slug } }));
 }
 
 const { slug } = Astro.params;
@@ -39,13 +24,8 @@ const allTyped = [...allConcepts, ...allSkills];
 // Try to find a typed entry by slug
 let entry = allTyped.find((e) => e.slug === slugStr);
 
-// If not a typed page, treat as section page if slug matches any category from typed content
-const knownSections = new Set(
-  allTyped
-    .map((e) => (e.data as any).category)
-    .filter((s): s is string => typeof s === "string" && !!s),
-);
-const isSectionPage = !entry && knownSections.has(slugStr);
+// Categories are deprecated: no section pages
+const isSectionPage = false;
 
 let Content: any = null;
 let data: any = {};
@@ -123,26 +103,6 @@ if (entry) {
         : "/guide";
   breadcrumbItems.push({ href: sectionHref, label: sectionLabel });
   breadcrumbItems.push({ label: data.title, ariaCurrent: "page" });
-} else if (isSectionPage) {
-  // Section: list typed entries whose category matches this section slug
-  sectionGuides = allTyped
-    .filter((e) => (e.data as any).category === slugStr)
-    .sort(
-      (a, b) =>
-        ((a.data as any).order ?? 999) - ((b.data as any).order ?? 999) ||
-        a.data.title.localeCompare(b.data.title),
-    );
-
-  // Fake a minimal section data object for rendering
-  data = {
-    title:
-      slugStr
-        .split("-")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ") || slugStr,
-    description: undefined,
-  };
-  breadcrumbItems.push({ label: data.title, ariaCurrent: "page" });
 } else {
   throw Astro.redirect("/guide");
 }
@@ -165,37 +125,7 @@ if (entry) {
       )
     }
 
-    {
-      isSectionPage && sectionGuides.length > 0 && (
-        <section class="section-guides">
-          <h2>Guides in this section</h2>
-          <ul class="guides-list">
-            {sectionGuides.map((guide) => {
-              const disabled = isPlaceholderTodo(guide.body);
-              return (
-                <li>
-                  <a
-                    class={disabled ? "is-disabled" : undefined}
-                    href={!disabled ? `/guide/${guide.slug}` : "#"}
-                    aria-disabled={disabled ? "true" : undefined}
-                    tabindex={disabled ? -1 : undefined}
-                  >
-                    {guide.data.title}
-                  </a>
-                  {disabled ? (
-                    <p class="guide-description">coming soon</p>
-                  ) : (
-                    guide.data.description && (
-                      <p class="guide-description">{guide.data.description}</p>
-                    )
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )
-    }
+    {false}
 
     {
       !isSectionPage && (prerequisites.length > 0 || leadsTo.length > 0) && (
