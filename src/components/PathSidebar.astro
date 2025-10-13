@@ -1,0 +1,160 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+
+type Props = {
+  pathId: string;
+  nodes?: string[];
+  title?: string;
+};
+
+const { pathId, nodes = [], title = "Path outline" } = Astro.props as Props;
+
+// Fetch concepts and skills once and build a lookup map by id/slug
+const concepts = (await getCollection(
+  "concepts",
+)) as CollectionEntry<"concepts">[];
+const skills = (await getCollection("skills")) as CollectionEntry<"skills">[];
+const all = [...concepts, ...skills];
+
+const idToEntry = new Map<string, (typeof all)[number]>();
+for (const e of all) {
+  const id = ((e.data as any).id || e.slug) as string;
+  if (!idToEntry.has(id)) idToEntry.set(id, e);
+}
+
+// If explicit nodes provided in the path frontmatter, follow that order.
+// Otherwise, derive items from concepts/skills whose data.paths includes this pathId.
+const derivedIds = all
+  .filter(
+    (e) =>
+      Array.isArray((e.data as any).paths) &&
+      (e.data as any).paths.includes(pathId),
+  )
+  .map((e) => ((e.data as any).id || e.slug) as string)
+  .sort((a, b) => {
+    const ea = idToEntry.get(a)!;
+    const eb = idToEntry.get(b)!;
+    return (ea.data.title || "").localeCompare(eb.data.title || "");
+  });
+
+const orderedIds = nodes.length > 0 ? nodes : derivedIds;
+const items = orderedIds
+  .map((id) => idToEntry.get(id))
+  .filter(Boolean)
+  .map((e) => ({
+    id: ((e!.data as any).id || e!.slug) as string,
+    title: e!.data.title as string,
+    slug: e!.slug as string,
+    type:
+      (e!.data as any).type ||
+      ((e!.collection as string) === "concepts" ? "concept" : "skill"),
+  }));
+---
+
+<aside class="path-sidebar" aria-label="{title}">
+  <div class="sidebar-card">
+    <h2 class="sidebar-title">{title}</h2>
+    {
+      items.length === 0 ? (
+        <p class="empty">No items have been added to this path yet.</p>
+      ) : (
+        <ol class="outline">
+          {items.map((it) => (
+            <li>
+              <a href={`/${it.type}/${it.slug}`} class="outline-link">
+                <span class="kicker">
+                  {it.type === "concept" ? "Concept" : "Skill"}
+                </span>
+                <span class="label">{it.title}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+  </div>
+  <style>
+    .path-sidebar {
+      position: relative;
+    }
+    @media (min-width: 960px) {
+      .path-sidebar {
+        position: sticky;
+        top: var(--space-8);
+        align-self: start;
+      }
+    }
+
+    .sidebar-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-title {
+      margin: 0 0 var(--space-4) 0;
+      font-size: var(--font-size-lg);
+      color: var(--color-text);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .empty {
+      color: var(--color-text-muted);
+      margin: 0;
+      font-size: var(--font-size-md);
+    }
+
+    .outline {
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: var(--space-2);
+    }
+    .outline li {
+      counter-increment: step;
+    }
+    .outline-link {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-3);
+      align-items: baseline;
+      text-decoration: none;
+      padding: var(--space-3) var(--space-4);
+      border-radius: 10px;
+      color: var(--color-text);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+    .outline-link:hover {
+      background: var(--color-surface-hover);
+      border-color: var(--color-accent);
+    }
+    .outline-link::before {
+      content: counter(step, decimal-leading-zero);
+      font-variant-numeric: tabular-nums;
+      color: var(--color-accent);
+      font-weight: var(--font-weight-bold);
+      min-width: 2ch;
+    }
+    .kicker {
+      grid-column: 1 / -1;
+      order: -1;
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+    .label {
+      grid-column: 2;
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+    }
+  </style>
+</aside>
