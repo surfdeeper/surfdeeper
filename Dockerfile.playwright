@@ -15,7 +15,6 @@ RUN apt-get update \
     fonts-noto-color-emoji \
     fonts-roboto \
     fonts-roboto-unhinted \
-    fonts-roboto-mono \
   && rm -rf /var/lib/apt/lists/*
 
 # Install only dependencies first to leverage Docker layer caching

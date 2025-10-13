@@ -16,15 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node from .nvmrc
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
       - name: Install fonts for consistent rendering
         run: |
           apt-get update
@@ -32,8 +23,10 @@ jobs:
             fonts-liberation \
             fonts-noto-color-emoji \
             fonts-roboto \
-            fonts-roboto-unhinted \
-            fonts-roboto-mono
+            fonts-roboto-unhinted
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build site
         run: npm run build
