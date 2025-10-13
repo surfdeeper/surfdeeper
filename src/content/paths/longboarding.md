@@ -19,7 +19,7 @@ Longboarding is surfing's **flowing meditation**—a dance of glide, trim, and g
 
 ### Why Start with a Longboard?
 
-If you're new to surfing, a longboard is often the **ideal first board**. The extra length and volume make paddling easier, catching waves more forgiving, and standing up more stable—giving you more time to focus on the fundamentals of balance and wave reading.
+If you're new to surfing, a longboard is often the **ideal first board**. The extra length and volume make paddling easier, catching waves more forgiving, and standing up more stable—giving you more time to focus on fundamentals like [[cobra-pose]] and [[angling-down-the-line]].
 
 ## Core Longboard Skills
 

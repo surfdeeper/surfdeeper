@@ -17,7 +17,7 @@ nodes:
 
 ## What Makes a Good First Wave?
 
-Catching your first wave isn't about random luck—it's about understanding the **connected flow** from paddling to standing to riding. Think of it as one continuous motion, not isolated steps. Each part flows naturally into the next: paddle position → cobra lift → angle → pop-up → bottom turn.
+Catching your first wave isn't about random luck—it's about understanding the **connected flow** from paddling to standing to riding. Think of it as one continuous motion, not isolated steps. Each part flows naturally into the next: paddle position → [[cobra-pose]] → angle → [[pop-up]] → bottom turn.
 
 ### Start on Broken Waves
 

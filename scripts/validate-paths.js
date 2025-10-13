@@ -122,16 +122,16 @@ function validateBidirectionalLinks() {
     );
 
     if (linkedGuides.size === 0) {
-      console.warn(
-        `⚠️  Path '${pathSlug}' has no inline [[guide-id]] learning links`,
+      console.error(
+        `❌ Invariant violated: Path '${pathSlug}' has no inline [[guide-id]] learning links`,
       );
-      console.warn(
-        `   ↳ Consider adding [[guide-id]] links in: ${path.relative(
+      console.error(
+        `   ↳ Fix: Add at least one [[guide-id]] reference in: ${path.relative(
           ROOT,
           pathFile,
         )}`,
       );
-      warnings++;
+      errors++;
     }
 
     // Check each linked guide exists and references this path back
