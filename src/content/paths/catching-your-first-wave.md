@@ -30,17 +30,17 @@ The takeoff is **one fluid motion**, not a checklist. Here's how the pieces conn
 
 ### 1. Strategic Paddling
 
-Learn proper [[paddling-efficiency|paddling technique]] to position yourself where the wave will carry you. Paddling isn't about brute force—it's about **strategic positioning**. Over-paddling exhausts you and puts you in the wrong spot, often resulting in the wave breaking on top of you.
+Learn proper [paddling technique](:paddling-efficiency) to position yourself where the wave will carry you. Paddling isn't about brute force—it's about **strategic positioning**. Over-paddling exhausts you and puts you in the wrong spot, often resulting in the wave breaking on top of you.
 
 > **Key insight**: The phrase "catching a wave" is slightly misleading. You don't chase waves aggressively; you align with them and let them carry you.
 
 ### 2. The Cobra Lift
 
-As the wave begins to lift you, use [[cobra-pose]] to press into the board and raise your chest smoothly. This subtle lift is your transition from paddling into the pop-up—it's not a separate move, it's the **bridge** between phases.
+As the wave begins to lift you, use [cobra pose](:cobra-pose) to press into the board and raise your chest smoothly. This subtle lift is your transition from paddling into the pop-up—it's not a separate move, it's the **bridge** between phases.
 
 ### 3. Angle & Pop-Up
 
-Master [[angling-down-the-line]] to match the wave's direction as you rise. The [[pop-up]] flows directly from your cobra lift and paddle momentum. Understanding the [[popping-mechanics]] helps you move smoothly rather than mechanically.
+Master [angling down the line](:angling-down-the-line) to match the wave's direction as you rise. The [pop-up](:pop-up) flows directly from your cobra lift and paddle momentum. Understanding the [popping mechanics](:popping-mechanics) helps you move smoothly rather than mechanically.
 
 Your body should flow from the chest lift directly into your feet finding their place on the board—**no pause, no hesitation**.
 
@@ -54,7 +54,7 @@ Even with perfect flow, takeoffs can be tricky. Here's how to troubleshoot witho
 
 ### Pearling (Nose Dives)
 
-Learn to [[avoid-pearling]] by understanding **all the variables**: board length, speed, timing, position, and angle. Simple advice like "lean back more" might fix pearling but can stall your board if speed is lacking. The solution is rarely a single tweak—it's finding the right balance between speed, angle, and weight distribution.
+Learn to [avoid pearling](:avoid-pearling) by understanding **all the variables**: board length, speed, timing, position, and angle. Simple advice like "lean back more" might fix pearling but can stall your board if speed is lacking. The solution is rarely a single tweak—it's finding the right balance between speed, angle, and weight distribution.
 
 ### Late Catches
 
