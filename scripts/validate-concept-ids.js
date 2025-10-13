@@ -59,9 +59,90 @@ for (const f of files) {
   checkList(fm.data.leadsTo, f);
 }
 
+// Build alias map for validation
+const aliases = new Map();
+for (const f of files) {
+  const fm = matter.read(f);
+  const id = fm.data.id;
+  if (id && fm.data.aliases) {
+    for (const alias of fm.data.aliases) {
+      aliases.set(alias, id);
+    }
+  }
+}
+
+// Validate magic links in markdown content (:id syntax)
+function validateMagicLinks(filePath, content) {
+  const magicLinkRegex = /\[([^\]]+)\]\((:([^)|]+)(?:\|[^)]*)?)\)/g;
+  let match;
+  const lines = content.split("\n");
+
+  while ((match = magicLinkRegex.exec(content)) !== null) {
+    const fullMatch = match[0];
+    const label = match[1];
+    const url = match[2];
+    const linkId = match[3]; // The ID after the colon
+
+    // Get candidates from the URL
+    const candidates = url
+      .split("|")
+      .map((p) => p.replace(/^:/, "").trim())
+      .filter(Boolean);
+
+    let resolved = false;
+    for (const c of candidates) {
+      if (ids.has(c) || aliases.has(c)) {
+        resolved = true;
+        break;
+      }
+    }
+
+    if (!resolved) {
+      const lineNumber = content.substring(0, match.index).split("\n").length;
+      console.error(
+        `❌ Broken magic link [${label}](${url}) in ${path.relative(ROOT, filePath)}:${lineNumber}`,
+      );
+      console.error(`   Tried to resolve: ${candidates.join(", ")}`);
+      errors++;
+    }
+  }
+}
+
+// Validate learning links in markdown content ([[id]] syntax)
+function validateLearningLinks(filePath, content) {
+  const learningLinkRegex = /\[\[([^\]]+)\]\]/g;
+  let match;
+
+  while ((match = learningLinkRegex.exec(content)) !== null) {
+    const fullMatch = match[0];
+    const contentStr = match[1].trim();
+    const [idPart] = contentStr.split("|").map((s) => s.trim());
+
+    let resolved = false;
+    if (ids.has(idPart) || aliases.has(idPart)) {
+      resolved = true;
+    }
+
+    if (!resolved) {
+      const lineNumber = content.substring(0, match.index).split("\n").length;
+      console.error(
+        `❌ Broken learning link [[${contentStr}]] in ${path.relative(ROOT, filePath)}:${lineNumber}`,
+      );
+      errors++;
+    }
+  }
+}
+
+// Check all magic links and learning links in markdown content
+for (const f of files) {
+  const content = fs.readFileSync(f, "utf8");
+  validateMagicLinks(f, content);
+  validateLearningLinks(f, content);
+}
+
 if (errors) {
   console.error(`\n❌ Validation failed with ${errors} error(s).`);
   process.exit(1);
 } else {
-  console.log("✅ Concept IDs and relationships look good!");
+  console.log("✅ Concept IDs, relationships, and magic links look good!");
 }
