@@ -12,6 +12,8 @@ import matter from "gray-matter";
 
 const ROOT = process.cwd();
 const GUIDES_DIR = path.join(ROOT, "src/content/guides");
+const CONCEPTS_DIR = path.join(ROOT, "src/content/concepts");
+const SKILLS_DIR = path.join(ROOT, "src/content/skills");
 const PATHS_DIR = path.join(ROOT, "src/content/paths");
 const OUTPUT_FILE = path.join(ROOT, "graph.json");
 
@@ -71,14 +73,16 @@ function parsePath(filePath) {
   const slug = path.basename(filePath, ".md");
   const id = data.id || slug;
 
-  // Extract guide references from content using [[guide-id]] syntax
+  // Prefer explicit nodes in frontmatter, else extract from content using [[guide-id]] syntax
   const content = fm.content || "";
   const linkPattern = /\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
-  const nodes = [];
+  const nodes = Array.isArray(data.nodes) ? [...data.nodes] : [];
   let match;
 
-  while ((match = linkPattern.exec(content)) !== null) {
-    nodes.push(match[1].trim());
+  if (nodes.length === 0) {
+    while ((match = linkPattern.exec(content)) !== null) {
+      nodes.push(match[1].trim());
+    }
   }
 
   return {
@@ -160,13 +164,15 @@ function exportGraph() {
   console.log("🔍 Scanning content directories...");
 
   const guideFiles = walk(GUIDES_DIR);
+  const conceptFiles = walk(CONCEPTS_DIR);
+  const skillFiles = walk(SKILLS_DIR);
   const pathFiles = walk(PATHS_DIR);
 
   console.log(
-    `📁 Found ${guideFiles.length} guide files and ${pathFiles.length} path files`,
+    `📁 Found ${guideFiles.length} guide files, ${conceptFiles.length} concept files, ${skillFiles.length} skill files and ${pathFiles.length} path files`,
   );
 
-  // Parse all guides and categorize by kind
+  // Parse all guides and categorize by kind (legacy support)
   const concepts = [];
   const skills = [];
   const sections = [];
@@ -187,16 +193,61 @@ function exportGraph() {
     }
   }
 
+  // Parse new typed content
+  function parseTyped(filePath, type) {
+    const fm = matter.read(filePath);
+    const data = fm.data || {};
+    const slug = path.basename(filePath, ".md");
+    const id = data.id || slug;
+    const base = {
+      id,
+      title: data.title || slug,
+      description: data.description,
+      category: data.category,
+      level: data.skillLevel || data.level, // map skillLevel -> level
+      levels: data.levels || [],
+      paths: data.paths || [],
+      dependsOn: data.dependsOn || [],
+      leadsTo: data.leadsTo || [],
+      appliesTo: data.appliesTo || [],
+      aliases: data.aliases || [],
+      tags: [],
+    };
+    return { type, ...base };
+  }
+
+  const typedConcepts = conceptFiles.map((f) => parseTyped(f, "concept"));
+  const typedSkills = skillFiles.map((f) => parseTyped(f, "skill"));
+
+  // Merge legacy and typed, prefer typed on ID conflict
+  const byId = new Map();
+  for (const c of concepts)
+    if (!byId.has(c.id)) byId.set(c.id, { t: "c", v: c });
+  for (const s of skills) if (!byId.has(s.id)) byId.set(s.id, { t: "s", v: s });
+  for (const c of typedConcepts) byId.set(c.id, { t: "c", v: c });
+  for (const s of typedSkills) byId.set(s.id, { t: "s", v: s });
+
+  const mergedConcepts = [];
+  const mergedSkills = [];
+  for (const { t, v } of byId.values()) {
+    if (t === "c") mergedConcepts.push(v);
+    else if (t === "s") mergedSkills.push(v);
+  }
+
   // Parse all paths
   const paths = pathFiles.map((file) => parsePath(file));
 
   console.log(
-    `📊 Categorized: ${concepts.length} concepts, ${skills.length} skills, ${sections.length} sections, ${paths.length} paths`,
+    `📊 Categorized: ${mergedConcepts.length} concepts, ${mergedSkills.length} skills, ${sections.length} sections, ${paths.length} paths`,
   );
 
   // Validate references
   console.log("🔍 Validating references...");
-  const { warnings, errors } = validateReferences(concepts, skills, paths);
+  const { warnings, errors } = validateReferences(
+    mergedConcepts,
+    mergedSkills,
+    paths,
+  );
 
   // Report validation results
   if (errors.length > 0) {
@@ -215,7 +266,7 @@ function exportGraph() {
 
   // Build output structure
   const graph = {
-    concepts: concepts.map((c) => ({
+    concepts: mergedConcepts.map((c) => ({
       id: c.id,
       title: c.title,
       description: c.description,
@@ -229,7 +280,7 @@ function exportGraph() {
       aliases: c.aliases,
       tags: c.tags,
     })),
-    skills: skills.map((s) => ({
+    skills: mergedSkills.map((s) => ({
       id: s.id,
       title: s.title,
       description: s.description,
@@ -260,8 +311,8 @@ function exportGraph() {
     })),
     metadata: {
       exportedAt: new Date().toISOString(),
-      totalConcepts: concepts.length,
-      totalSkills: skills.length,
+      totalConcepts: mergedConcepts.length,
+      totalSkills: mergedSkills.length,
       totalPaths: paths.length,
       totalSections: sections.length,
       validationErrors: errors.length,

@@ -6,6 +6,14 @@ title: Catching Your First Wave
 description: One fluid sequence from paddle to pop-up to first bottom turn—start on broken waves, connect the motions, and build flow.
 icon: 🏄
 order: 0
+type: path
+nodes:
+  - paddling-efficiency
+  - cobra-pose
+  - angling-down-the-line
+  - pop-up
+  - popping-mechanics
+  - avoid-pearling
 ---
 
 ## What Makes a Good First Wave?

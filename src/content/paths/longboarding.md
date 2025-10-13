@@ -6,6 +6,12 @@ title: Longboarding
 description: Flowing style, trim, and classic maneuvers across the lineup.
 icon: 🏄
 order: 1
+type: path
+nodes:
+  - choose-your-first-board
+  - cobra-pose
+  - angling-down-the-line
+  - avoid-pearling
 ---
 
 ## The Art of Longboarding
