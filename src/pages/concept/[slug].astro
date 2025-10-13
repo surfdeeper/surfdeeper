@@ -48,7 +48,33 @@ const mapIds = (ids?: string[]): RelatedLink[] =>
     }));
 
 const prerequisites = mapIds(data.dependsOn);
-const leadsTo = mapIds(data.leadsTo);
+// Build reverse "leads to" links: any entry that dependsOn this currentId
+const entryToLink = (e: any): RelatedLink => ({
+  id: ((e!.data as any).id || e!.slug) as string,
+  title: e!.data.title,
+  slug: e!.slug,
+  type: (e!.data as any).type || (e!.collection as string),
+});
+const reverseLeads: RelatedLink[] = all
+  .filter((e: any) => {
+    const deps = (e.data as any)?.dependsOn as string[] | undefined;
+    if (!Array.isArray(deps)) return false;
+    const norm = deps
+      .filter((d) => typeof d === "string")
+      .map((d) => d.trim().toLowerCase());
+    const idCandidate = currentId.trim().toLowerCase();
+    const slugCandidate = entry.slug.trim().toLowerCase();
+    return norm.includes(idCandidate) || norm.includes(slugCandidate);
+  })
+  .map(entryToLink);
+const leadsTo = (() => {
+  const combined = [...mapIds(data.leadsTo), ...reverseLeads].filter(
+    (l) => l.id !== currentId,
+  );
+  const byId = new Map<string, RelatedLink>();
+  for (const l of combined) if (!byId.has(l.id)) byId.set(l.id, l);
+  return Array.from(byId.values());
+})();
 ---
 
 <Layout
