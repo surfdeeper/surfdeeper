@@ -44,7 +44,7 @@ async function main() {
     console.log(
       `\n✅ Archived ${mdFiles.length} files to ${path.relative(root, archiveDir)}`,
     );
-    console.log("Kept _sections.json in place.");
+    console.log("Legacy _sections.json is no longer used.");
   } catch (err) {
     console.error("Failed to archive legacy guides:", err);
     process.exit(1);

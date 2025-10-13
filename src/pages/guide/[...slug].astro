@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { isPlaceholderTodo } from "../../utils/guide-filters";
 import GuidePathBreadcrumbs from "../../components/GuidePathBreadcrumbs.astro";
-import sections from "../../content/guides/_sections.json";
+// sections are now derived dynamically from content categories
 
 export async function getStaticPaths() {
   // Build paths from typed content and known section slugs
@@ -14,7 +14,13 @@ export async function getStaticPaths() {
     params: { slug: e.slug },
   }));
 
-  const sectionPaths = Object.keys(sections).map((slug) => ({
+  // Also include section pages derived from categories present in typed content
+  const knownSections = new Set(
+    [...concepts, ...skills]
+      .map((e) => (e.data as any).category)
+      .filter((s): s is string => typeof s === "string" && !!s),
+  );
+  const sectionPaths = Array.from(knownSections).map((slug) => ({
     params: { slug },
   }));
 
@@ -32,9 +38,13 @@ const allTyped = [...allConcepts, ...allSkills];
 // Try to find a typed entry by slug
 let entry = allTyped.find((e) => e.slug === slugStr);
 
-// If not a typed page, treat as section page if slug matches known sections
-const isSectionPage =
-  !entry && Object.prototype.hasOwnProperty.call(sections, slugStr);
+// If not a typed page, treat as section page if slug matches any category from typed content
+const knownSections = new Set(
+  allTyped
+    .map((e) => (e.data as any).category)
+    .filter((s): s is string => typeof s === "string" && !!s),
+);
+const isSectionPage = !entry && knownSections.has(slugStr);
 
 let Content: any = null;
 let data: any = {};
@@ -98,7 +108,11 @@ if (entry) {
 
   // Fake a minimal section data object for rendering
   data = {
-    title: (sections as any)[slugStr]?.label || slugStr,
+    title:
+      slugStr
+        .split("-")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ") || slugStr,
     description: undefined,
   };
 } else {

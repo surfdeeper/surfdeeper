@@ -11,6 +11,7 @@ const GUIDES_DIR = path.join(ROOT, "src/content/guides");
 const THREADS_DIR = path.join(ROOT, "src/content/threads");
 
 function walk(dir) {
+  if (!fs.existsSync(dir)) return [];
   const files = [];
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, e.name);

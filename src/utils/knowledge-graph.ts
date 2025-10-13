@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+import { isPlaceholderTodo } from "./guide-filters";
 type ConceptEntry = CollectionEntry<"concepts">;
 type SkillEntry = CollectionEntry<"skills">;
 export type GuideEntry = ConceptEntry | SkillEntry;
@@ -12,6 +13,7 @@ export type GuideNode = {
   paths: string[];
   kind?: string;
   category?: string;
+  isPlaceholder?: boolean;
 };
 
 export type GuideEdge = {
@@ -55,6 +57,7 @@ export function buildGraph(entries: GuideEntry[]): GuideGraph {
     paths: (e.data as any).paths || [],
     kind: (e.data as any).kind,
     category: (e.data as any).category,
+    isPlaceholder: isPlaceholderTodo((e as any).body),
   }));
 
   const byId = new Map(nodes.map((n) => [n.id, n] as const));

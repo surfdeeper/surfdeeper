@@ -61,17 +61,32 @@ class LinkValidator {
     for (const fp of conceptFiles) addSlugFrom(conceptsDir, fp);
     for (const fp of skillFiles) addSlugFrom(skillsDir, fp);
 
-    // Also include section slugs from src/content/guides/_sections.json
+    // Also include section slugs derived from typed content categories
     try {
-      const sectionsPath = path.join(this.contentDir, "guides/_sections.json");
-      const sectionsRaw = await fs.readFile(sectionsPath, "utf-8");
-      const sections = JSON.parse(sectionsRaw) as Record<string, unknown>;
-      for (const sectionSlug of Object.keys(sections)) {
+      const categories = new Set<string>();
+      const readAll = async (dir: string) => {
+        const files = await this.getMarkdownFiles(dir).catch(() => []);
+        for (const fp of files) {
+          const content = await fs.readFile(fp, "utf-8");
+          const fmMatch = /^---([\s\S]*?)---/m.exec(content);
+          if (fmMatch) {
+            const fm = fmMatch[1];
+            const catMatch = /^\s*category:\s*([^\n]+)$/m.exec(fm);
+            if (catMatch) {
+              const slug = catMatch[1].trim().replace(/^"|"$/g, "");
+              if (slug) categories.add(slug);
+            }
+          }
+        }
+      };
+      await readAll(conceptsDir);
+      await readAll(skillsDir);
+      for (const sectionSlug of categories) {
         this.availableGuides.add(sectionSlug);
         this.availableGuides.add(`${sectionSlug}/index`);
       }
     } catch (e) {
-      // ignore if sections file is missing
+      // ignore if category discovery fails
     }
 
     // Index all public files (images, etc.)

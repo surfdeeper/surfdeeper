@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import { getCollection } from "astro:content";
-import sections from "../content/guides/_sections.json";
+// Legacy sections file removed; we'll compute labels from category slugs
 
 // Import known diagram assets from src/assets so Astro can optimize them
 import spillingWaveImg from "../assets/spilling-wave.png";
@@ -49,8 +49,11 @@ for (const guide of allGuides) {
 
   const guideLink = `/guide/${guide.slug}`;
   const guideTitle = guide.data.title;
-  const sectionData = sections[sectionSlug as keyof typeof sections];
-  const sectionLabel = sectionData?.label || sectionSlug;
+  const sectionLabel =
+    (sectionSlug || "")
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ") || sectionSlug;
 
   // Get the raw markdown body
   const body = guide.body;

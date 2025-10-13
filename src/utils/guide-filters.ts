@@ -8,9 +8,30 @@
 export function isPlaceholderTodo(
   markdown: string | undefined | null,
 ): boolean {
-  const normalized = (markdown ?? "")
+  const text = (markdown ?? "").trim();
+  if (!text) return false;
+
+  // Check the first non-empty line for common placeholders
+  const firstLine = text.split(/\r?\n/).find((l) => l.trim().length > 0) || "";
+  const firstTrim = firstLine.trim();
+
+  // Matches: "Coming soon", "coming soon.", etc.
+  if (/^coming\s*soon[.!?]*$/i.test(firstTrim)) return true;
+
+  // Matches: "TODO", "to-do", "to do"
+  if (/^to\s*-?\s*do\b|^todo\b/i.test(firstTrim)) return true;
+
+  // Matches: lines that start with "Placeholder" (e.g., "Placeholder: concept page ...")
+  if (/^placeholder\b/i.test(firstTrim)) return true;
+
+  // Fallback strict normalization check for entire doc
+  const normalized = text
     .toLowerCase()
     .replace(/[^a-z]/g, "")
     .trim();
-  return normalized === "todo" || normalized == "comingsoon";
+  return (
+    normalized === "todo" ||
+    normalized === "comingsoon" ||
+    normalized === "placeholder"
+  );
 }

@@ -8,11 +8,8 @@ import {
 import { getCollection, type CollectionEntry } from "astro:content";
 
 // Props
-interface Props {
-  /** Show footer link to full Paths index */
-  showFooterLink?: boolean;
-}
-const { showFooterLink = true } = Astro.props as Props;
+interface Props {}
+const {} = Astro.props as Props;
 
 // Data
 const entries = await loadGuides();
@@ -56,11 +53,22 @@ const paths = pathIds.map((id) => {
                 <span class="badge">{items.length}</span>
               </div>
               <ul class="preview links-neutral stretched-content">
-                {items.slice(0, 4).map((n) => (
-                  <li>
-                    <a href={n.url}>{n.title}</a>
-                  </li>
-                ))}
+                {items.slice(0, 4).map((n) => {
+                  const disabled = (n as any).isPlaceholder === true;
+                  return (
+                    <li>
+                      <a
+                        class={disabled ? "is-disabled" : undefined}
+                        href={disabled ? "#" : n.url}
+                        aria-disabled={disabled ? "true" : undefined}
+                        tabindex={disabled ? -1 : undefined}
+                      >
+                        {n.title}
+                      </a>
+                      {disabled && <span class="soon"> — coming soon</span>}
+                    </li>
+                  );
+                })}
                 {items.length > 4 && (
                   <li class="more">+{items.length - 4} more</li>
                 )}
@@ -69,14 +77,6 @@ const paths = pathIds.map((id) => {
           );
         })}
       </section>
-
-      {showFooterLink && (
-        <footer class="centered-footer">
-          <a class="paths-footer-link" href="/paths">
-            View all paths →
-          </a>
-        </footer>
-      )}
     </>
   )
 }
@@ -117,14 +117,16 @@ const paths = pathIds.map((id) => {
     color: var(--color-accent);
   }
 
-  .paths-footer-link {
-    color: var(--color-accent);
+  .preview a.is-disabled {
+    pointer-events: none;
+    opacity: 0.6;
     text-decoration: none;
-    font-weight: var(--font-weight-semibold);
+    cursor: default;
+  }
+  .preview .soon {
+    color: var(--color-text-muted);
+    font-style: italic;
   }
 
-  .paths-footer-link:hover,
-  .paths-footer-link:focus {
-    text-decoration: underline;
-  }
+  /* footer link removed */
 </style>

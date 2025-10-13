@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
+import { isPlaceholderTodo } from "../utils/guide-filters";
 
 interface Props {
   /** Optional limit for number of skills to show */
@@ -42,24 +43,32 @@ const skills = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
     <ul class="grid-cards links-inherit">
       {skills.map((s) => {
         const lvl = (s.data as any).skillLevel || (s.data as any).level;
+        const disabled = isPlaceholderTodo(s.body);
+        const href = `/guide/${(s.data as any).id || s.slug}`;
         return (
           <li class="card">
             <div class="card-content">
               <div class="card-header">
                 <h3 class="card-title heading heading-sm">
                   <a
-                    class="card-link"
-                    href={`/guide/${(s.data as any).id || s.slug}`}
+                    class={`card-link${disabled ? " is-disabled" : ""}`}
+                    href={disabled ? "#" : href}
+                    aria-disabled={disabled ? "true" : undefined}
+                    tabindex={disabled ? -1 : undefined}
                   >
                     {s.data.title}
                   </a>
                 </h3>
                 {lvl && <span class="badge">{toTitleCase(String(lvl))}</span>}
               </div>
-              {s.data.description && (
-                <p class="card-desc text-sm text-secondary">
-                  {s.data.description}
-                </p>
+              {disabled ? (
+                <p class="card-desc coming-soon">coming soon</p>
+              ) : (
+                s.data.description && (
+                  <p class="card-desc text-sm text-secondary">
+                    {s.data.description}
+                  </p>
+                )
               )}
             </div>
           </li>
@@ -79,5 +88,17 @@ const skills = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
   .empty {
     text-align: center;
     color: var(--color-text-muted);
+  }
+
+  /* Placeholder state */
+  .card-link.is-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    text-decoration: none;
+    cursor: default;
+  }
+  .coming-soon {
+    color: var(--color-text-muted);
+    font-style: italic;
   }
 </style>

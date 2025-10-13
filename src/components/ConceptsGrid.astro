@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
+import { isPlaceholderTodo } from "../utils/guide-filters";
 
 interface Props {
   /** If true, shows a footer link to the Concepts section on the Guides page */
@@ -26,25 +27,35 @@ const concepts = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
   ) : (
     <>
       <ul class="grid-cards links-inherit">
-        {concepts.map((c) => (
-          <li class="card">
-            <div class="card-content">
-              <h3 class="card-title heading heading-sm">
-                <a
-                  class="card-link"
-                  href={`/guide/${(c.data as any).id || c.slug}`}
-                >
-                  {c.data.title}
-                </a>
-              </h3>
-              {c.data.description && (
-                <p class="card-desc text-sm text-secondary">
-                  {c.data.description}
-                </p>
-              )}
-            </div>
-          </li>
-        ))}
+        {concepts.map((c) => {
+          const disabled = isPlaceholderTodo(c.body);
+          const href = `/guide/${(c.data as any).id || c.slug}`;
+          return (
+            <li class="card">
+              <div class="card-content">
+                <h3 class="card-title heading heading-sm">
+                  <a
+                    class={`card-link${disabled ? " is-disabled" : ""}`}
+                    href={disabled ? "#" : href}
+                    aria-disabled={disabled ? "true" : undefined}
+                    tabindex={disabled ? -1 : undefined}
+                  >
+                    {c.data.title}
+                  </a>
+                </h3>
+                {disabled ? (
+                  <p class="card-desc coming-soon">coming soon</p>
+                ) : (
+                  c.data.description && (
+                    <p class="card-desc text-sm text-secondary">
+                      {c.data.description}
+                    </p>
+                  )
+                )}
+              </div>
+            </li>
+          );
+        })}
       </ul>
 
       {showFooterLink && (
@@ -73,5 +84,17 @@ const concepts = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
   .concepts-footer-link:hover,
   .concepts-footer-link:focus {
     text-decoration: underline;
+  }
+
+  /* Placeholder state */
+  .card-link.is-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    text-decoration: none;
+    cursor: default;
+  }
+  .coming-soon {
+    color: var(--color-text-muted);
+    font-style: italic;
   }
 </style>
