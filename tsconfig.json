@@ -1,11 +1,7 @@
 {
+  "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "jsx": "preserve",
-    "strict": true,
-    "skipLibCheck": true,
+    // Keep project-specific types
     "types": ["astro/client", "node"]
   },
   "exclude": ["node_modules", "dist", "build", ".astro", "surfdeeper3"]

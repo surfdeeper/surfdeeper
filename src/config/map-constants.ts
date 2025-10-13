@@ -37,7 +37,7 @@ export interface MapTheme {
   url: string;
   attribution: string;
   maxZoom: number;
-  subdomains?: string;
+  subdomains?: string[];
 }
 
 export const MAP_THEMES: Record<string, MapTheme> = {

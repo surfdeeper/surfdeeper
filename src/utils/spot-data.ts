@@ -49,7 +49,9 @@ export function serializeSpots(spots: SpotEntry[]): SerializedSpot[] {
  * @param elementId The ID of the script element containing spot data
  * @returns Parsed spot data or null if parsing fails
  */
-export function getSpotDataFromElement(elementId: string): any {
+export function getSpotDataFromElement(
+  elementId: string,
+): SerializedSpot | null {
   const dataElement = document.getElementById(elementId);
   if (!dataElement) {
     console.error(`Element with ID "${elementId}" not found`);
@@ -58,7 +60,7 @@ export function getSpotDataFromElement(elementId: string): any {
 
   try {
     const json = dataElement.textContent || "{}";
-    return JSON.parse(json);
+    return JSON.parse(json) as SerializedSpot;
   } catch (error) {
     console.error(
       `Failed to parse spot data from element "${elementId}":`,
@@ -73,21 +75,21 @@ export function getSpotDataFromElement(elementId: string): any {
  * @param elementId The ID of the script element containing spots array
  * @returns Array of parsed spot data or empty array if parsing fails
  */
-export function getSpotsDataFromElement(elementId: string): any[] {
+export function getSpotsDataFromElement(elementId: string): SerializedSpot[] {
   const dataElement = document.getElementById(elementId);
   if (!dataElement) {
     console.error(`Element with ID "${elementId}" not found`);
-    return [];
+    return [] as SerializedSpot[];
   }
 
   try {
     const json = dataElement.textContent || "[]";
-    return JSON.parse(json);
+    return JSON.parse(json) as SerializedSpot[];
   } catch (error) {
     console.error(
       `Failed to parse spots data from element "${elementId}":`,
       error,
     );
-    return [];
+    return [] as SerializedSpot[];
   }
 }

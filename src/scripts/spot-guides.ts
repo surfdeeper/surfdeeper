@@ -2,7 +2,7 @@ import { MAP_DEFAULTS } from "../config/map-constants";
 import { createBaseMap, waitForLeaflet } from "../utils/leaflet-setup";
 import { getSpotsDataFromElement } from "../utils/spot-data";
 
-type LeafletMarker = any; // Using any to avoid bringing in Leaflet types; Astro runtime provides L at window
+type LeafletMarker = L.Marker;
 
 interface SpotLike {
   title: string;
@@ -98,7 +98,7 @@ function initMap(): void {
     const map = createBaseMap("map", MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM);
     if (!map) return;
 
-    const L = (window as any).L;
+    const L = (window as Window & typeof globalThis).L;
     const markers: LeafletMarker[] = [];
     for (const spot of spots) {
       if (
@@ -113,11 +113,12 @@ function initMap(): void {
         marker.bindPopup(popup);
 
         // Store spot data on marker for later use
-        (marker as any).spotData = spot;
+        // Attach custom data in a type-safe-ish way via declaration merging if needed; keep local cast minimal
+        (marker as unknown as { spotData?: SpotLike }).spotData = spot;
 
         // Listen for popup open events to attach event listeners
         marker.on("popupopen", () => {
-          const editLink = document.querySelector<HTMLElement>(
+          const editLink = document.querySelector<HTMLAnchorElement>(
             `.edit-location-link[data-slug="${spot.slug}"]`,
           );
           const doneBtn = document.querySelector<HTMLButtonElement>(
