@@ -12,7 +12,6 @@ Reaching the lineup quickly keeps energy for wave riding. Combine smart position
 ## Core Skills
 
 - [[paddling-efficiency]]
-- [[angling-down-the-line]]
 
 ## Choose the Right Technique
 
