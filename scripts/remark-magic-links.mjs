@@ -74,17 +74,12 @@ export default function remarkMagicLinks() {
       if (resolvedSlug) {
         node.url = `/guide/${resolvedSlug}`;
       } else {
-        // Leave label, mark unresolved
-        node.data = node.data || {};
-        node.data.hProperties = {
-          ...(node.data.hProperties || {}),
-          class: [
-            ...(node.data.hProperties?.class
-              ? [node.data.hProperties.class]
-              : []),
-            "broken-magic-link",
-          ].join(" "),
-        };
+        // Convert broken link to plain text - hide the link entirely
+        node.type = "text";
+        node.value = node.children?.[0]?.value || "";
+        delete node.url;
+        delete node.children;
+        delete node.data;
       }
     });
   };

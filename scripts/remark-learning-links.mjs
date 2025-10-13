@@ -97,16 +97,10 @@ export default function remarkLearningLinks() {
             children: [{ type: "text", value: label }],
           });
         } else {
-          // Unresolved - keep as text with broken link indicator
+          // Unresolved - hide the link entirely, just show as plain text
           parts.push({
-            type: "link",
-            url: "#",
-            data: {
-              hProperties: {
-                class: "broken-learning-link",
-              },
-            },
-            children: [{ type: "text", value: label }],
+            type: "text",
+            value: label,
           });
         }
 
