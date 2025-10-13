@@ -21,11 +21,13 @@ Longboarding is surfing's **flowing meditation**—a dance of glide, trim, and g
 
 If you're new to surfing, a longboard is often the **ideal first board**. The extra length and volume make paddling easier, catching waves more forgiving, and standing up more stable—giving you more time to focus on fundamentals like [[cobra-pose]] and [[angling-down-the-line]].
 
+A simple sequence to reinforce: [[cobra-pose|cobra lift]] → [[angling-down-the-line|angle down the line]] → [[avoid-pearling|avoid pearling]] as waves steepen.
+
 ## Core Longboard Skills
 
 ### Positioning and Paddle
 
-The same principles that help you catch your first wave apply to longboarding, but with more emphasis on **glide and momentum**. Master [cobra pose](:cobra-pose) to transition smoothly from paddle to pop-up, and understand [angling down the line](:angling-down-the-line) to set your line early and maintain speed.
+The same principles that help you catch your first wave apply to longboarding, but with more emphasis on **glide and momentum**. Master [[cobra-pose|cobra pose]] to transition smoothly from paddle to pop-up, and understand [[angling-down-the-line|angling down the line]] to set your line early and maintain speed.
 
 Longboards excel at catching waves early because of their **length and buoyancy**. This means you can position yourself further outside and catch waves before they steepen—a huge advantage in crowded lineups.
 

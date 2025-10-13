@@ -9,11 +9,7 @@ nodes: [paddling-efficiency, paddling-posture, breath-and-relaxation]
 
 Reaching the lineup quickly keeps energy for wave riding. Combine smart positioning with the right technique for conditions and board type.
 
-## Core Skills
-
-- [[paddling-efficiency]]
-- [[paddling-posture]]
-- [[breath-and-relaxation]]
+Build this base: [[paddling-efficiency|paddling efficiency]] to cover distance, [[paddling-posture|paddling posture]] to keep shoulders safe and strokes long, and [[breath-and-relaxation|breath and relaxation]] to stay calm under sets.
 
 ## Choose the Right Technique
 

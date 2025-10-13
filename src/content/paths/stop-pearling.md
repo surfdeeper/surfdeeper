@@ -16,13 +16,7 @@ nodes:
 
 Pearling is usually a mix of speed, angle, and weight placement. This path targets those fundamentals.
 
-## Learn in Order
-
-- [[avoid-pearling]]
-- [[cobra-pose]]
-- [[paddling-efficiency]]
-- [[angling-down-the-line]]
-- [[trimming-and-speed]]
+Work this sequence: [[avoid-pearling|avoid pearling]] fundamentals → [[cobra-pose|cobra pose]] for weight shift → [[paddling-efficiency|paddling efficiency]] for entry speed → [[angling-down-the-line|angle down the line]] on takeoff → [[trimming-and-speed|trim for speed]] to stay high and fast.
 
 ## Avoiding Pearling
 
@@ -70,7 +64,7 @@ Scooting back moves weight off the nose to prevent pearling.
 - Steer the nose using push/pull hand pressure
 - Left turn: pull left, push right rail; right turn: pull right, push left rail
 - Start angling as soon as you feel lift
-- See also: [Angling Down the Line](:angling-down-the-line) and [Cobra Pose](:cobra-pose)
+- See also: [[angling-down-the-line|Angling Down the Line]] and [[cobra-pose|Cobra Pose]]
 
 ### Hold Onto Your Board
 
