@@ -18,7 +18,7 @@ Longboards need precise weight distribution. The cobra pose is your fine-tuning 
 
 ## Why Longboards Need Special Techniques
 
-- More prone to [pearling](:avoid-pearling)
+- More prone to [pearling](:stop-pearling)
 - Slower response window — more time to adjust and to err
 - Require deliberate weight distribution to maintain control
 

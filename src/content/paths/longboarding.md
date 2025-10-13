@@ -32,7 +32,7 @@ Longboards excel at catching waves early because of their **length and buoyancy*
 
 ### Avoiding the Pearling Trap
 
-With all that nose out in front of you, pearling becomes a real concern. [Learn to avoid pearling](:avoid-pearling) by understanding weight distribution, wave timing, and board positioning. Unlike shortboards where you can recover quickly, a pearled longboard can be a slower, wetter disaster.
+With all that nose out in front of you, pearling becomes a real concern. [Learn to avoid pearling](:stop-pearling) by understanding weight distribution, wave timing, and board positioning. Unlike shortboards where you can recover quickly, a pearled longboard can be a slower, wetter disaster.
 
 The key is **finding your sweet spot** on the board—not too far forward (pearling risk) and not too far back (losing speed and glide).
 
