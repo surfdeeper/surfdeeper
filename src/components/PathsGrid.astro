@@ -1,10 +1,6 @@
 ---
-import {
-  buildGraph,
-  getPaths,
-  loadGuides,
-  getGuidesByPath,
-} from "../utils/knowledge-graph";
+import { buildGraph, getPaths, loadGuides } from "../utils/knowledge-graph";
+import { getOrderedPathItems } from "../utils/path-helpers";
 import { getCollection, type CollectionEntry } from "astro:content";
 
 // Props
@@ -32,50 +28,55 @@ const paths = pathIds.map((id) => {
   ) : (
     <>
       <section class="grid-tiles">
-        {paths.map((t) => {
-          const items = getGuidesByPath(graph, t.id);
-          return (
-            <article class="card stretched-parent">
-              <a
-                class="stretched-link"
-                href={`/paths/${t.id}`}
-                aria-label={`Open path ${t.title}`}
-              />
-              <div class="thread-card-header stretched-content">
-                <div>
-                  <h2 class="heading heading-sm">
-                    <a class="thread-link" href={`/paths/${t.id}`}>
-                      {t.title}
-                    </a>
-                  </h2>
-                  {t.description && <p class="thread-desc">{t.description}</p>}
-                </div>
-                <span class="badge">{items.length}</span>
-              </div>
-              <ul class="preview links-neutral stretched-content">
-                {items.slice(0, 4).map((n) => {
-                  const disabled = (n as any).isPlaceholder === true;
-                  return (
-                    <li>
-                      <a
-                        class={disabled ? "is-disabled" : undefined}
-                        href={disabled ? "#" : n.url}
-                        aria-disabled={disabled ? "true" : undefined}
-                        tabindex={disabled ? -1 : undefined}
-                      >
-                        {n.title}
+        {await Promise.all(
+          paths.map(async (t) => {
+            const items = await getOrderedPathItems(graph, t.id);
+            return (
+              <article class="card stretched-parent">
+                <a
+                  class="stretched-link"
+                  href={`/paths/${t.id}`}
+                  aria-label={`Open path ${t.title}`}
+                />
+                <div class="thread-card-header stretched-content">
+                  <div>
+                    <h2 class="heading heading-sm">
+                      <a class="thread-link" href={`/paths/${t.id}`}>
+                        {t.title}
                       </a>
-                      {disabled && <span class="soon"> — coming soon</span>}
-                    </li>
-                  );
-                })}
-                {items.length > 4 && (
-                  <li class="more">+{items.length - 4} more</li>
-                )}
-              </ul>
-            </article>
-          );
-        })}
+                    </h2>
+                    {t.description && (
+                      <p class="thread-desc">{t.description}</p>
+                    )}
+                  </div>
+                  <span class="badge">{items.length}</span>
+                </div>
+                <ul class="preview links-neutral stretched-content">
+                  {items.slice(0, 4).map((n) => {
+                    const disabled = n.isPlaceholder === true;
+                    return (
+                      <li>
+                        <a
+                          class={disabled ? "is-disabled" : undefined}
+                          href={disabled ? "#" : n.url}
+                          aria-disabled={disabled ? "true" : undefined}
+                          tabindex={disabled ? -1 : undefined}
+                        >
+                          <span class="num">{n.number}</span>
+                          <span class="label">{n.title}</span>
+                        </a>
+                        {disabled && <span class="soon"> — coming soon</span>}
+                      </li>
+                    );
+                  })}
+                  {items.length > 4 && (
+                    <li class="more">+{items.length - 4} more</li>
+                  )}
+                </ul>
+              </article>
+            );
+          }),
+        )}
       </section>
     </>
   )
@@ -122,6 +123,17 @@ const paths = pathIds.map((id) => {
     opacity: 0.6;
     text-decoration: none;
     cursor: default;
+  }
+  .preview a .num {
+    display: inline-block;
+    min-width: 2ch;
+    margin-right: var(--space-2);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-accent);
+    font-weight: var(--font-weight-bold);
+  }
+  .preview a .label {
+    color: inherit;
   }
   .preview .soon {
     color: var(--color-text-muted);

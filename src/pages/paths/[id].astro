@@ -26,47 +26,7 @@ if (meta) {
   Content = rendered.Content;
 }
 
-// Build a path-ordered list of items (concepts + skills) to number inline links consistently with the sidebar
-const concepts = (await getCollection(
-  "concepts",
-)) as CollectionEntry<"concepts">[];
-const skills = (await getCollection("skills")) as CollectionEntry<"skills">[];
-const all = [...concepts, ...skills];
-const idToEntry = new Map<string, (typeof all)[number]>();
-for (const e of all) {
-  const eid = ((e.data as any).id || e.slug) as string;
-  if (!idToEntry.has(eid)) idToEntry.set(eid, e);
-}
-const derivedIds = all
-  .filter(
-    (e) =>
-      Array.isArray((e.data as any).paths) &&
-      (e.data as any).paths.includes(id),
-  )
-  .map((e) => ((e.data as any).id || e.slug) as string)
-  .sort((a, b) => {
-    const ea = idToEntry.get(a)!;
-    const eb = idToEntry.get(b)!;
-    return (ea.data.title || "").localeCompare(eb.data.title || "");
-  });
-const orderedIds =
-  (nodes as string[]).length > 0 ? (nodes as string[]) : derivedIds;
-const orderedItems = orderedIds
-  .map((nid) => idToEntry.get(nid))
-  .filter(Boolean)
-  .map((e) => ({
-    slug: e!.slug as string,
-    type: ((e!.data as any).type ||
-      ((e!.collection as string) === "concepts"
-        ? "concept"
-        : "skill")) as string,
-  }));
-const numberMap: Record<string, string> = Object.fromEntries(
-  orderedItems.map((it, i) => [
-    `/${it.type}/${it.slug}`,
-    String(i + 1).padStart(2, "0"),
-  ]),
-);
+// Note: Inline link numbering is handled by the remark plugin (scripts/remark-learning-links.mjs)
 ---
 
 <Layout
