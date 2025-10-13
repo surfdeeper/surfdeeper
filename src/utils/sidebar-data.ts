@@ -81,20 +81,19 @@ export async function buildSidebarSections(): Promise<SectionData[]> {
     ["intermediate", 1],
     ["advanced", 2],
   ]);
-  const sortedSkills = allSkills
-    .slice()
-    .sort((a, b) => {
-      const aLevel = (a.data as any).skillLevel || (a.data as any).level || "zzz";
-      const bLevel = (b.data as any).skillLevel || (b.data as any).level || "zzz";
-      const byLevel =
-        (skillOrder.get(String(aLevel)) ?? 99) -
-        (skillOrder.get(String(bLevel)) ?? 99);
-      if (byLevel !== 0) return byLevel;
-      return a.data.title.localeCompare(b.data.title);
-    });
-  const comingSoonSkills = sortedSkills.filter((s) =>
-    // @ts-ignore body exists at runtime
-    typeof (s as any).body === "string" && (s as any).body.includes("TODO"),
+  const sortedSkills = allSkills.slice().sort((a, b) => {
+    const aLevel = (a.data as any).skillLevel || (a.data as any).level || "zzz";
+    const bLevel = (b.data as any).skillLevel || (b.data as any).level || "zzz";
+    const byLevel =
+      (skillOrder.get(String(aLevel)) ?? 99) -
+      (skillOrder.get(String(bLevel)) ?? 99);
+    if (byLevel !== 0) return byLevel;
+    return a.data.title.localeCompare(b.data.title);
+  });
+  const comingSoonSkills = sortedSkills.filter(
+    (s) =>
+      // @ts-ignore body exists at runtime
+      typeof (s as any).body === "string" && (s as any).body.includes("TODO"),
   ).length;
   const skillGuides = sortedSkills
     .filter((s) => !(s as any).body?.includes?.("TODO"))
@@ -114,9 +113,10 @@ export async function buildSidebarSections(): Promise<SectionData[]> {
   const sortedConcepts = allConcepts
     .slice()
     .sort((a, b) => a.data.title.localeCompare(b.data.title));
-  const comingSoonConcepts = sortedConcepts.filter((c) =>
-    // @ts-ignore body exists at runtime
-    typeof (c as any).body === "string" && (c as any).body.includes("TODO"),
+  const comingSoonConcepts = sortedConcepts.filter(
+    (c) =>
+      // @ts-ignore body exists at runtime
+      typeof (c as any).body === "string" && (c as any).body.includes("TODO"),
   ).length;
   const conceptGuides = sortedConcepts
     .filter((c) => !(c as any).body?.includes?.("TODO"))

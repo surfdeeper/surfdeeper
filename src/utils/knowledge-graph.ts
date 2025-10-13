@@ -60,7 +60,7 @@ export async function loadGuides(): Promise<GuideEntry[]> {
 export function buildGraph(entries: GuideEntry[]): GuideGraph {
   const nodes: GuideNode[] = entries.map((e) => {
     const level: Level | undefined = isSkillEntry(e)
-      ? e.data.skillLevel ?? e.data.level
+      ? (e.data.skillLevel ?? e.data.level)
       : e.data.level;
     const kind: "concept" | "skill" | undefined = isSkillEntry(e)
       ? "skill"

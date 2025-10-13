@@ -70,9 +70,9 @@ describe("GuidePathBreadcrumbs component", () => {
     });
 
     expect(html).toContain("/paths/core");
-  // sequence links now point to typed routes (/concept or /skill)
-  expect(html).toContain('href="/concept/foundations"');
-  expect(html).toContain('href="/concept/core-skills/cutbacks"');
+    // sequence links now point to typed routes (/concept or /skill)
+    expect(html).toContain('href="/concept/foundations"');
+    expect(html).toContain('href="/concept/core-skills/cutbacks"');
     // current crumb should have aria-current="page"
     expect(html).toMatch(/aria-current=\"page\"[^>]*>\s*Cutbacks/);
   });
