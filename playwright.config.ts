@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig } from "@playwright/test";
 
 // Visual regression snapshots stored under tests/visual/__screenshots__/<test-file-basename>/
 export default defineConfig({
@@ -25,14 +25,24 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:4321",
     trace: "retain-on-failure",
-    /* Stable viewport for consistent screenshots */
-    viewport: { width: 1200, height: 800 },
+    /* Deterministic rendering for consistent screenshots */
+    viewport: { width: 800, height: 600 },
+    deviceScaleFactor: 1,
+    colorScheme: "light",
+    locale: "en-US",
+    timezoneId: "UTC",
   },
   /* Configure projects for major browsers */
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {},
+      launchOptions: {
+        args: [
+          "--disable-font-subpixel-positioning",
+          "--force-color-profile=srgb",
+        ],
+      },
     },
     // Add more browsers if desired for broader coverage
     // { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
@@ -49,7 +59,7 @@ export default defineConfig({
     },
     // Preview the built site for stable output
     {
-      command: "npm run preview",
+      command: "npm run preview -- --port=4321 --host=0.0.0.0",
       url: "http://localhost:4321",
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,

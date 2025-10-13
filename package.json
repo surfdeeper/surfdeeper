@@ -27,8 +27,10 @@
     "fix": "npm run fix:md",
     "format": "prettier --write .",
     "format:check": "prettier --check \"**/*.{md,js,json}\" && prettier --check \"**/*.astro\"",
-    "test:visual": "playwright test --config=playwright.config.ts",
-    "test:visual:update": "playwright test --config=playwright.config.ts --update-snapshots",
+    "test:visual": "playwright test --config=playwright.config.ts --project=chromium",
+    "test:visual:update": "playwright test --config=playwright.config.ts --project=chromium --update-snapshots",
+    "test:visual:docker": "docker compose run visual-tests -- bash -lc \"npm ci && npm run build && npm run test:visual\"",
+    "snapshots:update:docker": "docker compose run -e UPDATE_SNAPSHOTS=1 visual-tests -- bash -lc \"npm ci && npm run build && UPDATE_SNAPSHOTS=1 playwright test --update-snapshots --config=playwright.config.ts --project=chromium\"",
     "precommit": "lint-staged"
   },
   "dependencies": {
