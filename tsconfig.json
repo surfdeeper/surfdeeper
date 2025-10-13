@@ -6,7 +6,16 @@
     "jsx": "preserve",
     "strict": true,
     "skipLibCheck": true,
-    "types": ["astro/client", "node"]
+    "types": ["astro/client", "node", "@playwright/test"]
   },
-  "exclude": ["node_modules", "dist", "build", ".astro", "surfdeeper3"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    ".astro",
+    "surfdeeper3",
+    "tests/**/*.test.*",
+    "tests/**/*.spec.*",
+    "vitest.config.ts"
+  ]
 }

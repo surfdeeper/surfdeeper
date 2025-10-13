@@ -1,0 +1,28 @@
+# Use Playwright image matching our local @playwright/test version
+# Keep the tag in sync with package.json devDependency @playwright/test
+FROM mcr.microsoft.com/playwright:v1.48.2-jammy
+
+ENV NODE_ENV=production
+WORKDIR /app
+
+# Install fonts for consistent rendering
+# - Liberation (metric-compatible with Arial/Times)
+# - Noto Color Emoji for emoji rendering
+# - Roboto and Roboto Mono to match design tokens
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    fonts-liberation \
+    fonts-noto-color-emoji \
+    fonts-roboto \
+    fonts-roboto-unhinted \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install only dependencies first to leverage Docker layer caching
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copy the rest of the project
+COPY . .
+
+# Default command does nothing; docker-compose will provide the command
+CMD ["bash", "-lc", "echo 'Playwright image ready' && sleep 1"]

@@ -1,0 +1,28 @@
+version: "3.9"
+
+volumes:
+  pw-cache:
+  pw-results:
+
+services:
+  visual-tests:
+    container_name: surfdeeper-visual-tests
+    build:
+      context: .
+      dockerfile: Dockerfile.playwright
+    working_dir: /app
+    # Bind mount the repo for live edits
+    volumes:
+      - .:/app:delegated
+      # Playwright browser/cache
+      - pw-cache:/root/.cache/ms-playwright
+      # Test artifacts (reports, traces, screenshots)
+      - pw-results:/app/test-results
+    environment:
+      - CI=${CI:-}
+      - UPDATE_SNAPSHOTS=${UPDATE_SNAPSHOTS:-}
+    # Expose the preview port
+    ports:
+      - "4321:4321"
+    # Default: no command; npm scripts will provide it
+    command: ["bash", "-lc", "sleep infinity"]

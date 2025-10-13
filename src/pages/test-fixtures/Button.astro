@@ -1,0 +1,17 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Btn from "../../components/Button.astro";
+---
+
+<Layout
+  title="Button Fixture"
+  description="Visual regression fixture"
+  fullWidth
+>
+  <section
+    data-testid="fixture-root"
+    style="display:flex; align-items:center; justify-content:center; height:60vh;"
+  >
+    <Btn label="Click me" variant="primary" />
+  </section>
+</Layout>

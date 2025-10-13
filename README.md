@@ -57,6 +57,36 @@ Validation:
 - `npm run dev` - Start the development server
 - `npm run build` - Build the site for production
 - `npm run preview` - Preview the production build locally
+- `npm run test:visual` - Run Playwright visual tests (chromium)
+
+### Visual tests in Docker
+
+Run visual regression tests in a deterministic Docker environment that matches CI:
+
+- Run tests:
+
+  ```bash
+  npm run test:visual:docker
+  ```
+
+- Update snapshots in the container:
+
+  ```bash
+  npm run snapshots:update:docker
+  ```
+
+The Docker setup uses:
+
+- The official Playwright image `mcr.microsoft.com/playwright:v1.48.2-jammy` (kept in sync with `@playwright/test`)
+- Named volumes for cache and artifacts:
+  - `pw-cache` -> `/root/.cache/ms-playwright` (browser/cache)
+  - `pw-results` -> `/app/test-results` (artifacts)
+
+Notes:
+
+- The Astro site is built then served via `astro preview` on port 4321 inside the container; tests target `http://localhost:4321`.
+- Fonts (Liberation, Noto Color Emoji, Roboto/Mono) are installed in the image for consistent rendering.
+- Animations are disabled in tests to reduce flakiness.
 
 ## Project Structure
 
