@@ -2,11 +2,25 @@ import { MAP_DEFAULTS } from "../config/map-constants";
 import { createBaseMap, waitForLeaflet } from "../utils/leaflet-setup";
 import { getSpotsDataFromElement } from "../utils/spot-data";
 
-function getSpotsFromJson() {
-  return getSpotsDataFromElement("spots-data");
+type LeafletMarker = any; // Using any to avoid bringing in Leaflet types; Astro runtime provides L at window
+
+interface SpotLike {
+  title: string;
+  description?: string;
+  latitude: number;
+  longitude: number;
+  slug: string;
 }
 
-function createPopupContent(spot, marker, isDragging = false) {
+function getSpotsFromJson(): SpotLike[] {
+  return getSpotsDataFromElement("spots-data") as SpotLike[];
+}
+
+function createPopupContent(
+  spot: SpotLike,
+  marker: LeafletMarker,
+  isDragging = false,
+): string {
   const position = marker.getLatLng();
   const lat = position.lat.toFixed(4);
   const lng = position.lng.toFixed(4);
@@ -38,7 +52,11 @@ function createPopupContent(spot, marker, isDragging = false) {
   `;
 }
 
-function showContributionInstructions(spot, newLat, newLng) {
+function showContributionInstructions(
+  spot: SpotLike,
+  newLat: string,
+  newLng: string,
+): void {
   const modal = document.createElement("div");
   modal.className = "contribution-modal";
   modal.innerHTML = `
@@ -62,8 +80,8 @@ longitude: ${newLng}
 
   document.body.appendChild(modal);
 
-  const closeBtn = modal.querySelector(".close-modal-btn");
-  closeBtn.addEventListener("click", () => {
+  const closeBtn = modal.querySelector<HTMLButtonElement>(".close-modal-btn");
+  closeBtn?.addEventListener("click", () => {
     document.body.removeChild(modal);
   });
 
@@ -74,32 +92,35 @@ longitude: ${newLng}
   });
 }
 
-function initMap() {
+function initMap(): void {
   waitForLeaflet(() => {
     const spots = getSpotsFromJson();
     const map = createBaseMap("map", MAP_DEFAULTS.CENTER, MAP_DEFAULTS.ZOOM);
     if (!map) return;
 
-    const L = window.L;
-    const markers = [];
+    const L = (window as any).L;
+    const markers: LeafletMarker[] = [];
     for (const spot of spots) {
       if (
         typeof spot.latitude === "number" &&
         typeof spot.longitude === "number"
       ) {
-        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+        const marker: LeafletMarker = L.marker([
+          spot.latitude,
+          spot.longitude,
+        ]).addTo(map);
         const popup = createPopupContent(spot, marker, false);
         marker.bindPopup(popup);
 
         // Store spot data on marker for later use
-        marker.spotData = spot;
+        (marker as any).spotData = spot;
 
         // Listen for popup open events to attach event listeners
         marker.on("popupopen", () => {
-          const editLink = document.querySelector(
+          const editLink = document.querySelector<HTMLElement>(
             `.edit-location-link[data-slug="${spot.slug}"]`,
           );
-          const doneBtn = document.querySelector(
+          const doneBtn = document.querySelector<HTMLButtonElement>(
             `.done-dragging-btn[data-slug="${spot.slug}"]`,
           );
 
@@ -157,7 +178,7 @@ function initMap() {
   });
 }
 
-function initViewToggle() {
+function initViewToggle(): void {
   const toggleBtn = document.getElementById("view-toggle");
   const mapView = document.getElementById("map-view");
   const directoryView = document.getElementById("directory-view");

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import fs from "fs";
-import path from "path";
 import { globSync } from "glob";
 
 const RESET = "\x1b[0m";
@@ -21,7 +20,17 @@ const CYAN = "\x1b[36m";
  * 4. Markdown images referencing /public-root assets (prefer MDX + <Image>)
  */
 
-const RULES = {
+const RULES: Record<
+  string,
+  {
+    pattern: RegExp;
+    message: string;
+    severity: "error" | "warning";
+    fix: string;
+    // Optional: restrict rule to certain file patterns
+    include?: RegExp[];
+  }
+> = {
   "no-src-link-tags": {
     pattern: /<link[^>]*href=["|']\/src\/[^"|']*["|'][^>]*>/gi,
     message:
@@ -61,14 +70,22 @@ const RULES = {
   },
 };
 
-class AssetLinter {
-  constructor() {
-    this.errors = [];
-    this.warnings = [];
-    this.processedFiles = 0;
-  }
+type Issue = {
+  file: string;
+  line: number;
+  rule: string;
+  message: string;
+  severity: "error" | "warning";
+  fix: string;
+  match: string;
+};
 
-  async lint() {
+class AssetLinter {
+  errors: Issue[] = [];
+  warnings: Issue[] = [];
+  processedFiles = 0;
+
+  async lint(): Promise<void> {
     console.log(`${CYAN}🔍 Asset Reference Linter${RESET}\n`);
 
     // Find all relevant files
@@ -84,7 +101,7 @@ class AssetLinter {
       "src/**/*.mdx",
     ];
 
-    const files = [];
+    const files: string[] = [];
     for (const pattern of patterns) {
       files.push(...globSync(pattern));
     }
@@ -104,22 +121,22 @@ class AssetLinter {
     this.printResults();
   }
 
-  async lintFile(filePath) {
+  async lintFile(filePath: string): Promise<void> {
     try {
       const content = fs.readFileSync(filePath, "utf8");
-      const lines = content.split("\n");
-
       this.processedFiles++;
 
       // Apply each rule
       for (const [ruleName, rule] of Object.entries(RULES)) {
-        let match;
+        let match: RegExpExecArray | null;
         rule.pattern.lastIndex = 0; // Reset regex
 
         while ((match = rule.pattern.exec(content)) !== null) {
           // Optional file includes filter
           if (rule.include && Array.isArray(rule.include)) {
-            const included = rule.include.some((re) => re.test(filePath));
+            const included = rule.include.some((re: RegExp) =>
+              re.test(filePath),
+            );
             if (!included) continue;
           }
 
@@ -133,7 +150,7 @@ class AssetLinter {
           }
 
           const lineNumber = this.getLineNumber(content, match.index);
-          const issue = {
+          const issue: Issue = {
             file: filePath,
             line: lineNumber,
             rule: ruleName,
@@ -150,18 +167,18 @@ class AssetLinter {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(
         `${RED}Error reading ${filePath}: ${error.message}${RESET}`,
       );
     }
   }
 
-  getLineNumber(content, index) {
+  getLineNumber(content: string, index: number): number {
     return content.substring(0, index).split("\n").length;
   }
 
-  printResults() {
+  printResults(): void {
     console.log(`\n${CYAN}📊 Linting Results${RESET}`);
     console.log(`Files processed: ${this.processedFiles}`);
     console.log(`Errors: ${this.errors.length}`);
@@ -222,7 +239,8 @@ class AssetLinter {
 // CLI usage
 if (import.meta.url === `file://${process.argv[1]}`) {
   const linter = new AssetLinter();
-  linter.lint().catch((error) => {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  linter.lint().catch((error: any) => {
     console.error(`${RED}Fatal error: ${error.message}${RESET}`);
     process.exit(1);
   });

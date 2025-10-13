@@ -1,0 +1,95 @@
+/* Theme: Light - color variables only */
+:root[data-theme="light"] {
+  /* Core palette */
+  --color-primary: #0a7cc8; /* temp light accent */
+  --color-primary-hover: #086aa8;
+
+  /* Surfaces */
+  --color-surface-primary: #fff;
+  --color-surface-secondary: #f6f7f9;
+  --color-surface-tertiary: #eef1f5;
+
+  /* Override dark-leaning surfaces from base design-system */
+  --color-surface-deep: #f6f7f9;
+  --color-surface-dark: #eef1f5;
+
+  /* Text */
+  --color-text-primary: #1d2430;
+  --color-text-secondary: #526072;
+  --color-text-on-primary: #fff;
+
+  /* Borders */
+  --color-border: #e1e6ee;
+  --color-border-accent: var(--color-primary);
+
+  /* Semantic */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+  --color-info: #2563eb;
+
+  /* Weak backgrounds */
+  --bg-accent-weak: #0a7cc81a;
+  --bg-info-weak: #2563eb1a;
+  --bg-success-weak: #16a34a1a;
+  --bg-warning-weak: #d977061a;
+  --bg-error-weak: #dc26261a;
+
+  /* Overlays */
+  --overlay-scrim: #0006;
+
+  /* Link defaults */
+  --link-color: var(--color-primary);
+  --link-hover-color: var(--color-primary-hover);
+  --link-visited-color: var(--link-color);
+  --link-opacity: 1;
+  --link-hover-opacity: 1;
+  --link-underline: underline;
+  --link-hover-underline: underline;
+  --link-underline-offset: 3px;
+  --link-decoration-color: var(--color-primary);
+  --link-transition: color var(--transition-base);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]),
+  :root[data-theme="auto"] {
+    /* Re-assert variables for auto=light */
+    --color-primary: #0a7cc8;
+    --color-primary-hover: #086aa8;
+    --color-surface-primary: #fff;
+    --color-surface-secondary: #f6f7f9;
+    --color-surface-tertiary: #eef1f5;
+    --color-surface-deep: #f6f7f9;
+    --color-surface-dark: #eef1f5;
+    --color-text-primary: #1d2430;
+    --color-text-secondary: #526072;
+    --color-text-on-primary: #fff;
+    --color-border: #e1e6ee;
+    --color-border-accent: var(--color-primary);
+    --color-success: #16a34a;
+    --color-warning: #d97706;
+    --color-error: #dc2626;
+    --color-info: #2563eb;
+    --bg-accent-weak: #0a7cc81a;
+    --bg-info-weak: #2563eb1a;
+    --bg-success-weak: #16a34a1a;
+    --bg-warning-weak: #d977061a;
+    --bg-error-weak: #dc26261a;
+    --overlay-scrim: #0006;
+    --link-color: var(--color-primary);
+    --link-hover-color: var(--color-primary-hover);
+    --link-visited-color: var(--link-color);
+    --link-opacity: 1;
+    --link-hover-opacity: 1;
+    --link-underline: underline;
+    --link-hover-underline: underline;
+    --link-underline-offset: 3px;
+    --link-decoration-color: var(--color-primary);
+    --link-transition: color var(--transition-base);
+
+    color-scheme: light;
+  }
+}

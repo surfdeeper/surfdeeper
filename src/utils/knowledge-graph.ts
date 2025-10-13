@@ -1,4 +1,4 @@
-import { getCollection, type CollectionEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 
 export type GuideEntry = CollectionEntry<"guides">;
 
@@ -31,11 +31,14 @@ function normalizeId(entry: GuideEntry): string {
 }
 
 function toUrl(entry: GuideEntry): string {
-  const seg = entry.data.id || entry.slug;
-  return `/guide/${seg}`;
+  // Always use the content slug for URLs to match the dynamic route `[...slug].astro`.
+  // The `id` is a stable graph identifier and may differ from the rendered slug.
+  return `/guide/${entry.slug}`;
 }
 
 export async function loadGuides(): Promise<GuideEntry[]> {
+  // Dynamic import avoids requiring the Astro runtime when this module is imported in unit tests.
+  const { getCollection } = await import("astro:content");
   return await getCollection("guides");
 }
 

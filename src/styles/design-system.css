@@ -2,49 +2,7 @@
 
 /* CSS Custom Properties (Design Tokens) */
 :root {
-  /* Color Palette */
-  --color-primary: #febc08; /* Golden yellow - main accent */
-  --color-primary-hover: #e0a607; /* Darker yellow for hover states */
-  --color-surface-primary: #111a22; /* Dark blue - main backgrounds */
-  --color-surface-secondary: #132635; /* Lighter blue - cards, elevated surfaces */
-  --color-surface-tertiary: #1a2332; /* Even lighter - subtle variations */
-  --color-text-primary: #999; /* Main text color */
-  --color-text-secondary: #666; /* Muted text */
-  --color-text-on-primary: #000; /* Text on primary (yellow) backgrounds should be black */
-  --color-border: #132635; /* Default borders */
-  --color-border-accent: var(--color-primary); /* Accent borders */
-
-  /* Semantic Colors */
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
-
-  /* Additional semantic colors used across pages */
-
-  /* Deprecated for text: prefer --color-primary (accent) or --color-text-* for body copy */
-  --color-accent-green: #0f8; /* #00ff88 */
-  --color-accent-green-hover: #0c6; /* #00cc66 */
-  --color-surface-deep: #0f172a;
-  --color-surface-dark: #1e293b;
-  --color-text-muted: #94a3b8;
-  --color-text-light: #cbd5e1;
-  --color-text-dim: #64748b;
-  --color-danger: #f87171;
-  --color-state-success-text: #155724;
-  --color-state-warning-text: #856404;
-  --color-state-danger-text: #721c24;
-  --color-mint-light: #d1fae5;
-
-  /* Weak/translucent backgrounds */
-  --bg-accent-weak: #febc081a;
-  --bg-info-weak: #3b82f61a;
-  --bg-success-weak: #22c55e1a;
-  --bg-warning-weak: #f59e0b1a;
-  --bg-error-weak: #ef44441a;
-
-  /* Overlay / Scrims */
-  --overlay-scrim: #000c; /* 80% black */
+  /* Color scheme is owned by theme styles */
 
   /* Typography Scale */
   --font-family-primary: "Roboto", sans-serif;
@@ -142,6 +100,18 @@
 
   /* Layout sizes */
   --size-max-width: 1200px;
+
+  /* Link defaults (accented links) */
+  --link-color: var(--color-primary);
+  --link-hover-color: var(--color-primary-hover);
+  --link-visited-color: var(--link-color);
+  --link-opacity: 1;
+  --link-hover-opacity: 1;
+  --link-underline: underline;
+  --link-hover-underline: underline;
+  --link-underline-offset: 3px;
+  --link-decoration-color: var(--color-primary);
+  --link-transition: color var(--transition-base);
 }
 
 /* Global Base Styles */
@@ -260,15 +230,20 @@ body {
   font-size: var(--font-size-xl);
 }
 
-/* Links */
+/* Links - Variable-driven single source of truth */
+
+/* Base link behavior reads from CSS variables with sensible defaults.
+   Regions or elements can override via container classes that set these vars. */
 a:not(.btn) {
-  color: var(--color-primary);
-  text-decoration: underline;
-  text-decoration-color: var(--color-primary);
-  text-underline-offset: 3px;
-  transition: color var(--transition-base);
+  color: var(--link-color);
+  text-decoration: var(--link-underline);
+  text-decoration-color: var(--link-decoration-color);
+  text-underline-offset: var(--link-underline-offset);
+  opacity: var(--link-opacity);
+  transition: var(--link-transition);
 }
 
+/* Accessibility focus state */
 a:focus-visible {
   outline: 2px dashed var(--color-primary);
   outline-offset: 2px;
@@ -297,15 +272,19 @@ a:focus-visible {
   color: var(--color-primary);
 }
 
-/* General link styles - less specific selectors come after */
 a:not(.btn):hover {
-  color: var(--color-primary-hover);
-  text-decoration-color: var(--color-primary);
+  color: var(--link-hover-color);
+  text-decoration: var(--link-hover-underline);
+  opacity: var(--link-hover-opacity);
 }
 
 a:not(.btn):visited {
-  color: var(--color-primary);
+  color: var(--link-visited-color);
 }
+
+/* General link styles - less specific selectors come after */
+
+/* Covered by variable-driven rules above */
 
 /* Link containers for consistent variants */
 .links-accent a:not(.btn) {
@@ -323,40 +302,45 @@ a:not(.btn):visited {
   transition: opacity var(--transition-fast);
 }
 
-.links-accent a:not(.btn):hover {
-  color: var(--color-primary-hover);
+/* Region presets */
+.links-accent {
+  --link-color: var(--color-primary);
+  --link-hover-color: var(--color-primary-hover);
+  --link-visited-color: var(--color-primary);
+  --link-opacity: 1;
+  --link-hover-opacity: 1;
+  --link-underline: underline;
+  --link-hover-underline: underline;
+  --link-underline-offset: 3px;
+  --link-decoration-color: var(--color-primary);
+  --link-transition: color var(--transition-base);
 }
 
-.links-accent a:not(.btn):visited {
-  color: var(--color-primary);
+.links-neutral {
+  --link-color: var(--color-text-primary);
+  --link-hover-color: var(--color-text-primary);
+  --link-visited-color: var(--color-text-primary);
+  --link-opacity: 0.8;
+  --link-hover-opacity: 1;
+  --link-underline: none;
+  --link-hover-underline: underline;
+  --link-underline-offset: 2px;
+  --link-decoration-color: currentcolor;
+  --link-transition: opacity var(--transition-fast);
 }
 
-.links-neutral a:not(.btn):hover {
-  opacity: 1;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.links-neutral a:not(.btn):visited {
-  color: var(--color-text-primary);
-}
-
-/* Element-level utility (use sparingly) */
-a.link-neutral {
-  color: var(--color-text-primary);
-  text-decoration: none;
-  opacity: 0.8;
-  transition: opacity var(--transition-fast);
-}
-
-a.link-neutral:hover {
-  opacity: 1;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-a.link-neutral:visited {
-  color: var(--color-text-primary);
+/* Backwards-compatible element utility */
+.link-neutral {
+  --link-color: var(--color-text-primary);
+  --link-hover-color: var(--color-text-primary);
+  --link-visited-color: var(--color-text-primary);
+  --link-opacity: 0.8;
+  --link-hover-opacity: 1;
+  --link-underline: none;
+  --link-hover-underline: underline;
+  --link-underline-offset: 2px;
+  --link-decoration-color: currentcolor;
+  --link-transition: opacity var(--transition-fast);
 }
 
 /* Navigation */
