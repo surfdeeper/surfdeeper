@@ -6,12 +6,19 @@ import {
 } from "../utils/leaflet-setup";
 import { getSpotDataFromElement } from "../utils/spot-data";
 
+interface SpotLike {
+  title: string;
+  description?: string;
+  latitude: number;
+  longitude: number;
+}
+
 /**
  * Initializes the spot detail map
  */
-function initSpotMap() {
+function initSpotMap(): void {
   waitForLeaflet(() => {
-    const spot = getSpotDataFromElement("spot-data");
+    const spot = getSpotDataFromElement("spot-data") as SpotLike | null;
     if (!spot) return;
 
     // Initialize map centered on the spot
