@@ -4,7 +4,7 @@ description: Learn the strategies and skills to reach the lineup efficiently and
 icon: 🏁
 order: 20
 type: path
-nodes: []
+nodes: [paddling-efficiency, paddling-posture, breath-and-relaxation]
 ---
 
 Reaching the lineup quickly keeps energy for wave riding. Combine smart positioning with the right technique for conditions and board type.

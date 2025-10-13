@@ -84,6 +84,7 @@ function buildGuideMap() {
       slug,
       paths,
       path: path.relative(ROOT, f),
+      type: f.includes("/skills/") ? "skill" : "concept",
     });
   }
 
@@ -116,6 +117,9 @@ function validateBidirectionalLinks() {
     const pathContent = fs.readFileSync(pathFile, "utf8");
     const fm = matter(pathContent);
     const linkedGuides = extractLearningLinks(fm.content);
+    const nodeIds = new Set(
+      Array.isArray(fm.data.nodes) ? fm.data.nodes.map(String) : [],
+    );
 
     if (linkedGuides.size === 0) {
       console.warn(
@@ -152,6 +156,50 @@ function validateBidirectionalLinks() {
         console.error(`   ↳ Guide: ${guide.path}`);
         console.error(
           `   ↳ Fix: Add 'paths: [${pathSlug}]' to guide frontmatter`,
+        );
+        errors++;
+      }
+    }
+
+    // Check each node id exists and references the path back
+    for (const nodeId of nodeIds) {
+      const guide = guideMap.get(nodeId);
+      if (!guide) {
+        console.error(
+          `❌ Path '${pathSlug}' lists node '${nodeId}' but no guide with that ID exists`,
+        );
+        console.error(`   ↳ Path: ${path.relative(ROOT, pathFile)}`);
+        errors++;
+        continue;
+      }
+      if (!guide.paths.includes(pathSlug)) {
+        console.error(
+          `❌ Broken bidirectional link: Path '${pathSlug}' lists node '${nodeId}', but guide doesn't reference path back`,
+        );
+        console.error(`   ↳ Guide: ${guide.path}`);
+        console.error(
+          `   ↳ Fix: Add 'paths: [${pathSlug}]' to guide frontmatter`,
+        );
+        errors++;
+      }
+    }
+
+    // For guides that reference this path, ensure path references them somehow (inline or nodes)
+    const guidesReferencingThisPath = Array.from(guideMap.entries())
+      .filter(([, g]) => g.paths.includes(pathSlug))
+      .map(([id]) => id);
+
+    for (const id of guidesReferencingThisPath) {
+      const referencedInPath = linkedGuides.has(id) || nodeIds.has(id);
+      if (!referencedInPath) {
+        const guide = guideMap.get(id);
+        console.error(
+          `❌ Missing path reference: Guide '${id}' references path '${pathSlug}', but the path content doesn't reference it (neither in nodes[] nor with [[${id}]])`,
+        );
+        console.error(`   ↳ Path: ${path.relative(ROOT, pathFile)}`);
+        console.error(`   ↳ Guide: ${guide?.path}`);
+        console.error(
+          `   ↳ Fix: Add '${id}' to 'nodes: []' in the path frontmatter or include [[${id}]] in the path body`,
         );
         errors++;
       }

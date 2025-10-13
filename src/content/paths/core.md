@@ -4,7 +4,14 @@ description: Foundational surfing skills that apply across most sessions.
 icon: 🌊
 order: 10
 type: path
-nodes: []
+nodes:
+  [
+    board-care-and-repair,
+    bottom-and-top-turns,
+    cutbacks,
+    angling-down-the-line,
+    trimming-and-speed,
+  ]
 ---
 
 Core skills are the bedrock that make everything else work better.

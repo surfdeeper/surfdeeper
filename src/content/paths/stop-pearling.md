@@ -4,7 +4,14 @@ description: A focused path to eliminate nose-dives and improve takeoff success.
 icon: 🛑
 order: 25
 type: path
-nodes: []
+nodes:
+  [
+    avoid-pearling,
+    cobra-pose,
+    paddling-efficiency,
+    angling-down-the-line,
+    trimming-and-speed,
+  ]
 ---
 
 Pearling is usually a mix of speed, angle, and weight placement. This path targets those fundamentals.

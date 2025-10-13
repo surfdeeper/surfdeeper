@@ -12,7 +12,6 @@ nodes:
   - cobra-pose
   - angling-down-the-line
   - pop-up
-  - popping-mechanics
   - avoid-pearling
 ---
 
