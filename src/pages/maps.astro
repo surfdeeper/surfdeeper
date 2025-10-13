@@ -132,7 +132,7 @@ const serializedSpots = serializeSpots(spots);
       // Add theme switcher control
       addThemeSwitcherToMap(map, DEFAULT_THEME_FULL_MAP, "topright");
 
-      const L = (window as any).L;
+      const L = window(/** @type {Window & typeof globalThis} */ window).L;
 
       // Sort spots alphabetically for consistent numbering
       const sortedSpots = [...spots].sort((a, b) =>

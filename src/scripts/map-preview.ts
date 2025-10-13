@@ -11,11 +11,7 @@ interface SpotData {
   slug: string;
 }
 
-declare global {
-  interface Window {
-    L: any;
-  }
-}
+// L is provided globally by Leaflet script. Types come from src/types/leaflet.d.ts
 
 export function initMapPreview() {
   if (!window.L) {
@@ -106,8 +102,12 @@ export function initMapPreview() {
           </div>
         `;
         marker.bindPopup(popup);
-        (marker as any).spotData = spot;
-        (marker as any).spotNumber = spotNumber;
+        (
+          marker as unknown as { spotData?: SpotData; spotNumber?: number }
+        ).spotData = spot;
+        (
+          marker as unknown as { spotData?: SpotData; spotNumber?: number }
+        ).spotNumber = spotNumber;
       }
     });
 

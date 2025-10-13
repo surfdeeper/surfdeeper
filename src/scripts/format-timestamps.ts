@@ -27,7 +27,6 @@ export function formatTimestamps(): void {
       // Update the element with formatted date and timezone
       element.textContent = `${formattedDate} ${timezone ?? ""}`.trim();
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error("Error formatting date:", error);
     }
   });

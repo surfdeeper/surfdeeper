@@ -13,7 +13,10 @@ export function waitForLeaflet(callback: () => void, maxAttempts = 50): void {
   let attempts = 0;
 
   function check() {
-    if (typeof window !== "undefined" && (window as any).L) {
+    if (
+      typeof window !== "undefined" &&
+      (window as Window & typeof globalThis).L
+    ) {
       callback();
     } else if (attempts < maxAttempts) {
       attempts++;
@@ -66,13 +69,16 @@ export function createBaseMap(
   center: [number, number],
   zoom: number,
   theme?: MapTheme,
-): any | null {
-  if (typeof window === "undefined" || !(window as any).L) {
+): L.Map | null {
+  if (
+    typeof window === "undefined" ||
+    !(window as Window & typeof globalThis).L
+  ) {
     console.error("Leaflet not loaded");
     return null;
   }
 
-  const L = (window as any).L;
+  const L = (window as Window & typeof globalThis).L;
   const map = L.map(elementId, {
     // Set dark background to prevent white flicker
     backgroundColor: "#1a1f2e",
@@ -80,7 +86,12 @@ export function createBaseMap(
 
   // Add tile layer if theme is provided
   if (theme) {
-    const tileLayerOptions: any = {
+    const tileLayerOptions: {
+      attribution?: string;
+      maxZoom?: number;
+      className?: string;
+      subdomains?: string[];
+    } = {
       attribution: theme.attribution,
       maxZoom: theme.maxZoom,
       className: "map-tiles",
@@ -94,7 +105,7 @@ export function createBaseMap(
     tileLayer.addTo(map);
 
     // Store tile layer reference on map for theme switching
-    (map as any)._tileLayer = tileLayer;
+    map._tileLayer = tileLayer;
   }
 
   return map;
@@ -105,18 +116,23 @@ export function createBaseMap(
  * @param map The Leaflet map instance
  * @param theme The new theme configuration
  */
-export function changeMapTheme(map: any, theme: MapTheme): void {
+export function changeMapTheme(map: L.Map, theme: MapTheme): void {
   if (!map || typeof window === "undefined") return;
 
-  const L = (window as any).L;
+  const L = (window as Window & typeof globalThis).L;
 
   // Remove existing tile layer
-  if ((map as any)._tileLayer) {
-    map.removeLayer((map as any)._tileLayer);
+  if (map._tileLayer) {
+    map.removeLayer(map._tileLayer);
   }
 
   // Add new tile layer
-  const tileLayerOptions: any = {
+  const tileLayerOptions: {
+    attribution?: string;
+    maxZoom?: number;
+    className?: string;
+    subdomains?: string[];
+  } = {
     attribution: theme.attribution,
     maxZoom: theme.maxZoom,
     className: "map-tiles",
@@ -130,7 +146,7 @@ export function changeMapTheme(map: any, theme: MapTheme): void {
   tileLayer.addTo(map);
 
   // Store new tile layer reference
-  (map as any)._tileLayer = tileLayer;
+  map._tileLayer = tileLayer;
 
   // Store theme preference
   storeTheme(theme.id);
@@ -147,14 +163,14 @@ export function changeMapTheme(map: any, theme: MapTheme): void {
  * @returns The marker instance
  */
 export function createMarkerWithPopup(
-  map: any,
+  map: L.Map,
   latitude: number,
   longitude: number,
   title: string,
   description?: string,
   openPopup = false,
-): any {
-  const L = (window as any).L;
+): L.Marker {
+  const L = (window as Window & typeof globalThis).L;
   const marker = L.marker([latitude, longitude]).addTo(map);
 
   const popupContent = `<b>${title}</b>${description ? `<br/>${description}` : ""}`;

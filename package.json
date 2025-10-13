@@ -19,7 +19,8 @@
     "lint:assets": "tsx scripts/lint-assets.ts",
     "lint:no-js": "tsx scripts/no-js-in-src.ts",
     "lint:md": "markdownlint src/content/**/*.md",
-    "lint": "concurrently --group --prefix command --success=all --kill-others-on-fail \"npm:lint:no-js\" \"npm:lint:links\" \"npm:lint:md\" \"npm:lint:assets\" \"npm:lint:css\" \"prettier --check .\"",
+    "lint:ts": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "lint": "concurrently --group --prefix command --success=all --kill-others-on-fail \"npm:lint:no-js\" \"npm:lint:links\" \"npm:lint:md\" \"npm:lint:assets\" \"npm:lint:css\" \"npm:lint:ts\" \"prettier --check .\"",
     "check:duplicates": "node scripts/find-duplicate-content.js --threshold 0.78 --top 50",
     "migrate:flatten-guides": "node scripts/migrate-flatten-guides.js",
     "migrate:links-to-magic": "node scripts/convert-path-links-to-magic.js && npm run format",
@@ -39,6 +40,9 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.9.0",
+    "@typescript-eslint/parser": "^8.9.0",
+    "eslint": "^9.13.0",
     "concurrently": "^9.0.0",
     "@types/node": "^20.19.21",
     "tsx": "^4.19.0",

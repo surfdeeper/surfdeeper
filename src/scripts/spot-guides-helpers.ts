@@ -2,9 +2,15 @@
  * Helper functions for spot guides map interactions
  */
 
+interface SpotLike {
+  title: string;
+  description?: string;
+  slug: string;
+}
+
 export function createPopupContent(
-  spot: any,
-  marker: any,
+  spot: SpotLike,
+  marker: L.Marker,
   isDragging = false,
 ): string {
   const position = marker.getLatLng();
@@ -39,7 +45,7 @@ export function createPopupContent(
 }
 
 export function showContributionInstructions(
-  spot: any,
+  spot: SpotLike,
   newLat: string,
   newLng: string,
 ): void {
@@ -66,7 +72,7 @@ longitude: ${newLng}
 
   document.body.appendChild(modal);
 
-  const closeBtn = modal.querySelector(".close-modal-btn");
+  const closeBtn = modal.querySelector<HTMLButtonElement>(".close-modal-btn");
   closeBtn?.addEventListener("click", () => {
     document.body.removeChild(modal);
   });
@@ -79,17 +85,21 @@ longitude: ${newLng}
 }
 
 export function setupMarkerInteractions(
-  marker: any,
-  spot: any,
-  createPopupContentFn: (spot: any, marker: any, isDragging: boolean) => string,
-  showInstructionsFn: (spot: any, lat: string, lng: string) => void,
+  marker: L.Marker,
+  spot: SpotLike,
+  createPopupContentFn: (
+    spot: SpotLike,
+    marker: L.Marker,
+    isDragging: boolean,
+  ) => string,
+  showInstructionsFn: (spot: SpotLike, lat: string, lng: string) => void,
 ): void {
   // Listen for popup open events to attach event listeners
   marker.on("popupopen", () => {
-    const editLink = document.querySelector(
+    const editLink = document.querySelector<HTMLAnchorElement>(
       `.edit-location-link[data-slug="${spot.slug}"]`,
     );
-    const doneBtn = document.querySelector(
+    const doneBtn = document.querySelector<HTMLButtonElement>(
       `.done-dragging-btn[data-slug="${spot.slug}"]`,
     );
 

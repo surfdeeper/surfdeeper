@@ -13,7 +13,7 @@ import { changeMapTheme, getStoredTheme } from "./leaflet-setup";
  * @returns The control element
  */
 export function createThemeSwitcher(
-  map: any,
+  map: L.Map,
   defaultTheme: string,
 ): HTMLElement {
   const container = document.createElement("div");
@@ -77,13 +77,13 @@ export function createThemeSwitcher(
  * @param position The position on the map (default: 'topright')
  */
 export function addThemeSwitcherToMap(
-  map: any,
+  map: L.Map,
   defaultTheme: string,
   position: "topleft" | "topright" | "bottomleft" | "bottomright" = "topright",
 ): void {
   if (!map || typeof window === "undefined") return;
 
-  const L = (window as any).L;
+  const L = (window as Window & typeof globalThis).L;
 
   // Create a custom Leaflet control
   const ThemeSwitcherControl = L.Control.extend({
@@ -91,7 +91,7 @@ export function addThemeSwitcherToMap(
       position: position,
     },
 
-    onAdd: function (mapInstance: any) {
+    onAdd: function (mapInstance: L.Map) {
       return createThemeSwitcher(mapInstance, defaultTheme);
     },
   });
