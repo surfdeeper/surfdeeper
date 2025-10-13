@@ -4,10 +4,13 @@ title: The Pop-Up
 type: skill
 skillLevel: beginner
 dependsOn: [cobra-pose, paddling-efficiency]
-related: [popping-mechanics]
+related: []
 paths: [catching-your-first-wave]
 description: >-
   Master the fundamental pop-up technique — from lying to standing on your board.
+
+
+aliases: [popping-mechanics, popping, pop-up-mechanics]
 ---
 
 # The Pop-Up

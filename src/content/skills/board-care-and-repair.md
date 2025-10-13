@@ -1,8 +1,9 @@
 ---
 id: board-care-and-repair
 title: Board Care and Repair
-type: concept
-category: gear
+type: skill
+skillLevel: beginner
+paths: [core]
 ---
 
 Coming soon.

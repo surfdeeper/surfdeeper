@@ -4,8 +4,8 @@ title: Efficient Paddling
 type: skill
 skillLevel: beginner
 dependsOn: [paddling-posture, breath-and-relaxation]
-related: [duck-dive-vs-turtle-roll]
-paths: [catching-your-first-wave]
+related: []
+paths: [catching-your-first-wave, getting-out-back, stop-pearling]
 aliases: [paddling, paddling-paddling]
 description: >-
   Master surf paddling with efficient stroke mechanics, smart body position, and calm breathing.

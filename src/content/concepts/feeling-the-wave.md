@@ -1,9 +1,9 @@
 ---
-id: wave-riding
-title: Wave Riding
+id: feeling-the-wave
+title: Feeling The Wave
 type: concept
 description: >-
-  Learn to feel and read waves. Stay in the pocket, find steeper sections, and use cutbacks to maintain position.
+  Learn to feel the waves. Stay in the pocket, find steeper sections, and use cutbacks to maintain position.
 
 
 related: [cutbacks]
