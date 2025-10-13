@@ -1,13 +1,4 @@
-import { getCollection, type CollectionEntry } from "astro:content";
-/**
- * Knowledge graph builder
- * - Nodes come from `guides` collection. New fields:
- *   - data.type: "concept" | "skill" (preferred). Legacy `kind: "concept"` maps to type=concept.
- *   - data.concepts: string[]; for skills, creates dependsOn edges from concept -> skill.
- * - Edges:
- *   - dependsOn: A -> B means B depends on A (edge source=A, target=B)
- *   - leadsTo: A -> B means A leads to B (edge source=A, target=B)
- */
+import type { CollectionEntry } from "astro:content";
 
 export type GuideEntry = CollectionEntry<"guides">;
 
@@ -42,11 +33,14 @@ function normalizeId(entry: GuideEntry): string {
 }
 
 function toUrl(entry: GuideEntry): string {
-  const seg = entry.data.id || entry.slug;
-  return `/guide/${seg}`;
+  // Always use the content slug for URLs to match the dynamic route `[...slug].astro`.
+  // The `id` is a stable graph identifier and may differ from the rendered slug.
+  return `/guide/${entry.slug}`;
 }
 
 export async function loadGuides(): Promise<GuideEntry[]> {
+  // Dynamic import avoids requiring the Astro runtime when this module is imported in unit tests.
+  const { getCollection } = await import("astro:content");
   return await getCollection("guides");
 }
 

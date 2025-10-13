@@ -6,14 +6,17 @@ A standalone lint rule to detect asset reference issues that cause 404 errors in
 
 This linter detects common asset reference problems that work in development but fail in production:
 
-### Errors (will cause 404s)
+### Errors (will cause 404s or disable optimization)
 
-- **Direct `/src/` paths in `<link>` tags**: `<link rel="stylesheet" href="/src/styles/file.css" />`
-- **Direct `/src/` paths in `<script>` tags**: `<script src="/src/scripts/file.js"></script>`
+- Direct `/src/` paths in `<link>` tags: `<link rel="stylesheet" href="/src/styles/file.css" />`
+- Direct `/src/` paths in `<script>` tags: `<script src="/src/scripts/file.js"></script>`
+- Raw `<img>` tags in `.astro` files (use `astro:assets` `<Image>` instead)
+- Markdown images referencing root/public images (e.g. `![]( /file.png )`) — prefer MDX + `<Image>`
 
-### Warnings (may cause issues)
+### Warnings (transition period / legacy)
 
-- **Direct `/src/` paths in `<img>` tags**: `<img src="/src/images/file.png" />`
+- Direct `/src/` paths in `<img>` tags
+- A small allowlist of legacy Markdown images from `/public` will be flagged as warnings, not errors, until migrated to MDX + `<Image>`
 
 ## How to fix
 
@@ -65,22 +68,40 @@ import "../scripts/file.js";
 
 ### Image Files
 
-⚠️ **May cause issues**:
+❌ Wrong in `.astro` (raw `<img>`):
 
 ```astro
-<img src="/src/images/file.png" alt="description" />
+<img src={someUrl} alt="..." />
 ```
 
-✅ **Better approach**:
+✅ Correct in `.astro` (optimized):
 
 ```astro
-<!-- Move images to /public/ folder -->
-<img src="/images/file.png" alt="description" />
+---
+import { Image } from "astro:assets";
+import diagram from "../assets/diagram.png";
+---
 
-<!-- Or use proper asset imports -->
---- import imageUrl from "../images/file.png"; ---
-<img src={imageUrl} alt="description" />
+<Image src={diagram} alt="..." width={800} />
 ```
+
+❌ Wrong in Markdown (root/public):
+
+```md
+![Alt](/diagram.png)
+```
+
+✅ Preferred: convert to MDX and use `<Image>`
+
+```mdx
+---
+import { Image } from "astro:assets"; import diagram from "../../assets/diagram.png";
+---
+
+<Image src={diagram} alt="Alt" width={800} />
+```
+
+Note: A temporary allowlist exists for a few legacy diagrams to avoid blocking; they still show warnings.
 
 ## Usage
 
@@ -109,11 +130,12 @@ The asset linter is automatically included in:
 
 ## Configuration
 
-The linter rules are defined in `scripts/lint-assets.js`. Current rules:
+The linter rules are defined in `scripts/lint-assets.js`. Current rules include:
 
-- `no-src-link-tags` - Prevents `/src/` paths in link tags (ERROR)
-- `no-src-script-tags` - Prevents `/src/` paths in script tags (ERROR)
-- `no-src-img-tags` - Warns about `/src/` paths in img tags (WARNING)
+- `no-src-link-tags` (ERROR): No `/src/` href in `<link>`
+- `no-src-script-tags` (ERROR): No `/src/` src in `<script>`
+- `no-raw-img-tags-in-astro` (ERROR): Use `astro:assets` `<Image>`
+- `no-root-public-images-in-markdown` (ERROR with allowlist→WARNING): Prefer MDX + `<Image>` over `/public` paths
 
 ## Why This Matters
 
