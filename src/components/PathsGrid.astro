@@ -1,0 +1,171 @@
+---
+import {
+  buildGraph,
+  getPaths,
+  loadGuides,
+  getGuidesByPath,
+} from "../utils/knowledge-graph";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+// Props
+interface Props {
+  /** Show footer link to full Paths index */
+  showFooterLink?: boolean;
+}
+const { showFooterLink = true } = Astro.props as Props;
+
+// Data
+const entries = await loadGuides();
+const graph = buildGraph(entries);
+const pathIds = getPaths(graph);
+const pathMeta: CollectionEntry<"paths">[] = await getCollection("paths");
+const paths = pathIds.map((id) => {
+  const meta = pathMeta.find((t: CollectionEntry<"paths">) => t.slug === id);
+  return {
+    id,
+    title: meta?.data.title || id,
+    description: meta?.data.description || "",
+  };
+});
+---
+
+{
+  paths.length === 0 ? (
+    <p>No paths tagged yet. Add paths to guides' frontmatter (paths: []).</p>
+  ) : (
+    <>
+      <section class="threads-grid">
+        {paths.map((t) => {
+          const items = getGuidesByPath(graph, t.id);
+          return (
+            <article class="card thread-card">
+              <a
+                class="stretched"
+                href={`/paths/${t.id}`}
+                aria-label={`Open path ${t.title}`}
+              />
+              <div class="thread-card-header">
+                <div>
+                  <h2 class="heading heading-sm">
+                    <a class="thread-link" href={`/paths/${t.id}`}>
+                      {t.title}
+                    </a>
+                  </h2>
+                  {t.description && <p class="thread-desc">{t.description}</p>}
+                </div>
+                <span class="badge">{items.length}</span>
+              </div>
+              <ul class="preview links-neutral">
+                {items.slice(0, 4).map((n) => (
+                  <li>
+                    <a href={n.url}>{n.title}</a>
+                  </li>
+                ))}
+                {items.length > 4 && (
+                  <li class="more">+{items.length - 4} more</li>
+                )}
+              </ul>
+            </article>
+          );
+        })}
+      </section>
+
+      {showFooterLink && (
+        <footer class="paths-footer">
+          <a class="paths-footer-link" href="/paths">
+            View all paths →
+          </a>
+        </footer>
+      )}
+    </>
+  )
+}
+
+<style>
+  .thread-desc {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .threads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .thread-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+  }
+
+  .thread-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .thread-link:hover,
+  .thread-link:focus {
+    text-decoration: underline;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--bg-accent-weak);
+    color: var(--color-accent);
+    border: 1px solid var(--color-border-accent);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-2);
+    font-size: var(--font-size-sm);
+  }
+
+  .preview {
+    margin: 0 0 var(--space-md) 0;
+  }
+
+  .preview li {
+    margin-bottom: var(--space-2);
+  }
+
+  .preview .more {
+    color: var(--color-accent);
+  }
+
+  /* Make entire card clickable while preserving internal links */
+  .thread-card {
+    position: relative;
+  }
+
+  .thread-card .stretched {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-1);
+
+    /* no visual */
+  }
+
+  .thread-card .thread-card-header,
+  .thread-card .preview {
+    position: relative;
+    z-index: var(--z-2);
+  }
+
+  .paths-footer {
+    margin-top: var(--space-xl);
+    display: flex;
+    justify-content: center;
+  }
+
+  .paths-footer-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .paths-footer-link:hover,
+  .paths-footer-link:focus {
+    text-decoration: underline;
+  }
+</style>
