@@ -31,6 +31,7 @@
     "test:visual:update": "playwright test --config=playwright.config.ts --project=chromium --update-snapshots",
     "test:visual:docker": "docker compose run visual-tests -- bash -lc \"npm ci && npm run build && npm run test:visual\"",
     "snapshots:update:docker": "docker compose run -e UPDATE_SNAPSHOTS=1 visual-tests -- bash -lc \"npm ci && npm run build && UPDATE_SNAPSHOTS=1 playwright test --update-snapshots --config=playwright.config.ts --project=chromium\"",
+    "test": "vitest run",
     "precommit": "lint-staged"
   },
   "dependencies": {
@@ -55,5 +56,6 @@
     "stylelint-config-standard": "^36.0.1",
     "stylelint-declaration-strict-value": "^1.10.4",
     "@playwright/test": "^1.48.2"
+    "vitest": "^2.1.0"
   }
 }
