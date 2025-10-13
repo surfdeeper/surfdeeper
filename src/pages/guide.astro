@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PathsGrid from "../components/PathsGrid.astro";
 import { getCollection } from "astro:content";
 import sections from "../content/guides/_sections.json";
 // Provide a typed view for the JSON map so TS allows string indexing
@@ -60,6 +61,17 @@ for (const section of Object.keys(grouped)) {
     <h1>Guides</h1>
     <p class="page-subtitle">Master the fundamentals and advanced techniques</p>
   </header>
+
+  <!-- Quick access to learning paths -->
+  <section class="paths-intro card">
+    <h2
+      class="heading heading-md"
+      style="text-align:center; margin: 0 0 var(--space-md) 0;"
+    >
+      Explore Paths
+    </h2>
+    <PathsGrid />
+  </section>
 
   <section class="surfing-manual">
     <div class="section-grid">
