@@ -25,11 +25,11 @@ const concepts = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
     <p class="empty">No concepts yet.</p>
   ) : (
     <>
-      <ul class="cards-grid">
+      <ul class="grid-cards links-inherit">
         {concepts.map((c) => (
           <li class="card">
             <div class="card-content">
-              <h3 class="card-title">
+              <h3 class="card-title heading heading-sm">
                 <a
                   class="card-link"
                   href={`/guide/${(c.data as any).id || c.slug}`}
@@ -38,7 +38,9 @@ const concepts = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
                 </a>
               </h3>
               {c.data.description && (
-                <p class="card-desc">{c.data.description}</p>
+                <p class="card-desc text-sm text-secondary">
+                  {c.data.description}
+                </p>
               )}
             </div>
           </li>
@@ -46,7 +48,7 @@ const concepts = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
       </ul>
 
       {showFooterLink && (
-        <footer class="concepts-footer">
+        <footer class="centered-footer">
           <a class="concepts-footer-link" href="/guide#concepts">
             View all concepts →
           </a>
@@ -57,46 +59,9 @@ const concepts = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
 }
 
 <style>
-  .cards-grid {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-2xl) 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: var(--space-lg);
-  }
-
-  .card-title {
-    margin: 0 0 var(--space-2) 0;
-    color: var(--color-accent);
-    font-size: var(--font-size-lg);
-  }
-
-  .card-link {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .card-link:hover,
-  .card-link:focus {
-    text-decoration: underline;
-  }
-
-  .card-desc {
-    margin: 0;
-    color: var(--color-text-muted);
-    font-size: var(--font-size-sm);
-  }
-
   .empty {
     text-align: center;
     color: var(--color-text-muted);
-  }
-
-  .concepts-footer {
-    margin-top: var(--space-xl);
-    display: flex;
-    justify-content: center;
   }
 
   .concepts-footer-link {

@@ -343,6 +343,20 @@ a:not(.btn):visited {
   --link-transition: opacity var(--transition-fast);
 }
 
+/* Links inherit color from parent (e.g., headings) and show underline only on hover */
+.links-inherit {
+  --link-color: currentcolor; /* inherit */
+  --link-hover-color: currentcolor;
+  --link-visited-color: currentcolor;
+  --link-opacity: 1;
+  --link-hover-opacity: 1;
+  --link-underline: none;
+  --link-hover-underline: underline;
+  --link-underline-offset: 2px;
+  --link-decoration-color: currentcolor;
+  --link-transition: color var(--transition-base);
+}
+
 /* Navigation */
 .nav {
   background-color: var(--color-surface-primary);
@@ -526,4 +540,67 @@ a.broken-magic-link {
 
 a.broken-magic-link:hover {
   opacity: 0.9;
+}
+
+/*
+  Reusable layout + UI helpers used by grid components
+  ---------------------------------------------------
+*/
+
+/* Responsive cards grid (list or div container) */
+.grid-cards {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-2xl) 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* Tile grid variant (slightly wider min size) */
+.grid-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* Compact text sizing */
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+
+/* Generic badge pill */
+.badge {
+  display: inline-block;
+  background: var(--bg-accent-weak);
+  color: var(--color-accent);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+/* Make an entire card clickable while preserving internal links */
+.stretched-parent {
+  position: relative;
+}
+
+.stretched-link {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-1);
+  /* no visual appearance */
+}
+
+.stretched-content {
+  position: relative;
+  z-index: var(--z-2);
+}
+
+/* Centered footer helper for grid sections */
+.centered-footer {
+  margin-top: var(--space-xl);
+  display: flex;
+  justify-content: center;
 }
