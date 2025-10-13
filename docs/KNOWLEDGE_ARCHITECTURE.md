@@ -102,7 +102,7 @@ Notes:
 
 ### 5) Derived URLs and navigation
 
-- Routes are generated from IDs (and optionally sections/lenses), e.g. `/guide/:id`.
+- Routes are generated from IDs (and optionally sections/lenses), e.g. `/concept/:id` or `/skill/:id`.
 - The same node can appear in multiple views: linear course, thread grid, or a graph map.
 - Redirects are handled automatically if we change how URLs are shaped.
 

@@ -41,7 +41,7 @@ export async function loadHomepageData() {
       continue;
     }
 
-    // Use knowledge graph URL which normalizes to /guide/<slug>
+    // Use knowledge graph URL which normalizes to typed routes (/concept/ or /skill/)
     guidesBySection[section].push({
       slug: node.id,
       title: node.title,
@@ -118,8 +118,9 @@ export async function loadHomepageData() {
               /content\/(concepts|skills)\/([^/]+)\.md$/,
             );
             if (match) {
-              const [, , slug] = match;
-              url = `/guide/${slug}`;
+              const [_, kind, slug] = match;
+              const base = kind === "skills" ? "skill" : "concept";
+              url = `/${base}/${slug}`;
               title = slug
                 .replace(/-/g, " ")
                 .replace(/\b\w/g, (l) => l.toUpperCase());
@@ -135,7 +136,8 @@ export async function loadHomepageData() {
             );
             if (sectionMatch) {
               const section = sectionMatch[1];
-              url = `/guide/${section}`;
+              // Best-effort: treat as concept section index
+              url = `/concept/${section}`;
               title = section
                 .replace(/-/g, " ")
                 .replace(/\b\w/g, (l) => l.toUpperCase());

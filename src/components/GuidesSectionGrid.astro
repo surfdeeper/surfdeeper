@@ -33,7 +33,7 @@ const { sectionsMap, grouped, disabledSectionLinks } = Astro.props as Props;
         return (
           <a
             class={`card${disabled ? " is-disabled" : ""}`}
-            href={!disabled ? `/guide/${section}` : undefined}
+            href={!disabled ? `/concept/${section}` : undefined}
             aria-disabled={disabled ? "true" : undefined}
             tabindex={disabled ? -1 : undefined}
           >

@@ -9,7 +9,7 @@ A minimal Astro site.
 - Contributing: CONTRIBUTING.md
 - Knowledge model: docs/KNOWLEDGE_ARCHITECTURE.md
 - Design tokens & CSS rules: .stylelintrc.cjs and src/styles/design-system.css
-- Magic links: scripts/remark-magic-links.mjs
+- Magic links: scripts/remark-magic-links.mjs (rewrites to /concept/_or /skill/_)
 
 ## Getting Started
 
@@ -37,9 +37,9 @@ Content is organized as a simple knowledge graph:
 
 How it works:
 
-- `astro.config.mjs` registers a remark plugin (`scripts/remark-magic-links.mjs`) that scans all guides, builds an id/alias map, and rewrites `:id` links to `/guide/{slug}` at build time.
+- `astro.config.mjs` registers a remark plugin (`scripts/remark-magic-links.mjs`) that scans all guides, builds an id/alias map, and rewrites `:id` links to typed routes like `/concept/{slug}` or `/skill/{slug}` at build time.
 - Unresolved magic links are rendered with a `broken-magic-link` class to stand out (see `src/styles/design-system.css`).
-- Guide pages (`src/pages/guide/[...slug].astro`) render related links based on `dependsOn` and `leadsTo` if present.
+- Guide pages live under typed routes (`/concept/*` and `/skill/*`). A legacy redirect at `/guide/*` still exists but should not be used in new links.
 
 Authoring tips:
 

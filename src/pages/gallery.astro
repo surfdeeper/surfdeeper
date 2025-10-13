@@ -47,7 +47,8 @@ for (const guide of allGuides) {
   let sectionSlug = (guide.data as any).category as string | undefined;
   if (!sectionSlug) continue;
 
-  const guideLink = `/guide/${guide.slug}`;
+  const base = guide.collection === "skills" ? "skill" : "concept";
+  const guideLink = `/${base}/${guide.slug}`;
   const guideTitle = guide.data.title;
   const sectionLabel =
     (sectionSlug || "")

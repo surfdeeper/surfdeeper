@@ -44,7 +44,7 @@ Spots live under `src/content/spots/` with structured frontmatter (see `src/cont
 
 ## Links and assets
 
-- Internal links use absolute routes (e.g., `/guide/core-skills/cobra-pose`)
+- Internal links use absolute routes with typed prefixes (e.g., `/concept/core-skills/cobra-pose` or `/skill/popping-mechanics`)
 - Do not reference `/src/` assets directly in HTML; let Astro bundle via imports
 - See `docs/ASSET_LINTER.md` and `LINK_GUIDELINES.md`
 
