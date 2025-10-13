@@ -36,12 +36,13 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: {},
-      launchOptions: {
-        args: [
-          "--disable-font-subpixel-positioning",
-          "--force-color-profile=srgb",
-        ],
+      use: {
+        launchOptions: {
+          args: [
+            "--disable-font-subpixel-positioning",
+            "--force-color-profile=srgb",
+          ],
+        },
       },
     },
     // Add more browsers if desired for broader coverage
