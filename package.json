@@ -15,7 +15,7 @@
     "prepare": "husky install",
     "lint:css": "stylelint \"src/**/*.{css,astro}\"",
     "typecheck": "astro check",
-    "lint:links": "tsx scripts/validate-links.ts && node scripts/validate-concept-ids.js && node scripts/validate-paths.js && node scripts/validate-threads.js",
+    "lint:links": "tsx scripts/validate-links.ts && node scripts/validate-concept-ids.js && node scripts/validate-paths.js",
     "lint:assets": "tsx scripts/lint-assets.ts",
     "lint:no-js": "tsx scripts/no-js-in-src.ts",
     "lint:md": "markdownlint src/content/**/*.md",

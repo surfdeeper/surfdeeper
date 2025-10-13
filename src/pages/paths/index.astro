@@ -35,24 +35,24 @@ const paths = pathIds.map((id) => {
     paths.length === 0 ? (
       <p>No paths tagged yet. Add paths to guides' frontmatter (paths: []).</p>
     ) : (
-      <section class="threads-grid">
+      <section class="paths-grid">
         {paths.map((t) => {
           const items = getGuidesByPath(graph, t.id);
           return (
-            <article class="card thread-card">
+            <article class="card path-card">
               <a
                 class="stretched"
                 href={`/paths/${t.id}`}
                 aria-label={`Open path ${t.title}`}
               />
-              <div class="thread-card-header">
+              <div class="path-card-header">
                 <div>
                   <h2 class="heading heading-sm">
-                    <a class="thread-link" href={`/paths/${t.id}`}>
+                    <a class="path-link" href={`/paths/${t.id}`}>
                       {t.title}
                     </a>
                   </h2>
-                  {t.description && <p class="thread-desc">{t.description}</p>}
+                  {t.description && <p class="path-desc">{t.description}</p>}
                 </div>
                 <span class="badge">{items.length}</span>
               </div>
@@ -92,32 +92,32 @@ const paths = pathIds.map((id) => {
       margin: 0;
     }
 
-    .thread-desc {
+    .path-desc {
       margin: 0;
       color: var(--color-text-muted);
       font-size: var(--font-size-sm);
     }
 
-    .threads-grid {
+    .paths-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: var(--space-lg);
     }
 
-    .thread-card-header {
+    .path-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: var(--space-md);
     }
 
-    .thread-link {
+    .path-link {
       color: inherit;
       text-decoration: none;
     }
 
-    .thread-link:hover,
-    .thread-link:focus {
+    .path-link:hover,
+    .path-link:focus {
       text-decoration: underline;
     }
 
@@ -144,11 +144,11 @@ const paths = pathIds.map((id) => {
     }
 
     /* Make entire card clickable while preserving internal links */
-    .thread-card {
+    .path-card {
       position: relative;
     }
 
-    .thread-card .stretched {
+    .path-card .stretched {
       position: absolute;
       inset: 0;
       z-index: var(--z-1);
@@ -156,8 +156,8 @@ const paths = pathIds.map((id) => {
       /* no visual */
     }
 
-    .thread-card .thread-card-header,
-    .thread-card .preview {
+    .path-card .path-card-header,
+    .path-card .preview {
       position: relative;
       z-index: var(--z-2);
     }
