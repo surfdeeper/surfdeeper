@@ -1,10 +1,10 @@
 ---
-id: read-waves
-title: Reading Waves
+id: ocean-knowledge
+title: Ocean Knowledge
 type: concept
 dependsOn: []
 related: [wave-selection, types-of-waves]
 paths: []
 ---
 
-Placeholder: concept page for Reading Waves
+Coming Soon.
