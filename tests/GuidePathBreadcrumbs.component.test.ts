@@ -56,7 +56,9 @@ describe("GuidePathBreadcrumbs component", () => {
   });
 
   it("renders breadcrumb links with slug-based hrefs", async () => {
-    const Component = (await import("../src/components/GuidePathBreadcrumbs.astro")).default;
+    const Component = (
+      await import("../src/components/GuidePathBreadcrumbs.astro")
+    ).default;
 
     const html = await container.renderToString(Component, {
       props: {

@@ -16,6 +16,24 @@ const { guideId, guidePaths } = Astro.props as Props;
 
 let pathCrumbs: ReturnType<typeof computePathCrumbs> = [] as any;
 
+// Extract preferred guide order from a path markdown body based on [[guide-id]] wiki links
+function extractPreferredOrderFromBody(body: string | undefined): string[] {
+  if (!body) return [];
+  const out: string[] = [];
+  const seen = new Set<string>();
+  // Matches [[guide-id]] or [[guide-id|Label]]
+  const re = /\[\[([^\]|]+)(?:\|[^\]]*)?\]\]/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(body)) !== null) {
+    const id = m[1].trim();
+    if (id && !seen.has(id)) {
+      seen.add(id);
+      out.push(id);
+    }
+  }
+  return out;
+}
+
 if (guidePaths && guidePaths.length > 0) {
   const [allGuides, pathsMeta] = await Promise.all([
     loadGuides(),
@@ -31,6 +49,43 @@ if (guidePaths && guidePaths.length > 0) {
     (pathId) => buildPathSubgraph(graph, pathId, { kind: "concept" }),
     metaById,
   );
+
+  // Build a map of preferred order per path from its body content
+  const preferredOrderByPath = new Map<string, string[]>();
+  for (const p of pathsMeta) {
+    const order = extractPreferredOrderFromBody((p as any).body);
+    if (order.length > 0) preferredOrderByPath.set(p.slug, order);
+  }
+
+  // Reorder sequences to match preferred order when the path has no explicit leadsTo edges
+  pathCrumbs = pathCrumbs.map((crumb) => {
+    const preferred = preferredOrderByPath.get(crumb.id) || [];
+    if (preferred.length === 0) return crumb;
+
+    // Determine if this path has any leadsTo edges; only override when none
+    const sub = buildPathSubgraph(graph, crumb.id, { kind: "concept" });
+    const hasLeadsTo = sub.edges.some((e) => e.type === "leadsTo");
+    if (hasLeadsTo) return crumb;
+
+    const prefIndex = new Map(preferred.map((id, i) => [id, i] as const));
+    const originalIndex = new Map(
+      crumb.sequence.map((n, i) => [n.id, i] as const),
+    );
+    const reordered = crumb.sequence.slice().sort((a, b) => {
+      const pa = prefIndex.get(a.id);
+      const pb = prefIndex.get(b.id);
+      const ai = originalIndex.get(a.id) ?? 0;
+      const bi = originalIndex.get(b.id) ?? 0;
+      // Items listed in preferred order come first in that exact order
+      if (pa !== undefined && pb !== undefined) return pa - pb;
+      if (pa !== undefined) return -1;
+      if (pb !== undefined) return 1;
+      // For items not in preferred list, preserve original relative order
+      return ai - bi;
+    });
+
+    return { ...crumb, sequence: reordered };
+  });
 }
 ---
 
