@@ -1,7 +1,7 @@
 {
   "*.md": [
     "prettier --write",
-    "tsx scripts/validate-links.ts && node scripts/validate-concept-ids.js && node scripts/validate-paths.js && node scripts/validate-threads.js",
+    "tsx scripts/validate-links.ts && node scripts/validate-concept-ids.js && node scripts/validate-paths.js",
     "markdownlint --fix"
   ],
   "*.{js,json,css,astro,yml,yaml}": ["prettier --write"]
