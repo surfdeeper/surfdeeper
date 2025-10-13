@@ -5,14 +5,7 @@ type: skill
 skillLevel: beginner
 dependsOn: [paddling-efficiency]
 related: [cobra-pose, trimming-and-speed]
-paths:
-  [
-    catching-your-first-wave,
-    longboarding,
-    core,
-    getting-out-back,
-    stop-pearling,
-  ]
+paths: [catching-your-first-wave, longboarding, core, stop-pearling]
 description: >-
   Master the art of angling down the line — from longboard push/pull to shortboard control, and flow with the wave’s energy.
 ---
