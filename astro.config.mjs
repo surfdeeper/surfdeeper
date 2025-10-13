@@ -1,9 +1,11 @@
 import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
 import remarkMagicLinks from "./scripts/remark-magic-links.mjs";
 import remarkLearningLinks from "./scripts/remark-learning-links.mjs";
 
 export default defineConfig({
   site: "https://surfdeeper.com",
+  integrations: [mdx()],
   image: {
     // Enable image optimization
     service: {
