@@ -4,14 +4,16 @@ type ConceptEntry = CollectionEntry<"concepts">;
 type SkillEntry = CollectionEntry<"skills">;
 export type GuideEntry = ConceptEntry | SkillEntry;
 
+type Level = "beginner" | "intermediate" | "advanced";
+
 export type GuideNode = {
   id: string;
   title: string;
   url: string;
-  level?: any;
-  levels: any[];
+  level?: Level;
+  levels: Level[];
   paths: string[];
-  kind?: string;
+  kind?: "concept" | "skill";
   category?: string;
   isPlaceholder?: boolean;
 };
@@ -29,14 +31,22 @@ export type GuideGraph = {
   pathsIndex: Map<string, GuideNode[]>;
 };
 
+function isSkillEntry(entry: GuideEntry): entry is SkillEntry {
+  return entry.collection === "skills";
+}
+
+function isConceptEntry(entry: GuideEntry): entry is ConceptEntry {
+  return entry.collection === "concepts";
+}
+
 function normalizeId(entry: GuideEntry): string {
-  return (entry.data as any).id || entry.slug;
+  return entry.data.id ?? entry.slug;
 }
 
 function toUrl(entry: GuideEntry): string {
-  // Always use the content slug for URLs to match the dynamic route `[...slug].astro`.
-  // The `id` is a stable graph identifier and may differ from the rendered slug.
-  return `/guide/${entry.slug}`;
+  // Use typed routes: /skill/:slug or /concept/:slug
+  const base = entry.collection === "skills" ? "skill" : "concept";
+  return `/${base}/${entry.slug}`;
 }
 
 export async function loadGuides(): Promise<GuideEntry[]> {
@@ -48,28 +58,36 @@ export async function loadGuides(): Promise<GuideEntry[]> {
 }
 
 export function buildGraph(entries: GuideEntry[]): GuideGraph {
-  const nodes: GuideNode[] = entries.map((e) => ({
-    id: normalizeId(e),
-    title: e.data.title,
-    url: toUrl(e),
-    level: (e.data as any).level || (e.data as any).skillLevel,
-    levels: (e.data as any).levels || [],
-    paths: (e.data as any).paths || [],
-    kind: (e.data as any).kind,
-    category: (e.data as any).category,
-    isPlaceholder: isPlaceholderTodo((e as any).body),
-  }));
+  const nodes: GuideNode[] = entries.map((e) => {
+    const level: Level | undefined = isSkillEntry(e)
+      ? e.data.skillLevel ?? e.data.level
+      : e.data.level;
+    const kind: "concept" | "skill" | undefined = isSkillEntry(e)
+      ? "skill"
+      : "concept";
+    return {
+      id: normalizeId(e),
+      title: e.data.title,
+      url: toUrl(e),
+      level,
+      levels: e.data.levels ?? [],
+      paths: e.data.paths ?? [],
+      kind,
+      category: e.data.category,
+      isPlaceholder: isPlaceholderTodo(e.body),
+    } satisfies GuideNode;
+  });
 
   const byId = new Map(nodes.map((n) => [n.id, n] as const));
 
   const edges: GuideEdge[] = [];
   for (const e of entries) {
     const id = normalizeId(e);
-    for (const dep of (e.data as any).dependsOn || []) {
+    for (const dep of e.data.dependsOn ?? []) {
       // Edge from dependency to this guide
       edges.push({ source: dep, target: id, type: "dependsOn" });
     }
-    for (const nxt of (e.data as any).leadsTo || []) {
+    for (const nxt of e.data.leadsTo ?? []) {
       // Edge from this guide to the next guide
       edges.push({ source: id, target: nxt, type: "leadsTo" });
     }

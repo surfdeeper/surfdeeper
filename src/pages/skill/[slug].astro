@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import GuidePathBreadcrumbs from "../../components/GuidePathBreadcrumbs.astro";
 
 export async function getStaticPaths() {
   const entries = await getCollection("skills");
@@ -17,6 +18,10 @@ if (!entry) throw Astro.redirect("/skill");
 const rendered = await entry.render();
 const Content = rendered.Content;
 const data = entry.data as any;
+
+// For path breadcrumbs
+const currentId = ((data.id || entry.slug) as string).trim();
+const guidePaths: string[] = Array.isArray(data.paths) ? data.paths : [];
 
 // Related graph links across concepts+skills collections
 const concepts = await getCollection("concepts");
@@ -58,6 +63,12 @@ const leadsTo = mapIds(data.leadsTo);
 
   <article class="guide-article">
     <Content />
+
+    {
+      guidePaths.length > 0 && (
+        <GuidePathBreadcrumbs guideId={currentId} guidePaths={guidePaths} />
+      )
+    }
 
     {
       (prerequisites.length > 0 || leadsTo.length > 0) && (
