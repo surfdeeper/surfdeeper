@@ -27,6 +27,7 @@
     "fix": "npm run fix:md",
     "format": "prettier --write .",
     "format:check": "prettier --check \"**/*.{md,js,json}\" && prettier --check \"**/*.astro\"",
+    "test": "vitest run",
     "precommit": "lint-staged"
   },
   "dependencies": {
@@ -49,6 +50,7 @@
     "prettier-plugin-astro": "^0.12.0",
     "stylelint": "^16.9.0",
     "stylelint-config-standard": "^36.0.1",
-    "stylelint-declaration-strict-value": "^1.10.4"
+    "stylelint-declaration-strict-value": "^1.10.4",
+    "vitest": "^2.1.0"
   }
 }
