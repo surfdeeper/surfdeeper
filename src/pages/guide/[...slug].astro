@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection, getEntryBySlug } from "astro:content";
 import { isPlaceholderTodo } from "../../utils/guide-filters";
+import PathsBreadcrumb from "../../components/PathsBreadcrumb.astro";
 
 export async function getStaticPaths() {
   const entries = await getCollection("guides");
@@ -88,6 +89,11 @@ if (isSectionPage) {
   editPath={`src/content/guides/${entry.slug}.md`}
 >
   <article class="guide-article">
+    {
+      !isSectionPage && data.paths && data.paths.length > 0 && (
+        <PathsBreadcrumb paths={data.paths} />
+      )
+    }
     <Content />
 
     {

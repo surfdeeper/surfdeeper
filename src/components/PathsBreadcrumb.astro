@@ -1,0 +1,119 @@
+---
+// PathsBreadcrumb component - displays learning paths inline
+// Shows which paths this guide belongs to
+import { getCollection, type CollectionEntry } from "astro:content";
+
+export interface Props {
+  paths: string[];
+}
+
+const { paths } = Astro.props;
+
+// Load path metadata
+const pathMeta: CollectionEntry<"paths">[] = await getCollection("paths");
+
+// Map path IDs to their titles
+const pathItems = paths
+  .map((pathId) => {
+    const meta = pathMeta.find(
+      (t: CollectionEntry<"paths">) => t.slug === pathId,
+    );
+    return {
+      id: pathId,
+      title: meta?.data.title || pathId,
+      icon: meta?.data.icon || "",
+    };
+  })
+  .filter(Boolean);
+---
+
+{
+  pathItems.length > 0 && (
+    <nav class="paths-breadcrumb" aria-label="Learning paths">
+      <span class="paths-label">Learning paths:</span>
+      <ul class="paths-list">
+        {pathItems.map((item) => (
+          <li>
+            <a href={`/paths/${item.id}`}>
+              {item.icon && (
+                <span class="path-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+              )}
+              {item.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .paths-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--color-surface-secondary);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--space-6);
+    font-size: var(--font-size-sm);
+  }
+
+  .paths-label {
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-semibold);
+    opacity: 0.8;
+  }
+
+  .paths-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .paths-list li {
+    display: inline;
+  }
+
+  .paths-list a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-3);
+    background-color: var(--color-surface-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .paths-list a:hover {
+    background-color: var(--color-accent);
+    color: var(--color-text-on-primary);
+    border-color: var(--color-accent);
+  }
+
+  .path-icon {
+    font-size: var(--font-size-base);
+  }
+
+  @media (max-width: 768px) {
+    .paths-breadcrumb {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+
+    .paths-list {
+      width: 100%;
+    }
+  }
+</style>
