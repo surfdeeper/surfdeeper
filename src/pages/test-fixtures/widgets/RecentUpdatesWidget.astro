@@ -1,0 +1,37 @@
+---
+import FixtureLayout from "../_FixtureLayout.astro";
+import RecentUpdatesWidget from "../../../components/sidebar/widgets/RecentUpdatesWidget.astro";
+
+const recentlyUpdated = [
+  {
+    title: "Angling Down the Line",
+    url: "/guide/angling-down-the-line",
+    hierarchy: "Intermediate",
+    date: new Date("2024-08-05T09:00:00-07:00").toISOString(),
+  },
+  {
+    title: "Avoid Pearling",
+    url: "/guide/avoid-pearling",
+    hierarchy: "Foundations",
+    date: new Date("2024-08-04T09:00:00-07:00").toISOString(),
+  },
+  {
+    title: "Core Skills",
+    url: "/guide/core-skills",
+    hierarchy: "Core Skills",
+    date: new Date("2024-08-03T09:00:00-07:00").toISOString(),
+  },
+  {
+    title: "Board Care and Repair",
+    url: "/guide/board-care-and-repair",
+    hierarchy: "Gear",
+    date: new Date("2024-08-02T09:00:00-07:00").toISOString(),
+  },
+];
+---
+
+<FixtureLayout title="Recent Updates Widget">
+  <div data-testid="fixture-root">
+    <RecentUpdatesWidget {recentlyUpdated} />
+  </div>
+</FixtureLayout>

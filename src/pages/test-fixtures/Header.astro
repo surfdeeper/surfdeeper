@@ -1,0 +1,16 @@
+---
+import FixtureLayout from "./_FixtureLayout.astro";
+import Navigation from "../../components/Navigation.astro";
+---
+
+<FixtureLayout title="Header Fixture">
+  <section data-testid="fixture-root">
+    <Navigation />
+  </section>
+  <style is:global>
+    /* Remove layout padding to ensure stable full-width header capture */
+    main {
+      padding: 0 !important;
+    }
+  </style>
+</FixtureLayout>

@@ -1,0 +1,28 @@
+---
+import FixtureLayout from "../_FixtureLayout.astro";
+import RecentCommitsWidget from "../../../components/sidebar/widgets/RecentCommitsWidget.astro";
+
+const recentCommits = [
+  {
+    message: "refactor: extract map utilities",
+    url: "https://github.com/surfdeeper/surfdeeper/commit/111",
+    isoDate: new Date("2024-10-10T10:00:00-07:00").toISOString(),
+  },
+  {
+    message: "feat: add sidebar widgets",
+    url: "https://github.com/surfdeeper/surfdeeper/commit/222",
+    isoDate: new Date("2024-10-09T10:00:00-07:00").toISOString(),
+  },
+  {
+    message: "fix: footer spacing",
+    url: "https://github.com/surfdeeper/surfdeeper/commit/333",
+    isoDate: new Date("2024-10-08T10:00:00-07:00").toISOString(),
+  },
+];
+---
+
+<FixtureLayout title="Recent Commits Widget">
+  <div data-testid="fixture-root">
+    <RecentCommitsWidget {recentCommits} />
+  </div>
+</FixtureLayout>

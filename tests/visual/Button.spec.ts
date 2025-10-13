@@ -1,14 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 
-test.describe("Button visual regression", () => {
-  test("default primary button", async ({ page }) => {
-    await page.goto("/test-fixtures/Button/");
-    // give fonts/layout a moment to settle
-    await page.waitForTimeout(100);
-    const container = page.getByTestId("fixture-root");
-    const screenshot = await container.screenshot();
-    expect(screenshot).toMatchSnapshot(
-      `button-${test.info().project.name}.png`,
-    );
+test.describe.skip("Legacy Button test (replaced)", () => {
+  test("replaced by real component tests", async () => {
+    // See Header.spec.ts, Footer.spec.ts, LeftSidebar.spec.ts, RightSidebar.spec.ts, Widgets.spec.ts, Map.spec.ts
   });
 });

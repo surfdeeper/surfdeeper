@@ -1,0 +1,61 @@
+---
+import FixtureLayout from "./_FixtureLayout.astro";
+import RightSidebar from "../../components/sidebar/RightSidebar.astro";
+
+const recentlyUpdated = [
+  {
+    title: "Cobra Pose",
+    url: "/guide/cobra-pose",
+    hierarchy: "Foundations",
+    date: new Date("2024-08-01T12:00:00-07:00").toISOString(),
+  },
+  {
+    title: "Cutback Mechanics",
+    url: "/guide/cutback-mechanics",
+    hierarchy: "Techniques",
+    date: new Date("2024-09-15T08:30:00-07:00").toISOString(),
+  },
+  {
+    title: "Board Design Basics",
+    url: "/guide/board-design-basics",
+    hierarchy: "Gear",
+    date: new Date("2024-07-10T17:45:00-07:00").toISOString(),
+  },
+  {
+    title: "Crowded Lineup Strategy",
+    url: "/guide/crowded-lineup-strategy",
+    hierarchy: "Going Deeper",
+    date: new Date("2024-06-02T09:15:00-07:00").toISOString(),
+  },
+];
+
+const recentCommits = [
+  {
+    message: "feat: add visual tests",
+    url: "https://github.com/surfdeeper/surfdeeper/commit/abc123",
+    isoDate: new Date("2024-10-01T10:00:00-07:00").toISOString(),
+  },
+  {
+    message: "fix: sidebar styles",
+    url: "https://github.com/surfdeeper/surfdeeper/commit/def456",
+    isoDate: new Date("2024-09-28T14:22:00-07:00").toISOString(),
+  },
+  {
+    message: "docs: update contributing.md",
+    url: "https://github.com/surfdeeper/surfdeeper/commit/ghi789",
+    isoDate: new Date("2024-09-20T08:05:00-07:00").toISOString(),
+  },
+];
+---
+
+<FixtureLayout title="Right Sidebar Fixture">
+  <div data-testid="fixture-root" style="display:block">
+    <RightSidebar {recentlyUpdated} {recentCommits} />
+  </div>
+  <style>
+    :global(.right-sidebar) {
+      display: block !important;
+      max-width: 360px;
+    }
+  </style>
+</FixtureLayout>

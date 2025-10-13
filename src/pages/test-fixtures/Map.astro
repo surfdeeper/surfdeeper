@@ -1,0 +1,48 @@
+---
+import FixtureLayout from "./_FixtureLayout.astro";
+import { MAP_DEFAULTS } from "../../config/map-constants";
+---
+
+<FixtureLayout title="Map Fixture">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <section data-testid="fixture-root">
+    <div
+      id="fixture-map"
+      data-lat={MAP_DEFAULTS.CENTER[0]}
+      data-lng={MAP_DEFAULTS.CENTER[1]}
+      data-zoom={MAP_DEFAULTS.ZOOM}
+      style="height:480px; border:1px solid var(--color-border);"
+    >
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script is:inline>
+    (function () {
+      function init() {
+        if (!window.L) return requestAnimationFrame(init);
+        const el = document.getElementById("fixture-map");
+        if (!el) return;
+        const lat = parseFloat(el.getAttribute("data-lat") || "0");
+        const lng = parseFloat(el.getAttribute("data-lng") || "0");
+        const zoom = parseInt(el.getAttribute("data-zoom") || "9", 10);
+        const L = window.L;
+        const map = L.map("fixture-map", {
+          backgroundColor: "#111a22",
+        }).setView({ lat, lng }, zoom);
+        // Expose map for tests
+        window.fixtureMap = map;
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap contributors",
+          className: "map-tiles",
+        }).addTo(map);
+        setTimeout(() => map.invalidateSize(), 100);
+      }
+      init();
+    })();
+  </script>
+</FixtureLayout>

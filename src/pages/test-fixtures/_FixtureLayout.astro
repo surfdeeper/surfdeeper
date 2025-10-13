@@ -1,0 +1,36 @@
+---
+// Minimal layout for visual test fixtures
+import "../../styles/design-system.css";
+import "../../styles/theme-dark.css";
+import "../../styles/theme-light.css";
+
+interface Props {
+  title?: string;
+  theme?: "light" | "dark" | "auto";
+}
+
+const { title = "Fixture", theme = "auto" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme={theme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <script>
+      // Ensure deterministic theme for screenshots
+      (function () {
+        try {
+          const t = localStorage.getItem("theme") || "auto";
+          document.documentElement.setAttribute("data-theme", t);
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <main style="max-width:1200px; margin:0 auto; padding: var(--space-md);">
+      <slot />
+    </main>
+  </body>
+</html>
