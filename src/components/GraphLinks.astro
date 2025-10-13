@@ -1,0 +1,101 @@
+---
+export interface LinkItem {
+  id?: string;
+  title: string;
+  slug: string;
+  type: string; // "concept" | "skill" | "guide"
+}
+
+interface Props {
+  prerequisites?: LinkItem[];
+  leadsTo?: LinkItem[];
+}
+
+const { prerequisites = [], leadsTo = [] } = Astro.props as Props;
+const basePathFor = (t: string) => {
+  const normalized = (t || "").toLowerCase().endsWith("s")
+    ? (t || "").toLowerCase().slice(0, -1)
+    : (t || "").toLowerCase();
+  if (normalized === "concept") return "concept";
+  if (normalized === "skill") return "skill";
+  return "guide";
+};
+const hasAny = prerequisites.length > 0 || leadsTo.length > 0;
+---
+
+<style>
+  .graph-links {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 2px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .graph-heading {
+    color: var(--color-accent);
+    font-size: var(--font-size-2xl);
+    margin: 0 0 var(--space-4) 0;
+    text-align: center;
+  }
+
+  .graph-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .graph-list li {
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-6);
+    position: relative;
+  }
+
+  .graph-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: bold;
+    font-size: var(--font-size-lg);
+  }
+
+  @media (min-width: 768px) {
+    .graph-links {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+{
+  hasAny && (
+    <section class="graph-links">
+      {prerequisites.length > 0 && (
+        <div class="graph-block">
+          <h2 class="graph-heading">Prerequisites</h2>
+          <ul class="graph-list">
+            {prerequisites.map((g) => (
+              <li>
+                <a href={`/${basePathFor(g.type)}/${g.slug}`}>{g.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {leadsTo.length > 0 && (
+        <div class="graph-block">
+          <h2 class="graph-heading">Leads to</h2>
+          <ul class="graph-list">
+            {leadsTo.map((g) => (
+              <li>
+                <a href={`/${basePathFor(g.type)}/${g.slug}`}>{g.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  )
+}

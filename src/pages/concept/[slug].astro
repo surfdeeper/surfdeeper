@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import GuidePathBreadcrumbs from "../../components/GuidePathBreadcrumbs.astro";
+import GraphLinks from "../../components/GraphLinks.astro";
 
 export async function getStaticPaths() {
   const entries = await getCollection("concepts");
@@ -72,87 +73,13 @@ const leadsTo = mapIds(data.leadsTo);
       )
     }
 
-    {
-      (prerequisites.length > 0 || leadsTo.length > 0) && (
-        <section class="graph-links">
-          {prerequisites.length > 0 && (
-            <div class="graph-block">
-              <h2 class="graph-heading">Prerequisites</h2>
-              <ul class="graph-list">
-                {prerequisites.map((g) => (
-                  <li>
-                    <a
-                      href={`/${g.type === "concept" || g.type === "concepts" ? "concept" : g.type === "skill" || g.type === "skills" ? "skill" : "guide"}/${g.slug}`}
-                    >
-                      {g.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {leadsTo.length > 0 && (
-            <div class="graph-block">
-              <h2 class="graph-heading">Leads to</h2>
-              <ul class="graph-list">
-                {leadsTo.map((g) => (
-                  <li>
-                    <a
-                      href={`/${g.type === "concept" || g.type === "concepts" ? "concept" : g.type === "skill" || g.type === "skills" ? "skill" : "guide"}/${g.slug}`}
-                    >
-                      {g.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </section>
-      )
-    }
+    <GraphLinks prerequisites={prerequisites} leadsTo={leadsTo} />
   </article>
 
   <style>
     .guide-article {
       max-width: 800px;
       margin: 0 auto;
-    }
-    .graph-links {
-      margin-top: var(--space-12);
-      padding-top: var(--space-8);
-      border-top: 2px solid var(--color-border);
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--space-8);
-    }
-    .graph-heading {
-      color: var(--color-accent);
-      font-size: var(--font-size-2xl);
-      margin: 0 0 var(--space-4) 0;
-      text-align: center;
-    }
-    .graph-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .graph-list li {
-      margin-bottom: var(--space-3);
-      padding-left: var(--space-6);
-      position: relative;
-    }
-    .graph-list li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: var(--color-accent);
-      font-weight: bold;
-      font-size: var(--font-size-lg);
-    }
-    @media (min-width: 768px) {
-      .graph-links {
-        grid-template-columns: 1fr 1fr;
-      }
     }
   </style>
 </Layout>
