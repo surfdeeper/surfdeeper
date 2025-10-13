@@ -1,15 +1,16 @@
 import type { CollectionEntry } from "astro:content";
-
-export type GuideEntry = CollectionEntry<"guides">;
+type ConceptEntry = CollectionEntry<"concepts">;
+type SkillEntry = CollectionEntry<"skills">;
+export type GuideEntry = ConceptEntry | SkillEntry;
 
 export type GuideNode = {
   id: string;
   title: string;
   url: string;
-  level?: GuideEntry["data"]["level"];
-  levels: GuideEntry["data"]["levels"];
+  level?: any;
+  levels: any[];
   paths: string[];
-  kind?: GuideEntry["data"]["kind"];
+  kind?: string;
   category?: string;
 };
 
@@ -27,7 +28,7 @@ export type GuideGraph = {
 };
 
 function normalizeId(entry: GuideEntry): string {
-  return entry.data.id || entry.slug;
+  return (entry.data as any).id || entry.slug;
 }
 
 function toUrl(entry: GuideEntry): string {
@@ -39,7 +40,9 @@ function toUrl(entry: GuideEntry): string {
 export async function loadGuides(): Promise<GuideEntry[]> {
   // Dynamic import avoids requiring the Astro runtime when this module is imported in unit tests.
   const { getCollection } = await import("astro:content");
-  return await getCollection("guides");
+  const concepts = await getCollection("concepts");
+  const skills = await getCollection("skills");
+  return [...concepts, ...skills];
 }
 
 export function buildGraph(entries: GuideEntry[]): GuideGraph {
@@ -47,11 +50,11 @@ export function buildGraph(entries: GuideEntry[]): GuideGraph {
     id: normalizeId(e),
     title: e.data.title,
     url: toUrl(e),
-    level: e.data.level,
-    levels: e.data.levels || [],
-    paths: e.data.paths || [],
-    kind: e.data.kind,
-    category: e.data.category,
+    level: (e.data as any).level || (e.data as any).skillLevel,
+    levels: (e.data as any).levels || [],
+    paths: (e.data as any).paths || [],
+    kind: (e.data as any).kind,
+    category: (e.data as any).category,
   }));
 
   const byId = new Map(nodes.map((n) => [n.id, n] as const));
@@ -59,11 +62,11 @@ export function buildGraph(entries: GuideEntry[]): GuideGraph {
   const edges: GuideEdge[] = [];
   for (const e of entries) {
     const id = normalizeId(e);
-    for (const dep of e.data.dependsOn || []) {
+    for (const dep of (e.data as any).dependsOn || []) {
       // Edge from dependency to this guide
       edges.push({ source: dep, target: id, type: "dependsOn" });
     }
-    for (const nxt of e.data.leadsTo || []) {
+    for (const nxt of (e.data as any).leadsTo || []) {
       // Edge from this guide to the next guide
       edges.push({ source: id, target: nxt, type: "leadsTo" });
     }

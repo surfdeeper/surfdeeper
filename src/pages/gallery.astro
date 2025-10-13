@@ -20,8 +20,10 @@ interface GalleryImage {
   context?: string;
 }
 
-// Get all guides
-const allGuides = await getCollection("guides");
+// Get all typed guides (concepts and skills)
+const allConcepts = await getCollection("concepts");
+const allSkills = await getCollection("skills");
+const allGuides = [...allConcepts, ...allSkills];
 
 const images: GalleryImage[] = [];
 
@@ -39,15 +41,10 @@ const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
 const headingRegex = /^#{1,6}\s+(.+)$/gm;
 
 for (const guide of allGuides) {
-  // Skip section index pages entirely; gallery is for concept pages
-  if (guide.data.kind === "section") continue;
+  // Typed entries are only concepts/skills; no section index pages here
 
-  // Derive section from frontmatter category (preferred), fallback to legacy path
-  let sectionSlug = guide.data.category as string | undefined;
-  if (!sectionSlug) {
-    const slugParts = guide.slug.split("/");
-    if (slugParts.length > 1) sectionSlug = slugParts[0];
-  }
+  // Derive section from frontmatter category
+  let sectionSlug = (guide.data as any).category as string | undefined;
   if (!sectionSlug) continue;
 
   const guideLink = `/guide/${guide.slug}`;

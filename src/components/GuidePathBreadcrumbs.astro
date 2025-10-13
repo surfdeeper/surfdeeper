@@ -46,7 +46,7 @@ if (guidePaths && guidePaths.length > 0) {
   pathCrumbs = computePathCrumbs(
     guideId,
     guidePaths,
-    (pathId) => buildPathSubgraph(graph, pathId, { kind: "concept" }),
+    (pathId) => buildPathSubgraph(graph, pathId),
     metaById,
   );
 
@@ -63,7 +63,7 @@ if (guidePaths && guidePaths.length > 0) {
     if (preferred.length === 0) return crumb;
 
     // Determine if this path has any leadsTo edges; only override when none
-    const sub = buildPathSubgraph(graph, crumb.id, { kind: "concept" });
+    const sub = buildPathSubgraph(graph, crumb.id);
     const hasLeadsTo = sub.edges.some((e) => e.type === "leadsTo");
     if (hasLeadsTo) return crumb;
 

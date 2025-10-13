@@ -2,7 +2,8 @@ import fs from "fs";
 import path from "path";
 import { visit } from "unist-util-visit";
 
-const GUIDE_DIR = path.resolve(process.cwd(), "src/content/guides");
+const CONCEPTS_DIR = path.resolve(process.cwd(), "src/content/concepts");
+const SKILLS_DIR = path.resolve(process.cwd(), "src/content/skills");
 
 function buildIdMap() {
   const map = new Map(); // id -> slug
@@ -14,8 +15,7 @@ function buildIdMap() {
       if (entry.isDirectory()) {
         walk(full);
       } else if (entry.isFile() && entry.name.endsWith(".md")) {
-        const rel = path.relative(GUIDE_DIR, full);
-        const slug = path.basename(rel, ".md");
+        const slug = path.basename(full, ".md");
         const src = fs.readFileSync(full, "utf8");
         const m = /^---[\s\S]*?---/m.exec(src);
         let id = null;
@@ -38,7 +38,8 @@ function buildIdMap() {
     }
   }
 
-  if (fs.existsSync(GUIDE_DIR)) walk(GUIDE_DIR);
+  if (fs.existsSync(CONCEPTS_DIR)) walk(CONCEPTS_DIR);
+  if (fs.existsSync(SKILLS_DIR)) walk(SKILLS_DIR);
   return { map, alias };
 }
 

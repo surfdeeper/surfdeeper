@@ -44,20 +44,34 @@ class LinkValidator {
   }
 
   async buildFileIndex(): Promise<void> {
-    // Index all guide files
-    const guidesDir = path.join(this.contentDir, "guides");
-    const guideFiles = await this.getMarkdownFiles(guidesDir);
+    // Index all typed content files (concepts + skills)
+    const conceptsDir = path.join(this.contentDir, "concepts");
+    const skillsDir = path.join(this.contentDir, "skills");
+    const [conceptFiles, skillFiles] = await Promise.all([
+      this.getMarkdownFiles(conceptsDir).catch(() => []),
+      this.getMarkdownFiles(skillsDir).catch(() => []),
+    ]);
 
-    for (const filePath of guideFiles) {
-      // Convert file path to guide slug format
-      const relativePath = path.relative(guidesDir, filePath);
+    const addSlugFrom = (baseDir: string, filePath: string) => {
+      const relativePath = path.relative(baseDir, filePath);
       const slug = relativePath.replace(/\.md$/, "").replace(/\/index$/, "");
-      this.availableGuides.add(slug);
+      if (slug) this.availableGuides.add(slug);
+    };
 
-      // Also add the /index variant for section pages
-      if (!slug.includes("/")) {
-        this.availableGuides.add(`${slug}/index`);
+    for (const fp of conceptFiles) addSlugFrom(conceptsDir, fp);
+    for (const fp of skillFiles) addSlugFrom(skillsDir, fp);
+
+    // Also include section slugs from src/content/guides/_sections.json
+    try {
+      const sectionsPath = path.join(this.contentDir, "guides/_sections.json");
+      const sectionsRaw = await fs.readFile(sectionsPath, "utf-8");
+      const sections = JSON.parse(sectionsRaw) as Record<string, unknown>;
+      for (const sectionSlug of Object.keys(sections)) {
+        this.availableGuides.add(sectionSlug);
+        this.availableGuides.add(`${sectionSlug}/index`);
       }
+    } catch (e) {
+      // ignore if sections file is missing
     }
 
     // Index all public files (images, etc.)
@@ -72,7 +86,7 @@ class LinkValidator {
     }
 
     console.log(
-      `📁 Indexed ${this.availableGuides.size} guide pages and ${this.availablePublicFiles.size} public files`,
+      `📁 Indexed ${this.availableGuides.size} /guide pages (concepts, skills, sections) and ${this.availablePublicFiles.size} public files`,
     );
   }
 

@@ -4,7 +4,8 @@ import path from "path";
 import matter from "gray-matter";
 
 const ROOT = process.cwd();
-const GUIDES_DIR = path.join(ROOT, "src/content/guides");
+const CONCEPTS_DIR = path.join(ROOT, "src/content/concepts");
+const SKILLS_DIR = path.join(ROOT, "src/content/skills");
 const PATHS_DIR = path.join(ROOT, "src/content/paths");
 
 function walk(dir) {
@@ -18,7 +19,9 @@ function walk(dir) {
 }
 
 function collectGuidePathsWithSources() {
-  const files = walk(GUIDES_DIR);
+  const files = [CONCEPTS_DIR, SKILLS_DIR]
+    .filter((d) => fs.existsSync(d))
+    .flatMap((d) => walk(d));
   /** @type {Map<string, Set<string>>} */
   const map = new Map();
   for (const f of files) {
@@ -66,7 +69,9 @@ function extractLearningLinks(content) {
  * @returns {Map<string, {slug: string, paths: string[], path: string}>}
  */
 function buildGuideMap() {
-  const files = walk(GUIDES_DIR);
+  const files = [CONCEPTS_DIR, SKILLS_DIR]
+    .filter((d) => fs.existsSync(d))
+    .flatMap((d) => walk(d));
   const map = new Map();
 
   for (const f of files) {

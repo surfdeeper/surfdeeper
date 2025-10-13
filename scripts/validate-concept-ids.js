@@ -4,7 +4,10 @@ import path from "path";
 import matter from "gray-matter";
 
 const ROOT = process.cwd();
-const DIR = path.join(ROOT, "src/content/guides");
+const DIRS = [
+  path.join(ROOT, "src/content/concepts"),
+  path.join(ROOT, "src/content/skills"),
+];
 
 function walk(dir) {
   const files = [];
@@ -16,7 +19,7 @@ function walk(dir) {
   return files;
 }
 
-const files = walk(DIR);
+const files = DIRS.filter((d) => fs.existsSync(d)).flatMap((d) => walk(d));
 const ids = new Map();
 let errors = 0;
 

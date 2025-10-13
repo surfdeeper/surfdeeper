@@ -16,8 +16,10 @@ export async function loadHomepageData() {
   // Get all surf spots for the map preview
   const spots = await getCollection("spots");
 
-  // Get all guides and organize by semantic section (frontmatter category)
-  const allGuides = await getCollection("guides");
+  // Get all typed guides and organize by semantic section (frontmatter category)
+  const concepts = await getCollection("concepts");
+  const skills = await getCollection("skills");
+  const allGuides = [...concepts, ...skills];
   const guidesBySection: Record<
     string,
     Array<{ slug: string; title: string; url: string }>
@@ -25,19 +27,8 @@ export async function loadHomepageData() {
   const comingSoonCountBySection: Record<string, number> = {};
 
   for (const guide of allGuides) {
-    // Skip section index pages; sidebar lists concepts under each section
-    if (guide.data.kind === "section") continue;
-
-    // Preferred: use explicit category from frontmatter
-    let section = guide.data.category as string | undefined;
-
-    // Fallback for legacy nested paths during migration
-    if (!section) {
-      const slugParts = guide.slug.split("/");
-      if (slugParts.length > 1) {
-        section = slugParts[0];
-      }
-    }
+    // Typed entries have category in frontmatter
+    let section = (guide.data as any).category as string | undefined;
 
     // If we still don't know the section, skip from sidebar to avoid mis-grouping
     if (!section) continue;
@@ -121,27 +112,36 @@ export async function loadHomepageData() {
           let title = "";
           let hierarchy = "";
 
-          if (filePath.includes("content/guides/")) {
+          if (
+            filePath.includes("content/concepts/") ||
+            filePath.includes("content/skills/")
+          ) {
             const match = filePath.match(
-              /content\/guides\/([^/]+)\/([^/]+)\.md$/,
+              /content\/(concepts|skills)\/([^/]+)\.md$/,
             );
             if (match) {
-              const [, category, slug] = match;
-              const categoryFormatted = category
+              const [, , slug] = match;
+              url = `/guide/${slug}`;
+              title = slug
                 .replace(/-/g, " ")
                 .replace(/\b\w/g, (l) => l.toUpperCase());
-
-              if (slug === "index") {
-                url = `/guide/${category}`;
-                title = categoryFormatted;
-                hierarchy = "Guide";
-              } else {
-                url = `/guide/${category}/${slug}`;
-                title = slug
-                  .replace(/-/g, " ")
-                  .replace(/\b\w/g, (l) => l.toUpperCase());
-                hierarchy = `Guide > ${categoryFormatted}`;
-              }
+              hierarchy = "Guide";
+            }
+          } else if (
+            filePath.includes("content/guides/") &&
+            /\/([a-z0-9-]+)\.md$/.test(filePath)
+          ) {
+            // Legacy section pages (e.g., src/content/guides/paddling.md)
+            const sectionMatch = filePath.match(
+              /content\/guides\/([a-z0-9-]+)\.md$/,
+            );
+            if (sectionMatch) {
+              const section = sectionMatch[1];
+              url = `/guide/${section}`;
+              title = section
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase());
+              hierarchy = "Guide";
             }
           } else if (filePath.includes("content/spots/")) {
             const match = filePath.match(/content\/spots\/([^/]+)\.md$/);

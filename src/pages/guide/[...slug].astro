@@ -1,49 +1,51 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import {
-  getCollection,
-  getEntryBySlug,
-  type CollectionEntry,
-} from "astro:content";
+import { getCollection } from "astro:content";
 import { isPlaceholderTodo } from "../../utils/guide-filters";
 import GuidePathBreadcrumbs from "../../components/GuidePathBreadcrumbs.astro";
+import sections from "../../content/guides/_sections.json";
 
 export async function getStaticPaths() {
-  const entries = await getCollection("guides");
-  return entries.map((e) => ({ params: { slug: e.slug } }));
+  // Build paths from typed content and known section slugs
+  const concepts = await getCollection("concepts");
+  const skills = await getCollection("skills");
+
+  const contentPaths = [...concepts, ...skills].map((e) => ({
+    params: { slug: e.slug },
+  }));
+
+  const sectionPaths = Object.keys(sections).map((slug) => ({
+    params: { slug },
+  }));
+
+  return [...contentPaths, ...sectionPaths];
 }
 
 const { slug } = Astro.params;
 const slugStr = String(slug);
-let entry = await getEntryBySlug("guides", slugStr);
 
-// If direct slug not found, try section/index pattern
-if (!entry && !slugStr.includes("/")) {
-  entry = await getEntryBySlug("guides", `${slugStr}/index`);
-}
+// Load typed collections
+const allConcepts = await getCollection("concepts");
+const allSkills = await getCollection("skills");
+const allTyped = [...allConcepts, ...allSkills];
 
-if (!entry) {
-  throw Astro.redirect("/guide");
-}
+// Try to find a typed entry by slug
+let entry = allTyped.find((e) => e.slug === slugStr);
 
-const { Content } = await entry.render();
-const { data } = entry;
+// If not a typed page, treat as section page if slug matches known sections
+const isSectionPage =
+  !entry && Object.prototype.hasOwnProperty.call(sections, slugStr);
 
-// Common identifiers used across render
-const currentId = (entry.data.id || entry.slug).trim();
-const guidePaths: string[] = Array.isArray(entry.data.paths)
-  ? entry.data.paths
-  : [];
-
-// Determine section vs concept using frontmatter (post-flatten)
-const isSectionPage = entry.data.kind === "section";
-let sectionGuides: any[] = [];
+let Content: any = null;
+let data: any = {};
+let currentId = "";
+let guidePaths: string[] = [];
+let sectionGuides: typeof allTyped = [];
 
 // Build an ID -> entry map for graph relationships
-const allGuides = await getCollection("guides");
-const idToEntry = new Map<string, (typeof allGuides)[number]>();
-for (const e of allGuides) {
-  const id = (e.data.id || e.slug).trim();
+const idToEntry = new Map<string, (typeof allTyped)[number]>();
+for (const e of allTyped) {
+  const id = (e.data as any).id || e.slug;
   if (!idToEntry.has(id)) idToEntry.set(id, e);
 }
 
@@ -51,59 +53,68 @@ type RelatedLink = { id: string; title: string; slug: string };
 let prerequisites: RelatedLink[] = [];
 let leadsTo: RelatedLink[] = [];
 
-// Path breadcrumbs are rendered by GuidePathBreadcrumbs component
-
-if (isSectionPage) {
-  // Get all guides with matching category, excluding section files
-  const sectionId = entry.data.id || entry.slug;
-  sectionGuides = allGuides
-    .filter(
-      (guide) =>
-        guide.data.kind !== "section" && guide.data.category === sectionId,
-    )
-    .sort(
-      (a, b) =>
-        (a.data.order ?? 999) - (b.data.order ?? 999) ||
-        a.data.title.localeCompare(b.data.title),
-    );
-} else {
-  // Concept page: resolve dependsOn and leadsTo graph links by ID
-  const dependsOnIds = Array.isArray(entry.data.dependsOn)
-    ? entry.data.dependsOn
+if (entry) {
+  const rendered = await entry.render();
+  Content = rendered.Content;
+  data = entry.data;
+  currentId = ((entry.data as any).id || entry.slug).trim();
+  guidePaths = Array.isArray((entry.data as any).paths)
+    ? (entry.data as any).paths
     : [];
-  const leadsToIds = Array.isArray(entry.data.leadsTo)
-    ? entry.data.leadsTo
+
+  const dependsOnIds = Array.isArray((entry.data as any).dependsOn)
+    ? (entry.data as any).dependsOn
+    : [];
+  const leadsToIds = Array.isArray((entry.data as any).leadsTo)
+    ? (entry.data as any).leadsTo
     : [];
 
   prerequisites = dependsOnIds
-    .map((id) => idToEntry.get(id))
+    .map((id: string) => idToEntry.get(id))
     .filter(Boolean)
-    .map((e) => ({
-      id: e!.data.id || e!.slug,
+    .map((e: any) => ({
+      id: ((e!.data as any).id || e!.slug) as string,
       title: e!.data.title,
       slug: e!.slug,
     }));
 
   leadsTo = leadsToIds
-    .map((id) => idToEntry.get(id))
+    .map((id: string) => idToEntry.get(id))
     .filter(Boolean)
-    .map((e) => ({
-      id: e!.data.id || e!.slug,
+    .map((e: any) => ({
+      id: ((e!.data as any).id || e!.slug) as string,
       title: e!.data.title,
       slug: e!.slug,
     }));
+} else if (isSectionPage) {
+  // Section: list typed entries whose category matches this section slug
+  sectionGuides = allTyped
+    .filter((e) => (e.data as any).category === slugStr)
+    .sort(
+      (a, b) =>
+        ((a.data as any).order ?? 999) - ((b.data as any).order ?? 999) ||
+        a.data.title.localeCompare(b.data.title),
+    );
 
-  // Nothing additional; breadcrumb props are computed above
+  // Fake a minimal section data object for rendering
+  data = {
+    title: (sections as any)[slugStr]?.label || slugStr,
+    description: undefined,
+  };
+} else {
+  throw Astro.redirect("/guide");
 }
 ---
 
 <Layout
   title={data.title}
   description={data.description}
-  editPath={`src/content/guides/${entry.slug}.md`}
+  editPath={entry
+    ? `src/content/${entry.collection as string}/${entry.slug}.md`
+    : `src/content/guides/${slugStr}.md`}
 >
   <article class="guide-article">
-    <Content />
+    {Content && <Content />}
 
     {
       !isSectionPage && (

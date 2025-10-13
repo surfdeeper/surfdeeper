@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 
 // Mock astro:content for both loadGuides() and component's getCollection('paths')
-const guides = [
+// Now that guides are split into typed collections, provide concepts/skills
+const concepts = [
   {
     slug: "foundations",
     data: {
@@ -41,7 +42,8 @@ const paths = [
 
 vi.mock("astro:content", () => ({
   getCollection: (name: string) => {
-    if (name === "guides") return guides;
+    if (name === "concepts") return concepts;
+    if (name === "skills") return [];
     if (name === "paths") return paths;
     return [];
   },
