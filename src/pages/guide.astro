@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import PathsGrid from "../components/PathsGrid.astro";
 import ConceptsGrid from "../components/ConceptsGrid.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 ---
 
 <Layout
@@ -10,6 +11,7 @@ import SkillsGrid from "../components/SkillsGrid.astro";
   description="Guides for understanding waves, ocean safety, and surf techniques. Learn from the community."
   fullWidth={true}
 >
+  <Breadcrumbs items={[{ label: "Guides", ariaCurrent: "page" }]} />
   <header class="page-header">
     <h1>Guides</h1>
     <p class="page-subtitle">Master the fundamentals and advanced techniques</p>

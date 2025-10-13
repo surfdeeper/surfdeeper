@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { isPlaceholderTodo } from "../../utils/guide-filters";
 import GuidePathBreadcrumbs from "../../components/GuidePathBreadcrumbs.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 // sections are now derived dynamically from content categories
 
 export async function getStaticPaths() {
@@ -59,9 +60,17 @@ for (const e of allTyped) {
   if (!idToEntry.has(id)) idToEntry.set(id, e);
 }
 
-type RelatedLink = { id: string; title: string; slug: string };
+type RelatedLink = {
+  id: string;
+  title: string;
+  slug: string;
+  collection: string;
+};
 let prerequisites: RelatedLink[] = [];
 let leadsTo: RelatedLink[] = [];
+// Build breadcrumbs items deterministically to satisfy typing
+let breadcrumbItems: { href?: string; label: string; ariaCurrent?: "page" }[] =
+  [{ href: "/guide", label: "Guides" }];
 
 if (entry) {
   const rendered = await entry.render();
@@ -86,6 +95,7 @@ if (entry) {
       id: ((e!.data as any).id || e!.slug) as string,
       title: e!.data.title,
       slug: e!.slug,
+      collection: e!.collection as string,
     }));
 
   leadsTo = leadsToIds
@@ -95,7 +105,24 @@ if (entry) {
       id: ((e!.data as any).id || e!.slug) as string,
       title: e!.data.title,
       slug: e!.slug,
+      collection: e!.collection as string,
     }));
+
+  // Append section breadcrumb for typed entry
+  const sectionLabel =
+    entry.collection === "skills"
+      ? "Skills"
+      : entry.collection === "concepts"
+        ? "Concepts"
+        : "Guides";
+  const sectionHref =
+    entry.collection === "skills"
+      ? "/skill"
+      : entry.collection === "concepts"
+        ? "/concept"
+        : "/guide";
+  breadcrumbItems.push({ href: sectionHref, label: sectionLabel });
+  breadcrumbItems.push({ label: data.title, ariaCurrent: "page" });
 } else if (isSectionPage) {
   // Section: list typed entries whose category matches this section slug
   sectionGuides = allTyped
@@ -115,6 +142,7 @@ if (entry) {
         .join(" ") || slugStr,
     description: undefined,
   };
+  breadcrumbItems.push({ label: data.title, ariaCurrent: "page" });
 } else {
   throw Astro.redirect("/guide");
 }
@@ -127,6 +155,7 @@ if (entry) {
     ? `src/content/${entry.collection as string}/${entry.slug}.md`
     : `src/content/guides/${slugStr}.md`}
 >
+  <Breadcrumbs items={breadcrumbItems} />
   <article class="guide-article">
     {Content && <Content />}
 
@@ -177,7 +206,11 @@ if (entry) {
               <ul class="graph-list">
                 {prerequisites.map((g) => (
                   <li>
-                    <a href={`/guide/${g.slug}`}>{g.title}</a>
+                    <a
+                      href={`/${g.collection === "skills" ? "skill" : g.collection === "concepts" ? "concept" : "guide"}/${g.slug}`}
+                    >
+                      {g.title}
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -189,7 +222,11 @@ if (entry) {
               <ul class="graph-list">
                 {leadsTo.map((g) => (
                   <li>
-                    <a href={`/guide/${g.slug}`}>{g.title}</a>
+                    <a
+                      href={`/${g.collection === "skills" ? "skill" : g.collection === "concepts" ? "concept" : "guide"}/${g.slug}`}
+                    >
+                      {g.title}
+                    </a>
                   </li>
                 ))}
               </ul>

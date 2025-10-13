@@ -44,7 +44,7 @@ const skills = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
       {skills.map((s) => {
         const lvl = (s.data as any).skillLevel || (s.data as any).level;
         const disabled = isPlaceholderTodo(s.body);
-        const href = `/guide/${(s.data as any).id || s.slug}`;
+        const href = `/skill/${s.slug}`;
         return (
           <li class="card">
             <div class="card-content">

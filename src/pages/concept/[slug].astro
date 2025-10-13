@@ -1,0 +1,147 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("concepts");
+  return entries.map((e) => ({ params: { slug: e.slug } }));
+}
+
+const { slug } = Astro.params as { slug: string };
+const concepts = (await getCollection(
+  "concepts",
+)) as CollectionEntry<"concepts">[];
+const entry = concepts.find((e) => e.slug === slug);
+
+if (!entry) throw Astro.redirect("/concept");
+
+const rendered = await entry.render();
+const Content = rendered.Content;
+const data = entry.data as any;
+
+// Build related graph links across concepts + skills
+const skills = await getCollection("skills");
+const all = [...concepts, ...skills];
+const idToEntry = new Map<string, (typeof all)[number]>();
+for (const e of all) {
+  const id = ((e.data as any).id || e.slug) as string;
+  if (!idToEntry.has(id)) idToEntry.set(id, e);
+}
+
+type RelatedLink = { id: string; title: string; slug: string; type: string };
+const mapIds = (ids?: string[]): RelatedLink[] =>
+  (ids || [])
+    .map((id) => idToEntry.get(id))
+    .filter(Boolean)
+    .map((e: any) => ({
+      id: ((e!.data as any).id || e!.slug) as string,
+      title: e!.data.title,
+      slug: e!.slug,
+      type: (e!.data as any).type || (e!.collection as string),
+    }));
+
+const prerequisites = mapIds(data.dependsOn);
+const leadsTo = mapIds(data.leadsTo);
+---
+
+<Layout
+  title={`${data.title} – Concept – SurfDeeper`}
+  description={data.description}
+  editPath={`src/content/concepts/${entry.slug}.md`}
+>
+  <Breadcrumbs
+    items={[
+      { href: "/guide", label: "Guides" },
+      { href: "/concept", label: "Concepts" },
+      { label: data.title, ariaCurrent: "page" },
+    ]}
+  />
+
+  <article class="guide-article">
+    <Content />
+
+    {
+      (prerequisites.length > 0 || leadsTo.length > 0) && (
+        <section class="graph-links">
+          {prerequisites.length > 0 && (
+            <div class="graph-block">
+              <h2 class="graph-heading">Prerequisites</h2>
+              <ul class="graph-list">
+                {prerequisites.map((g) => (
+                  <li>
+                    <a
+                      href={`/${g.type === "concept" || g.type === "concepts" ? "concept" : g.type === "skill" || g.type === "skills" ? "skill" : "guide"}/${g.slug}`}
+                    >
+                      {g.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {leadsTo.length > 0 && (
+            <div class="graph-block">
+              <h2 class="graph-heading">Leads to</h2>
+              <ul class="graph-list">
+                {leadsTo.map((g) => (
+                  <li>
+                    <a
+                      href={`/${g.type === "concept" || g.type === "concepts" ? "concept" : g.type === "skill" || g.type === "skills" ? "skill" : "guide"}/${g.slug}`}
+                    >
+                      {g.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )
+    }
+  </article>
+
+  <style>
+    .guide-article {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .graph-links {
+      margin-top: var(--space-12);
+      padding-top: var(--space-8);
+      border-top: 2px solid var(--color-border);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+    .graph-heading {
+      color: var(--color-accent);
+      font-size: var(--font-size-2xl);
+      margin: 0 0 var(--space-4) 0;
+      text-align: center;
+    }
+    .graph-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .graph-list li {
+      margin-bottom: var(--space-3);
+      padding-left: var(--space-6);
+      position: relative;
+    }
+    .graph-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+      font-weight: bold;
+      font-size: var(--font-size-lg);
+    }
+    @media (min-width: 768px) {
+      .graph-links {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</Layout>

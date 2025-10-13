@@ -1,45 +1,39 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import PathsGrid from "../../components/PathsGrid.astro";
+import SkillsGrid from "../../components/SkillsGrid.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 ---
 
-<Layout
-  title="Paths – SurfDeeper"
-  description="Explore learning paths across related guides."
->
+<Layout title="Skills – SurfDeeper" description="Surf skills and techniques.">
   <Breadcrumbs
     items={[
       { href: "/guide", label: "Guides" },
-      { label: "Paths", ariaCurrent: "page" },
+      { label: "Skills", ariaCurrent: "page" },
     ]}
   />
+
   <header class="page-header">
-    <h1>Paths</h1>
-    <p class="page-subtitle">Collections of related guides.</p>
+    <h1>Skills</h1>
+    <p class="page-subtitle">Techniques and movement patterns</p>
   </header>
 
-  <PathsGrid />
+  <SkillsGrid />
 
   <style>
     .page-header {
       text-align: center;
       margin-bottom: var(--space-2xl);
     }
-
     .page-header h1 {
       color: var(--color-accent);
       font-size: var(--font-size-4xl);
       margin: 0 0 var(--space-sm) 0;
       font-weight: var(--font-weight-bold);
     }
-
     .page-subtitle {
       font-size: var(--font-size-xl);
       opacity: 0.9;
       margin: 0;
     }
-
-    /* Grid/card styles are scoped in the PathsGrid component */
   </style>
 </Layout>

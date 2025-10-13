@@ -29,7 +29,7 @@ const concepts = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
       <ul class="grid-cards links-inherit">
         {concepts.map((c) => {
           const disabled = isPlaceholderTodo(c.body);
-          const href = `/guide/${(c.data as any).id || c.slug}`;
+          const href = `/concept/${c.slug}`;
           return (
             <li class="card">
               <div class="card-content">
@@ -60,7 +60,7 @@ const concepts = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
 
       {showFooterLink && (
         <footer class="centered-footer">
-          <a class="concepts-footer-link" href="/guide#concepts">
+          <a class="concepts-footer-link" href="/concept">
             View all concepts →
           </a>
         </footer>
