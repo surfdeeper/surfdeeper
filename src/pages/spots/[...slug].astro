@@ -68,6 +68,13 @@ const serializedSpot = serializeSpot(entry);
             >
               Unable to load current conditions
             </div>
+            <div class="data-attribution" aria-label="Data attribution">
+              Data from <a
+                href="https://open-meteo.com/"
+                target="_blank"
+                rel="noopener">Open‑Meteo</a
+              >
+            </div>
           </div>
 
           <div class="spot-description">
@@ -484,6 +491,18 @@ const serializedSpot = serializeSpot(entry);
       margin-top: 0.5rem;
       padding-top: 1rem;
       border-top: 1px solid var(--color-border);
+    }
+
+    .data-attribution {
+      margin-top: var(--space-3);
+      font-size: var(--font-size-0-85);
+      color: var(--color-text-muted);
+    }
+
+    .data-attribution a {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
     /* Main Content Styles */

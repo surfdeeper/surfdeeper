@@ -3,6 +3,8 @@ import Navigation from "../components/Navigation.astro";
 import HeadMeta from "../components/HeadMeta.astro";
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
 import "../styles/design-system.css";
+import "../styles/theme-dark.css";
+import "../styles/theme-light.css";
 
 export interface Props {
   title: string;
@@ -25,6 +27,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       canonicalURL={canonicalURL}
     />
     <GoogleAnalytics />
+    <script>
+      (function () {
+        try {
+          const saved = localStorage.getItem("theme");
+          const root = document.documentElement;
+          const value = saved || "auto";
+          root.setAttribute("data-theme", value);
+        } catch (_) {}
+      })();
+    </script>
   </head>
   <body>
     <Navigation />

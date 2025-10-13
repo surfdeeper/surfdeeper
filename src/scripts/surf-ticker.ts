@@ -1,92 +1,10 @@
 // Surf conditions ticker logic extracted from index.astro
-
-async function fetchMarineConditions(latitude: number, longitude: number) {
-  try {
-    const marineUrl = new URL("https://marine-api.open-meteo.com/v1/marine");
-    marineUrl.searchParams.set("latitude", latitude.toString());
-    marineUrl.searchParams.set("longitude", longitude.toString());
-    marineUrl.searchParams.set(
-      "hourly",
-      [
-        "wave_height",
-        "wave_period",
-        "wave_direction",
-        "swell_wave_height",
-        "swell_wave_period",
-        "swell_wave_direction",
-      ].join(","),
-    );
-    marineUrl.searchParams.set("forecast_days", "1");
-
-    const weatherUrl = new URL("https://api.open-meteo.com/v1/forecast");
-    weatherUrl.searchParams.set("latitude", latitude.toString());
-    weatherUrl.searchParams.set("longitude", longitude.toString());
-    weatherUrl.searchParams.set("hourly", "wind_speed_10m,wind_direction_10m");
-    weatherUrl.searchParams.set("forecast_days", "1");
-
-    const [marineResponse, weatherResponse] = await Promise.all([
-      fetch(marineUrl.toString()),
-      fetch(weatherUrl.toString()),
-    ]);
-
-    if (!marineResponse.ok || !weatherResponse.ok) {
-      throw new Error("API error");
-    }
-
-    const marineData = await marineResponse.json();
-    const weatherData = await weatherResponse.json();
-
-    const marineHourly = marineData.hourly;
-    const weatherHourly = weatherData.hourly;
-    const idx = 0;
-
-    return {
-      waveHeight: marineHourly.wave_height[idx] || 0,
-      wavePeriod: marineHourly.wave_period[idx] || 0,
-      waveDirection: marineHourly.wave_direction[idx] || 0,
-      swellHeight: marineHourly.swell_wave_height[idx] || 0,
-      swellPeriod: marineHourly.swell_wave_period[idx] || 0,
-      swellDirection: marineHourly.swell_wave_direction[idx] || 0,
-      windSpeed: weatherHourly.wind_speed_10m[idx] || 0,
-      windDirection: weatherHourly.wind_direction_10m[idx] || 0,
-      timestamp: marineHourly.time[idx] || new Date().toISOString(),
-    };
-  } catch (error) {
-    console.error("Failed to fetch marine conditions:", error);
-    return null;
-  }
-}
-
-function degreesToCardinal(degrees: number) {
-  const directions = [
-    "N",
-    "NNE",
-    "NE",
-    "ENE",
-    "E",
-    "ESE",
-    "SE",
-    "SSE",
-    "S",
-    "SSW",
-    "SW",
-    "WSW",
-    "W",
-    "WNW",
-    "NW",
-    "NNW",
-  ];
-  const index = Math.round(degrees / 22.5) % 16;
-  return directions[index];
-}
-
-function metersToFeet(meters: number) {
-  return meters * 3.28084;
-}
-
-function kmhToMph(kmh: number) {
-  return kmh * 0.621371;
-}
+import {
+  fetchMarineConditions,
+  degreesToCardinal,
+  metersToFeet,
+  kmhToMph,
+} from "../utils/marine-weather";
 
 const surfSayings = [
   "🤙 The best surfer is the one having the most fun",

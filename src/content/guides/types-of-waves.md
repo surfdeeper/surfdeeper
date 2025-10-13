@@ -4,6 +4,8 @@ description: >-
   Understand rolling, plunging, collapsing, and surging waves — how they move, where they appear, and how to read their energy.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 1
 id: types-of-waves
 category: foundations

@@ -4,6 +4,8 @@ description: >-
   Carry, bike, and car transport options for surfboards with safety‑first tips and setup outlines.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 2
 id: transporting-your-surfboard
 category: gear

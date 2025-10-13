@@ -4,6 +4,8 @@ description: >-
   Learn to prevent nose-diving when catching waves. Master positioning, speed, and control to stay on top of the wave.
 
 
+created: 2025-10-12T03:11:48.844Z
+lastUpdated: 2025-10-12T03:11:48.844Z
 order: 5
 id: avoid-pearling
 category: core-skills

@@ -1,27 +1,30 @@
 ---
 // Navigation component - single source of truth for main navigation
+import { Image } from "astro:assets";
+import logoV2 from "../assets/logo-v2.png";
+import favicon from "../assets/favicon.svg";
 ---
 
 <nav class="nav">
   <div class="nav-container">
     <a href="/" class="nav-logo" aria-label="Surf Deeper home">
       <span class="logo-crop">
-        <img
-          src="/logo-v2.png"
+        <Image
+          src={logoV2}
           alt="SurfDeeper logo"
           class="image-logo"
-          width="180"
-          height="108"
-          onerror="this.onerror=null;this.src='/favicon.svg';"
+          width={180}
+          height={108}
+          loading="eager"
+          format="webp"
+          quality={85}
         />
       </span>
     </a>
     <ul class="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/guide">Guide</a></li>
-      <li><a href="/paths">Paths</a></li>
       <li><a href="/maps">Map</a></li>
-      <li><a href="/contribute">Contribute</a></li>
       <li><a href="/gallery">Gallery</a></li>
     </ul>
   </div>
