@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 
 // Mock astro:content for both loadGuides() and component's getCollection('paths')
-const guides = [
+// Now that guides are split into typed collections, provide concepts/skills
+const concepts = [
   {
     slug: "foundations",
     data: {
@@ -41,7 +42,8 @@ const paths = [
 
 vi.mock("astro:content", () => ({
   getCollection: (name: string) => {
-    if (name === "guides") return guides;
+    if (name === "concepts") return concepts;
+    if (name === "skills") return [];
     if (name === "paths") return paths;
     return [];
   },
@@ -68,9 +70,9 @@ describe("GuidePathBreadcrumbs component", () => {
     });
 
     expect(html).toContain("/paths/core");
-    // sequence links
-    expect(html).toContain('href="/guide/foundations"');
-    expect(html).toContain('href="/guide/core-skills/cutbacks"');
+    // sequence links now point to typed routes (/concept or /skill)
+    expect(html).toContain('href="/concept/foundations"');
+    expect(html).toContain('href="/concept/core-skills/cutbacks"');
     // current crumb should have aria-current="page"
     expect(html).toMatch(/aria-current=\"page\"[^>]*>\s*Cutbacks/);
   });

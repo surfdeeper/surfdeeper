@@ -1,0 +1,146 @@
+---
+import { getOrderedPathItemsForSidebar } from "../utils/path-order";
+import { loadGuides, buildGraph } from "../utils/knowledge-graph";
+
+type Props = {
+  pathId: string;
+  title?: string;
+};
+
+const { pathId, title = "Path outline" } = Astro.props as Props;
+
+// Use ordered nodes from path frontmatter (id-or-slug resolved) as single source of truth
+const baseItems = await getOrderedPathItemsForSidebar(pathId);
+
+// Centralized placeholder detection via knowledge graph
+const allGuides = await loadGuides();
+const graph = buildGraph(allGuides);
+const placeholderById = new Map<string, boolean>();
+for (const n of graph.nodes) placeholderById.set(n.id, !!n.isPlaceholder);
+
+const items = baseItems.map((e) => ({
+  ...e,
+  isPlaceholder: placeholderById.get(e.id) === true,
+}));
+---
+
+<aside class="path-sidebar" aria-label="{title}">
+  <div class="sidebar-card">
+    <h2 class="sidebar-title">{title}</h2>
+    {
+      items.length === 0 ? (
+        <p class="empty">No items have been added to this path yet.</p>
+      ) : (
+        <ol class="outline">
+          {items.map((it) => (
+            <li>
+              <a
+                href={it.isPlaceholder ? "#" : `/${it.type}/${it.slug}`}
+                class={`outline-link${it.isPlaceholder ? " is-disabled" : ""}`}
+                aria-disabled={it.isPlaceholder ? "true" : undefined}
+                tabindex={it.isPlaceholder ? -1 : undefined}
+              >
+                <span class="kicker">
+                  {it.type === "concept" ? "Concept" : "Skill"}
+                </span>
+                <span class="label">{it.title}</span>
+                {it.isPlaceholder && <span class="soon">coming soon</span>}
+              </a>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+  </div>
+  <style>
+    .path-sidebar {
+      position: relative;
+    }
+    @media (min-width: 960px) {
+      .path-sidebar {
+        position: sticky;
+        top: var(--space-8);
+        align-self: start;
+      }
+    }
+
+    .sidebar-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-title {
+      margin: 0 0 var(--space-4) 0;
+      font-size: var(--font-size-lg);
+      color: var(--color-text);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .empty {
+      color: var(--color-text-muted);
+      margin: 0;
+      font-size: var(--font-size-md);
+    }
+
+    .outline {
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: var(--space-2);
+    }
+    .outline li {
+      counter-increment: step;
+    }
+    .outline-link {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-3);
+      align-items: baseline;
+      text-decoration: none;
+      padding: var(--space-3) var(--space-4);
+      border-radius: 10px;
+      color: var(--color-text);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+    .outline-link:hover {
+      background: var(--color-surface-hover);
+      border-color: var(--color-accent);
+    }
+    .outline-link::before {
+      content: counter(step, decimal-leading-zero);
+      font-variant-numeric: tabular-nums;
+      color: var(--color-accent);
+      font-weight: var(--font-weight-bold);
+      min-width: 2ch;
+    }
+    .kicker {
+      grid-column: 1 / -1;
+      order: -1;
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+    .label {
+      grid-column: 2;
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .soon {
+      grid-column: 2;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      font-style: italic;
+    }
+  </style>
+</aside>

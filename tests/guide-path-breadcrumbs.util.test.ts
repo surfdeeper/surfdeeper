@@ -11,21 +11,21 @@ describe("guide-path-breadcrumbs.util", () => {
       {
         id: "foundations",
         title: "Foundations",
-        url: "/guide/foundations",
+        url: "/concept/foundations",
         paths: ["core"],
         levels: [],
       },
       {
         id: "cutbacks",
         title: "Cutbacks",
-        url: "/guide/core-skills/cutbacks",
+        url: "/concept/core-skills/cutbacks",
         paths: ["core"],
         levels: [],
       },
       {
         id: "linking-maneuvers",
         title: "Linking Maneuvers",
-        url: "/guide/intermediate/linking-maneuvers",
+        url: "/concept/intermediate/linking-maneuvers",
         paths: ["core"],
         levels: [],
       },
@@ -58,9 +58,9 @@ describe("guide-path-breadcrumbs.util", () => {
     const c = crumbs[0];
     expect(c.title).toBe("Core Skills");
     expect(c.sequence.map((s) => s.url)).toEqual([
-      "/guide/foundations",
-      "/guide/core-skills/cutbacks",
-      "/guide/intermediate/linking-maneuvers",
+      "/concept/foundations",
+      "/concept/core-skills/cutbacks",
+      "/concept/intermediate/linking-maneuvers",
     ]);
     const current = c.sequence.find((s) => s.isCurrent)!;
     expect(current.id).toBe("cutbacks");

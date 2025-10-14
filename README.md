@@ -9,7 +9,7 @@ A minimal Astro site.
 - Contributing: CONTRIBUTING.md
 - Knowledge model: docs/KNOWLEDGE_ARCHITECTURE.md
 - Design tokens & CSS rules: .stylelintrc.cjs and src/styles/design-system.css
-- Magic links: scripts/remark-magic-links.mjs
+- Magic links: scripts/remark-magic-links.mjs (rewrites to /concept/_or /skill/_)
 
 ## Getting Started
 
@@ -37,9 +37,9 @@ Content is organized as a simple knowledge graph:
 
 How it works:
 
-- `astro.config.mjs` registers a remark plugin (`scripts/remark-magic-links.mjs`) that scans all guides, builds an id/alias map, and rewrites `:id` links to `/guide/{slug}` at build time.
+- `astro.config.mjs` registers a remark plugin (`scripts/remark-magic-links.mjs`) that scans all guides, builds an id/alias map, and rewrites `:id` links to typed routes like `/concept/{slug}` or `/skill/{slug}` at build time.
 - Unresolved magic links are rendered with a `broken-magic-link` class to stand out (see `src/styles/design-system.css`).
-- Guide pages (`src/pages/guide/[...slug].astro`) render related links based on `dependsOn` and `leadsTo` if present.
+- Guide pages live under typed routes (`/concept/*` and `/skill/*`). A legacy redirect at `/guide/*` still exists but should not be used in new links.
 
 Authoring tips:
 
@@ -52,11 +52,95 @@ Validation:
 - Run `npm run lint` to validate links, concepts, assets, CSS tokens, and formatting.
 - Run `npm run dev` to preview; production build with `npm run build`.
 
+## Export Knowledge Graph
+
+You can export the entire knowledge graph as JSON using:
+
+```bash
+npm run export-graph
+```
+
+This generates a `graph.json` file in the project root containing:
+
+- **concepts**: All guides with `kind: "concept"` (or no kind specified)
+- **skills**: All guides with `kind: "skill"`
+- **sections**: All guides with `kind: "section"`
+- **paths**: All path definitions from `src/content/paths/`
+
+Each entry includes:
+
+- `id`, `title`, `description`
+- Relationships: `dependsOn`, `leadsTo`, `appliesTo`
+- Metadata: `category`, `level`, `paths`, `aliases`, `tags`
+
+The script validates all references and reports errors/warnings:
+
+- ❌ **Errors**: Missing dependencies or broken references (exits with code 1)
+- ⚠️ **Warnings**: Unidirectional links or path references to missing guides (non-blocking)
+
+Output structure:
+
+```json
+{
+  "concepts": [
+    {
+      "id": "angling-down-the-line",
+      "title": "Angling Down the Line",
+      "description": "Master the art of angling...",
+      "dependsOn": [],
+      "leadsTo": [],
+      "paths": ["longboarding", "catching-your-first-wave"]
+    }
+  ],
+  "skills": [...],
+  "paths": [
+    {
+      "id": "longboarding",
+      "title": "Longboarding",
+      "description": "Flowing style, trim, and classic maneuvers",
+      "nodes": ["choose-your-first-board", "cobra-pose", ...]
+    }
+  ],
+  "sections": [...],
+  "metadata": {
+    "exportedAt": "2025-10-12T23:44:19.429Z",
+    "totalConcepts": 49,
+    "totalSkills": 0,
+    "totalPaths": 2
+  }
+}
+```
+
+### Path ordering (single source of truth)
+
+- Each path page in `src/content/paths/<path-id>.md` must define a non-empty `nodes: []` array in frontmatter.
+- The `nodes` array is the only source of truth for the order of concepts and skills shown for that path.
+- Items can be referenced by canonical `id` or by their `slug`; both resolve to the same guide.
+- The Path sidebar and path previews use this order, and inline `[[...]]` learning links inside the path content are auto-numbered to match.
+- There is no fallback alphabetical or graph-derived ordering; omit or mis-order items and the linter/build will fail.
+
+Authoring example:
+
+```yaml
+---
+title: Catching Your First Wave
+description: One fluid sequence from paddle to pop-up.
+nodes:
+  - paddling-efficiency # id or slug
+  - cobra-pose
+  - angling-down-the-line
+  - pop-up
+---
+
+Practice this sequence: [[paddling-efficiency]] → [[cobra-pose]] → [[angling-down-the-line]] → [[pop-up]].
+```
+
 ## Available Scripts
 
 - `npm run dev` - Start the development server
 - `npm run build` - Build the site for production
 - `npm run preview` - Preview the production build locally
+- `npm run export-graph` - Export the knowledge graph to `graph.json`
 
 ## Project Structure
 

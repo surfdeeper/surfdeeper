@@ -3,6 +3,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { getCollection } from "astro:content";
 import { isPlaceholderTodo } from "./guide-filters";
+import { buildGraph, loadGuides } from "./knowledge-graph";
 
 export interface UpdatedPage {
   title: string;
@@ -16,31 +17,18 @@ export async function loadHomepageData() {
   // Get all surf spots for the map preview
   const spots = await getCollection("spots");
 
-  // Get all guides and organize by semantic section (frontmatter category)
-  const allGuides = await getCollection("guides");
+  // Get all guides via knowledge graph and organize by semantic section (frontmatter category)
+  const entries = await loadGuides();
+  const graph = buildGraph(entries);
   const guidesBySection: Record<
     string,
     Array<{ slug: string; title: string; url: string }>
   > = {};
   const comingSoonCountBySection: Record<string, number> = {};
 
-  for (const guide of allGuides) {
-    // Skip section index pages; sidebar lists concepts under each section
-    if (guide.data.kind === "section") continue;
-
-    // Preferred: use explicit category from frontmatter
-    let section = guide.data.category as string | undefined;
-
-    // Fallback for legacy nested paths during migration
-    if (!section) {
-      const slugParts = guide.slug.split("/");
-      if (slugParts.length > 1) {
-        section = slugParts[0];
-      }
-    }
-
-    // If we still don't know the section, skip from sidebar to avoid mis-grouping
-    if (!section) continue;
+  for (const node of graph.nodes) {
+    const section = (node as any).category as string | undefined;
+    if (!section) continue; // Only include nodes with a category for sidebar sections
 
     // Initialize aggregates
     if (!guidesBySection[section]) guidesBySection[section] = [];
@@ -48,15 +36,16 @@ export async function loadHomepageData() {
       comingSoonCountBySection[section] = 0;
 
     // Count placeholders as "coming soon" and exclude from visible list
-    if (isPlaceholderTodo(guide.body)) {
+    if (node.isPlaceholder) {
       comingSoonCountBySection[section]++;
       continue;
     }
 
+    // Use knowledge graph URL which normalizes to typed routes (/concept/ or /skill/)
     guidesBySection[section].push({
-      slug: guide.slug,
-      title: guide.data.title,
-      url: `/guide/${guide.slug}`,
+      slug: node.id,
+      title: node.title,
+      url: node.url,
     });
   }
 
@@ -121,27 +110,38 @@ export async function loadHomepageData() {
           let title = "";
           let hierarchy = "";
 
-          if (filePath.includes("content/guides/")) {
+          if (
+            filePath.includes("content/concepts/") ||
+            filePath.includes("content/skills/")
+          ) {
             const match = filePath.match(
-              /content\/guides\/([^/]+)\/([^/]+)\.md$/,
+              /content\/(concepts|skills)\/([^/]+)\.md$/,
             );
             if (match) {
-              const [, category, slug] = match;
-              const categoryFormatted = category
+              const [_, kind, slug] = match;
+              const base = kind === "skills" ? "skill" : "concept";
+              url = `/${base}/${slug}`;
+              title = slug
                 .replace(/-/g, " ")
                 .replace(/\b\w/g, (l) => l.toUpperCase());
-
-              if (slug === "index") {
-                url = `/guide/${category}`;
-                title = categoryFormatted;
-                hierarchy = "Guide";
-              } else {
-                url = `/guide/${category}/${slug}`;
-                title = slug
-                  .replace(/-/g, " ")
-                  .replace(/\b\w/g, (l) => l.toUpperCase());
-                hierarchy = `Guide > ${categoryFormatted}`;
-              }
+              hierarchy = "Guide";
+            }
+          } else if (
+            filePath.includes("content/guides/") &&
+            /\/([a-z0-9-]+)\.md$/.test(filePath)
+          ) {
+            // Legacy section pages (e.g., src/content/guides/paddling.md)
+            const sectionMatch = filePath.match(
+              /content\/guides\/([a-z0-9-]+)\.md$/,
+            );
+            if (sectionMatch) {
+              const section = sectionMatch[1];
+              // Best-effort: treat as concept section index
+              url = `/concept/${section}`;
+              title = section
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase());
+              hierarchy = "Guide";
             }
           } else if (filePath.includes("content/spots/")) {
             const match = filePath.match(/content\/spots\/([^/]+)\.md$/);

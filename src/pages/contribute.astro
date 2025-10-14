@@ -67,19 +67,21 @@ import Layout from "../layouts/Layout.astro";
       <div class="card">
         <h3>5. Add/Edit Guides & Spots</h3>
         <p>
-          Edit or add Markdown files in <code>src/content/guides/</code> or <code
-            >src/content/spots/</code
-          >. Copilot will help you write!
+          Edit or add Markdown files in <code>src/content/concepts/</code>, <code
+            >src/content/skills/</code
+          > or <code>src/content/spots/</code>. Copilot will help you write!
         </p>
-      </div>
-      <div class="card">
-        <h3>6. Commit & Push</h3>
         <p>
-          In the terminal, run:<br /><span class="code-block"
-            >git add .<br />git commit -m "Add new guide/spot"<br />git push
-            origin main</span
-          >
+          Guides are now split into typed collections: concepts and skills. Use
+          stable IDs with magic links. Each page is a single concept or skill.
+          Link by ID instead of paths.
         </p>
+        In the terminal, run:<br /><span class="code-block"
+          >git add .<br />git commit -m "Add new guide/spot"<br />git push
+          <li>Concepts: <code>src/content/concepts/</code></li>
+          <li>Skills: <code>src/content/skills/</code></li>
+          >
+        </span>
       </div>
       <div class="card">
         <h3>7. Make a Pull Request</h3>
@@ -156,11 +158,18 @@ import Layout from "../layouts/Layout.astro";
     <ol>
       <li>
         Open the <a
-          href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/guides"
-          target="_blank">guides folder</a
+          href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/concepts"
+          target="_blank">concepts folder</a
+        > or <a
+          href="https://github.com/surfdeeper/surfdeeper/tree/main/src/content/skills"
+          target="_blank">skills folder</a
         >.
       </li>
-      <li>Copy an existing guide into <code>src/content/guides/</code>.</li>
+      <li>
+        Copy an existing page into <code>src/content/concepts/</code> or <code
+          >src/content/skills/</code
+        >.
+      </li>
       <li>
         Set a unique <code>id</code> in frontmatter and edit the
         <code>title</code> and content.

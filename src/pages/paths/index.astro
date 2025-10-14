@@ -1,18 +1,25 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PathsGrid from "../../components/PathsGrid.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 ---
 
 <Layout
   title="Paths – SurfDeeper"
   description="Explore learning paths across related guides."
 >
+  <Breadcrumbs
+    items={[
+      { href: "/guide", label: "Guides" },
+      { label: "Paths", ariaCurrent: "page" },
+    ]}
+  />
   <header class="page-header">
     <h1>Paths</h1>
     <p class="page-subtitle">Collections of related guides.</p>
   </header>
 
-  <PathsGrid showFooterLink={false} />
+  <PathsGrid />
 
   <style>
     .page-header {

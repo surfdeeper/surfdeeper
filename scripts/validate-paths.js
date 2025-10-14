@@ -4,7 +4,8 @@ import path from "path";
 import matter from "gray-matter";
 
 const ROOT = process.cwd();
-const GUIDES_DIR = path.join(ROOT, "src/content/guides");
+const CONCEPTS_DIR = path.join(ROOT, "src/content/concepts");
+const SKILLS_DIR = path.join(ROOT, "src/content/skills");
 const PATHS_DIR = path.join(ROOT, "src/content/paths");
 
 function walk(dir) {
@@ -18,7 +19,9 @@ function walk(dir) {
 }
 
 function collectGuidePathsWithSources() {
-  const files = walk(GUIDES_DIR);
+  const files = [CONCEPTS_DIR, SKILLS_DIR]
+    .filter((d) => fs.existsSync(d))
+    .flatMap((d) => walk(d));
   /** @type {Map<string, Set<string>>} */
   const map = new Map();
   for (const f of files) {
@@ -48,17 +51,27 @@ function collectExistingPathSlugs() {
  * @param {string} content - The markdown content
  * @returns {Set<string>} Set of guide IDs referenced in the content
  */
-function extractLearningLinks(content) {
-  const links = new Set();
-  const regex = /\[\[([^\]|]+)(?:\|[^\]]*)?\]\]/g;
+function extractBracketLearningLinks(content) {
+  const occurrences = [];
+  const regex = /\[\[([^\]]+)\]\]/g; // [[id]] or [[id|label]]
   let match;
-
   while ((match = regex.exec(content)) !== null) {
-    const guideId = match[1].trim();
-    links.add(guideId);
+    const full = match[1].trim();
+    const idPart = full.split("|")[0].trim();
+    occurrences.push({ raw: idPart, index: match.index });
   }
+  return occurrences;
+}
 
-  return links;
+function extractMarkdownLinks(content) {
+  // Generic markdown link extractor: [label](url)
+  const occurrences = [];
+  const regex = /\[[^\]]+\]\(([^)]+)\)/g;
+  let match;
+  while ((match = regex.exec(content)) !== null) {
+    occurrences.push({ url: match[1].trim(), index: match.index });
+  }
+  return occurrences;
 }
 
 /**
@@ -66,23 +79,98 @@ function extractLearningLinks(content) {
  * @returns {Map<string, {slug: string, paths: string[], path: string}>}
  */
 function buildGuideMap() {
-  const files = walk(GUIDES_DIR);
+  const files = [CONCEPTS_DIR, SKILLS_DIR]
+    .filter((d) => fs.existsSync(d))
+    .flatMap((d) => walk(d));
   const map = new Map();
+  const bySlug = new Map(); // slug -> id
+  const aliasToId = new Map(); // alias -> id
 
   for (const f of files) {
     const fm = matter.read(f);
     const slug = path.basename(f, ".md");
     const id = fm.data.id || slug;
     const paths = Array.isArray(fm.data.paths) ? fm.data.paths : [];
+    const aliases = Array.isArray(fm.data.aliases) ? fm.data.aliases : [];
 
     map.set(id, {
       slug,
       paths,
       path: path.relative(ROOT, f),
+      type: f.includes("/skills/") ? "skill" : "concept",
+      aliases,
     });
+
+    bySlug.set(slug, id);
+    for (const a of aliases) aliasToId.set(String(a), id);
   }
 
-  return map;
+  return { map, bySlug, aliasToId };
+}
+
+/**
+ * Resolve a token (id | alias | slug) to canonical guide id
+ */
+function makeIdResolver(guideIndex) {
+  const { map, bySlug, aliasToId } = guideIndex;
+  return (token) => {
+    const t = String(token).trim();
+    if (!t) return null;
+    if (map.has(t)) return t; // exact id
+    if (aliasToId.has(t)) return aliasToId.get(t);
+    if (bySlug.has(t)) return bySlug.get(t);
+    return null;
+  };
+}
+
+/**
+ * Extract inline guide references from content, recognizing:
+ * - [[id]] / [[id|label]]
+ * - [label](:id|:alias1|:alias2)
+ * - [label](/concept/slug) and [label](/skill/slug)
+ * Returns ordered occurrences with canonical ids and positions.
+ */
+function extractInlineGuideRefs(content, guideIndex) {
+  const resolveId = makeIdResolver(guideIndex);
+  const { map } = guideIndex;
+  const occurrences = [];
+
+  // [[...]] occurrences
+  for (const occ of extractBracketLearningLinks(content)) {
+    const id = resolveId(occ.raw);
+    if (id && map.has(id)) occurrences.push({ id, index: occ.index });
+  }
+
+  // Markdown links
+  for (const occ of extractMarkdownLinks(content)) {
+    const url = occ.url;
+    if (url.startsWith(":")) {
+      // Magic link: :id or :id|:alias1|:alias2
+      const candidates = url
+        .split("|")
+        .map((p) => p.replace(/^:/, "").trim())
+        .filter(Boolean);
+      for (const c of candidates) {
+        const id = resolveId(c);
+        if (id && guideIndex.map.has(id)) {
+          occurrences.push({ id, index: occ.index });
+          break;
+        }
+      }
+      continue;
+    }
+    if (url.startsWith("/concept/") || url.startsWith("/skill/")) {
+      const slug = url.replace(/^\/(concept|skill)\//, "").replace(/#.*/, "");
+      const id = resolveId(slug);
+      if (id && guideIndex.map.has(id))
+        occurrences.push({ id, index: occ.index });
+      continue;
+    }
+  }
+
+  // Sort by position in content
+  occurrences.sort((a, b) => a.index - b.index);
+  return occurrences;
 }
 
 /**
@@ -102,7 +190,8 @@ function validateBidirectionalLinks() {
     .filter((n) => n.endsWith(".md"))
     .map((n) => path.join(PATHS_DIR, n));
 
-  const guideMap = buildGuideMap();
+  const guideIndex = buildGuideMap();
+  const guideMap = guideIndex.map;
   let errors = 0;
   let warnings = 0;
 
@@ -110,19 +199,76 @@ function validateBidirectionalLinks() {
     const pathSlug = path.basename(pathFile, ".md");
     const pathContent = fs.readFileSync(pathFile, "utf8");
     const fm = matter(pathContent);
-    const linkedGuides = extractLearningLinks(fm.content);
+    const inlineRefs = extractInlineGuideRefs(fm.content, guideIndex);
+    const linkedGuides = new Set(inlineRefs.map((r) => r.id));
+    const nodeIds = new Set(
+      Array.isArray(fm.data.nodes) ? fm.data.nodes.map(String) : [],
+    );
 
     if (linkedGuides.size === 0) {
-      console.warn(
-        `⚠️  Path '${pathSlug}' has no inline [[guide-id]] learning links`,
+      console.error(
+        `❌ Invariant violated: Path '${pathSlug}' has no inline learning links (expected [[id]] or :id magic links)`,
       );
-      console.warn(
-        `   ↳ Consider adding [[guide-id]] links in: ${path.relative(
+      console.error(
+        `   ↳ Fix: Add at least one [[guide-id]] reference in: ${path.relative(
           ROOT,
           pathFile,
         )}`,
       );
-      warnings++;
+      errors++;
+    }
+
+    // Enforce that every node in frontmatter appears as an inline link in content
+    const missingNodes = Array.from(nodeIds).filter(
+      (n) => !linkedGuides.has(n),
+    );
+    if (missingNodes.length > 0) {
+      console.error(
+        `❌ Path '${pathSlug}' frontmatter lists node(s) not referenced inline in content: ${missingNodes.join(
+          ", ",
+        )}`,
+      );
+      console.error(
+        `   ↳ Fix: Include each as [[${missingNodes[0]}]] or [label](:${missingNodes[0]}) in the markdown body`,
+      );
+      errors++;
+    }
+
+    // Enforce inline order matches nodes order
+    if (nodeIds.size > 0 && linkedGuides.size > 0) {
+      const nodesOrder = Array.from(nodeIds);
+      // Map first occurrence position for each node id
+      const firstPos = new Map();
+      for (const id of nodesOrder) {
+        const occ = inlineRefs.find((r) => r.id === id);
+        if (occ) firstPos.set(id, occ.index);
+      }
+      // Only check order when all nodes are present inline
+      if (firstPos.size === nodesOrder.length) {
+        let inOrder = true;
+        for (let i = 1; i < nodesOrder.length; i++) {
+          const prev = firstPos.get(nodesOrder[i - 1]);
+          const curr = firstPos.get(nodesOrder[i]);
+          if (prev > curr) {
+            inOrder = false;
+            break;
+          }
+        }
+        if (!inOrder) {
+          const foundOrder = nodesOrder
+            .slice()
+            .sort((a, b) => firstPos.get(a) - firstPos.get(b));
+          console.error(
+            `❌ Path '${pathSlug}' inline learning links are out of order. Expected order (frontmatter 'nodes'):\n   ${nodesOrder.join(
+              " → ",
+            )}\n   Found order in content:\n   ${foundOrder.join(" → ")}`,
+          );
+          console.error(
+            `   ↳ Fix: Reorder inline references to match 'nodes' sequence, since paths are ordered journeys.`,
+          );
+          errors++;
+        }
+      }
     }
 
     // Check each linked guide exists and references this path back
@@ -147,6 +293,50 @@ function validateBidirectionalLinks() {
         console.error(`   ↳ Guide: ${guide.path}`);
         console.error(
           `   ↳ Fix: Add 'paths: [${pathSlug}]' to guide frontmatter`,
+        );
+        errors++;
+      }
+    }
+
+    // Check each node id exists and references the path back
+    for (const nodeId of nodeIds) {
+      const guide = guideMap.get(nodeId);
+      if (!guide) {
+        console.error(
+          `❌ Path '${pathSlug}' lists node '${nodeId}' but no guide with that ID exists`,
+        );
+        console.error(`   ↳ Path: ${path.relative(ROOT, pathFile)}`);
+        errors++;
+        continue;
+      }
+      if (!guide.paths.includes(pathSlug)) {
+        console.error(
+          `❌ Broken bidirectional link: Path '${pathSlug}' lists node '${nodeId}', but guide doesn't reference path back`,
+        );
+        console.error(`   ↳ Guide: ${guide.path}`);
+        console.error(
+          `   ↳ Fix: Add 'paths: [${pathSlug}]' to guide frontmatter`,
+        );
+        errors++;
+      }
+    }
+
+    // For guides that reference this path, ensure path references them somehow (inline or nodes)
+    const guidesReferencingThisPath = Array.from(guideMap.entries())
+      .filter(([, g]) => g.paths.includes(pathSlug))
+      .map(([id]) => id);
+
+    for (const id of guidesReferencingThisPath) {
+      const referencedInPath = linkedGuides.has(id) || nodeIds.has(id);
+      if (!referencedInPath) {
+        const guide = guideMap.get(id);
+        console.error(
+          `❌ Missing path reference: Guide '${id}' references path '${pathSlug}', but the path content doesn't reference it (neither in nodes[] nor with [[${id}]])`,
+        );
+        console.error(`   ↳ Path: ${path.relative(ROOT, pathFile)}`);
+        console.error(`   ↳ Guide: ${guide?.path}`);
+        console.error(
+          `   ↳ Fix: Add '${id}' to 'nodes: []' in the path frontmatter or include [[${id}]] in the path body`,
         );
         errors++;
       }

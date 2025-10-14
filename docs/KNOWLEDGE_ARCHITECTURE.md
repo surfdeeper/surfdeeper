@@ -102,7 +102,7 @@ Notes:
 
 ### 5) Derived URLs and navigation
 
-- Routes are generated from IDs (and optionally sections/lenses), e.g. `/guide/:id`.
+- Routes are generated from IDs (and optionally sections/lenses), e.g. `/concept/:id` or `/skill/:id`.
 - The same node can appear in multiple views: linear course, thread grid, or a graph map.
 - Redirects are handled automatically if we change how URLs are shaped.
 
@@ -169,3 +169,10 @@ Master your chest lift with [Cobra Pose](:cobra-pose) before attempting faster [
 ```
 
 This keeps links stable even if files are renamed or reorganized.
+
+## Path sequences and ordering
+
+- Each path lives at `src/content/paths/<id>.md` and must declare a non-empty `nodes: []` frontmatter array.
+- `nodes` is the canonical sequence for that path; items are referenced by guide `id` or `slug` and are rendered in the exact order provided.
+- The Path sidebar, previews, and inline `[[...]]` learning-link numbering all derive from `nodes`. There is no alphabetical or automatic graph-based fallback ordering.
+- A linter verifies that each `nodes` entry exists, appears in the path content body as a learning link, and that inline order matches `nodes`.

@@ -1,0 +1,66 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import GuidePathBreadcrumbs from "../../components/GuidePathBreadcrumbs.astro";
+import GraphLinks from "../../components/GraphLinks.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("skills");
+  return entries.map((e) => ({ params: { slug: e.slug } }));
+}
+
+const { slug } = Astro.params as { slug: string };
+const skills = (await getCollection("skills")) as CollectionEntry<"skills">[];
+const entry = skills.find((e) => e.slug === slug);
+
+if (!entry) throw Astro.redirect("/skill");
+
+const rendered = await entry.render();
+const Content = rendered.Content;
+const data = entry.data as any;
+
+// For path breadcrumbs
+const currentId = ((data.id || entry.slug) as string).trim();
+const guidePaths: string[] = Array.isArray(data.paths) ? data.paths : [];
+
+// Delegate related graph link computation to the GraphLinks component
+---
+
+<Layout
+  title={`${data.title} – Skill – SurfDeeper`}
+  description={data.description}
+  editPath={`src/content/skills/${entry.slug}.md`}
+>
+  <Breadcrumbs
+    items={[
+      { href: "/guide", label: "Guides" },
+      { href: "/skill", label: "Skills" },
+      { label: data.title, ariaCurrent: "page" },
+    ]}
+  />
+
+  <article class="guide-article">
+    <Content />
+
+    {
+      guidePaths.length > 0 && (
+        <GuidePathBreadcrumbs guideId={currentId} guidePaths={guidePaths} />
+      )
+    }
+
+    <GraphLinks
+      currentId={currentId}
+      slug={entry.slug}
+      dependsOnIds={data.dependsOn}
+      leadsToIds={data.leadsTo}
+    />
+  </article>
+
+  <style>
+    .guide-article {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  </style>
+</Layout>

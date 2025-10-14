@@ -2,20 +2,20 @@ import fs from "fs";
 import path from "path";
 import { visit } from "unist-util-visit";
 
-const GUIDE_DIR = path.resolve(process.cwd(), "src/content/guides");
+const CONCEPTS_DIR = path.resolve(process.cwd(), "src/content/concepts");
+const SKILLS_DIR = path.resolve(process.cwd(), "src/content/skills");
 
 function buildIdMap() {
-  const map = new Map(); // id -> slug
+  const map = new Map(); // id -> { slug, base }
   const alias = new Map(); // alias -> id
 
-  function walk(dir) {
+  function walk(dir, base) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) {
-        walk(full);
+        walk(full, base);
       } else if (entry.isFile() && entry.name.endsWith(".md")) {
-        const rel = path.relative(GUIDE_DIR, full);
-        const slug = path.basename(rel, ".md");
+        const slug = path.basename(full, ".md");
         const src = fs.readFileSync(full, "utf8");
         const m = /^---[\s\S]*?---/m.exec(src);
         let id = null;
@@ -33,12 +33,13 @@ function buildIdMap() {
           }
         }
         const key = (id || slug).trim();
-        if (!map.has(key)) map.set(key, slug);
+        if (!map.has(key)) map.set(key, { slug, base });
       }
     }
   }
 
-  if (fs.existsSync(GUIDE_DIR)) walk(GUIDE_DIR);
+  if (fs.existsSync(CONCEPTS_DIR)) walk(CONCEPTS_DIR, "concept");
+  if (fs.existsSync(SKILLS_DIR)) walk(SKILLS_DIR, "skill");
   return { map, alias };
 }
 
@@ -56,23 +57,23 @@ export default function remarkMagicLinks() {
         .map((p) => p.replace(/^:/, "").trim())
         .filter(Boolean);
 
-      let resolvedSlug = null;
+      let resolved = null;
       for (const c of candidates) {
         if (map.has(c)) {
-          resolvedSlug = map.get(c);
+          resolved = map.get(c);
           break;
         }
         if (alias.has(c)) {
           const id = alias.get(c);
           if (map.has(id)) {
-            resolvedSlug = map.get(id);
+            resolved = map.get(id);
             break;
           }
         }
       }
 
-      if (resolvedSlug) {
-        node.url = `/guide/${resolvedSlug}`;
+      if (resolved) {
+        node.url = `/${resolved.base}/${resolved.slug}`;
       } else {
         // Convert broken link to plain text - hide the link entirely
         node.type = "text";

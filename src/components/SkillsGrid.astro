@@ -1,0 +1,107 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import { isPlaceholderTodo } from "../utils/guide-filters";
+
+interface Props {
+  /** Optional limit for number of skills to show */
+  limit?: number;
+}
+
+const { limit } = Astro.props as Props;
+
+function toTitleCase(s?: string) {
+  if (!s) return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+const skillOrder = new Map([
+  ["beginner", 0],
+  ["intermediate", 1],
+  ["advanced", 2],
+]);
+
+// Data
+const allSkills = (await getCollection(
+  "skills",
+)) as CollectionEntry<"skills">[];
+const sorted = allSkills.sort((a, b) => {
+  const aLevel = (a.data as any).skillLevel || (a.data as any).level || "zzz";
+  const bLevel = (b.data as any).skillLevel || (b.data as any).level || "zzz";
+  const byLevel =
+    (skillOrder.get(String(aLevel)) ?? 99) -
+    (skillOrder.get(String(bLevel)) ?? 99);
+  if (byLevel !== 0) return byLevel;
+  return a.data.title.localeCompare(b.data.title);
+});
+const skills = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
+---
+
+{
+  skills.length === 0 ? (
+    <p class="empty">No skills yet.</p>
+  ) : (
+    <ul class="grid-cards links-inherit">
+      {skills.map((s) => {
+        const lvl = (s.data as any).skillLevel || (s.data as any).level;
+        const disabled = isPlaceholderTodo(s.body);
+        const href = `/skill/${s.slug}`;
+        return (
+          <li class="card">
+            <div class="card-content">
+              <div class="card-header">
+                <h3 class="card-title heading heading-sm">
+                  <a
+                    class={`card-link${disabled ? " is-disabled u-coming-soon" : ""}`}
+                    href={disabled ? "#" : href}
+                    aria-disabled={disabled ? "true" : undefined}
+                    aria-label={
+                      disabled ? `${s.data.title} — coming soon` : undefined
+                    }
+                    tabindex={disabled ? -1 : undefined}
+                  >
+                    {s.data.title}
+                  </a>
+                </h3>
+                {lvl && <span class="badge">{toTitleCase(String(lvl))}</span>}
+              </div>
+              {disabled ? (
+                <p class="card-desc coming-soon">coming soon</p>
+              ) : (
+                s.data.description && (
+                  <p class="card-desc text-sm text-secondary">
+                    {s.data.description}
+                  </p>
+                )
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  )
+}
+
+<style>
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .empty {
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+
+  /* Placeholder state */
+  .card-link.is-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    text-decoration: none;
+    cursor: default;
+  }
+  .coming-soon {
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+</style>

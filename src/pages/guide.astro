@@ -1,55 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PathsGrid from "../components/PathsGrid.astro";
-import { getCollection } from "astro:content";
-import sections from "../content/guides/_sections.json";
-// Provide a typed view for the JSON map so TS allows string indexing
-const sectionsMap = sections as Record<
-  string,
-  { order?: number; label?: string }
->;
-import { isPlaceholderTodo } from "../utils/guide-filters";
-
-// Load all guides
-const entries = await getCollection("guides");
-
-type EntryType = (typeof entries)[number];
-
-// Group by frontmatter category (post-flatten). Fallback to id or slug for sections.
-const grouped = entries.reduce(
-  (acc, e) => {
-    if (e.data.kind === "section") {
-      const key = e.data.id || e.slug;
-      (acc[key] ||= []).push(e);
-    } else {
-      const key = e.data.category || "uncategorized";
-      (acc[key] ||= []).push(e);
-    }
-    return acc;
-  },
-  {} as Record<string, EntryType[]>,
-);
-
-for (const key of Object.keys(grouped)) {
-  grouped[key].sort(
-    (a, b) =>
-      (a.data.order ?? 999) - (b.data.order ?? 999) ||
-      a.data.title.localeCompare(b.data.title),
-  );
-}
-
-// Determine which section index pages are placeholder TODO-only
-const disabledSectionLinks = new Set<string>();
-for (const section of Object.keys(grouped)) {
-  const sectionIndex = entries.find(
-    (e) =>
-      e.data.kind === "section" &&
-      (e.data.id === section || e.slug === section),
-  );
-  if (sectionIndex && isPlaceholderTodo(sectionIndex.body)) {
-    disabledSectionLinks.add(section);
-  }
-}
+import ConceptsGrid from "../components/ConceptsGrid.astro";
+import SkillsGrid from "../components/SkillsGrid.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 ---
 
 <Layout
@@ -57,61 +11,28 @@ for (const section of Object.keys(grouped)) {
   description="Guides for understanding waves, ocean safety, and surf techniques. Learn from the community."
   fullWidth={true}
 >
+  <Breadcrumbs items={[{ label: "Guides", ariaCurrent: "page" }]} />
   <header class="page-header">
     <h1>Guides</h1>
     <p class="page-subtitle">Master the fundamentals and advanced techniques</p>
   </header>
 
-  <!-- Quick access to learning paths -->
+  <!-- Paths -->
   <section class="paths-intro">
-    <h2
-      class="heading heading-md"
-      style="text-align:center; margin: 0 0 var(--space-md) 0;"
-    >
-      Explore Paths
-    </h2>
+    <h2 class="heading heading-md section-title">Paths</h2>
     <PathsGrid />
   </section>
 
-  <section class="surfing-manual">
-    <div class="section-grid">
-      {
-        (Object.entries(grouped) as [string, EntryType[]][])
-          .sort(
-            ([a], [b]) =>
-              (sectionsMap[a]?.order ?? 999) - (sectionsMap[b]?.order ?? 999),
-          )
-          .map(([section, items]) => {
-            const disabled = disabledSectionLinks.has(section);
-            return (
-              <a
-                class={`card${disabled ? " is-disabled" : ""}`}
-                href={!disabled ? `/guide/${section}` : undefined}
-                aria-disabled={disabled ? "true" : undefined}
-                tabindex={disabled ? -1 : undefined}
-              >
-                <div class="card-content">
-                  <h3 class="heading heading-md">
-                    {sectionsMap[section]?.label ?? section}
-                  </h3>
-                  <p class="guide-count">
-                    {items.length} {items.length === 1 ? "guide" : "guides"}
-                  </p>
-                  <ul class="guide-preview">
-                    {items.slice(0, 3).map((e) => (
-                      <li>{e.data.title}</li>
-                    ))}
-                    {items.length > 3 && (
-                      <li class="more">+{items.length - 3} more</li>
-                    )}
-                  </ul>
-                </div>
-                <div class="card-link">View Guides →</div>
-              </a>
-            );
-          })
-      }
-    </div>
+  <!-- Concepts -->
+  <section class="concepts">
+    <h2 class="heading heading-md section-title">Concepts</h2>
+    <ConceptsGrid />
+  </section>
+
+  <!-- Skills -->
+  <section class="skills">
+    <h2 class="heading heading-md section-title">Skills</h2>
+    <SkillsGrid />
   </section>
 
   <section class="coming-soon card">
@@ -144,80 +65,9 @@ for (const section of Object.keys(grouped)) {
       margin: 0;
     }
 
-    .surfing-manual {
-      margin: 0 auto;
-    }
-
-    .section-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: var(--space-lg);
-      margin-bottom: var(--space-2xl);
-    }
-
-    .section-grid .card {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .card-content {
-      flex: 1;
-      margin-bottom: var(--space-md);
-    }
-
-    .section-grid .card h3 {
-      color: var(--color-accent);
-      font-size: var(--font-size-2xl);
-      margin: 0 0 var(--space-sm) 0;
-      text-align: center;
-    }
-
-    .guide-count {
-      color: var(--color-accent);
-      font-size: var(--font-size-sm);
-      opacity: 0.7;
+    .section-title {
       text-align: center;
       margin: 0 0 var(--space-md) 0;
-    }
-
-    .guide-preview {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .guide-preview li {
-      color: var(--color-text-secondary);
-      padding-left: var(--space-md);
-      position: relative;
-      opacity: 0.9;
-      margin-bottom: var(--space-sm);
-    }
-
-    .guide-preview li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: var(--color-accent);
-      font-weight: bold;
-    }
-
-    .guide-preview li.more {
-      color: var(--color-accent);
-      font-style: italic;
-    }
-
-    .card-link {
-      display: block;
-      text-align: center;
-      color: var(--color-accent);
-      font-weight: var(--font-weight-semibold);
-      font-size: var(--font-size-lg);
-      transition: opacity 0.2s ease;
-    }
-
-    .section-grid .card:hover .card-link {
-      opacity: 0.8;
     }
 
     .coming-soon {
@@ -236,18 +86,6 @@ for (const section of Object.keys(grouped)) {
       opacity: 0.9;
     }
 
-    /* Disabled section cards */
-    .section-grid .card.is-disabled {
-      pointer-events: none;
-      opacity: 0.6;
-    }
-
     /* button styles are provided by .btn .btn-primary */
-
-    @media (max-width: 768px) {
-      .section-grid {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
 </Layout>

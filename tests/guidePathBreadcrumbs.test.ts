@@ -55,14 +55,14 @@ describe("Guide breadcrumbs sequence URLs", () => {
         {
           id: "foundations",
           title: "Foundations",
-          url: "/guide/foundations",
+          url: "/concept/foundations",
           paths: ["core"],
           levels: [],
         },
         {
           id: "cutbacks",
           title: "Cutbacks",
-          url: "/guide/core-skills/cutbacks",
+          url: "/concept/core-skills/cutbacks",
           paths: ["core"],
           levels: [],
         },
@@ -74,8 +74,8 @@ describe("Guide breadcrumbs sequence URLs", () => {
 
     const ordered = orderByLeadsTo(graph);
     const seq = ordered.map((n) => ({ id: n.id, title: n.title, url: n.url }));
-    expect(seq[0].url).toBe("/guide/foundations");
+    expect(seq[0].url).toBe("/concept/foundations");
     // The URL should reflect the slug location, not the id alone
-    expect(seq[1].url).toBe("/guide/core-skills/cutbacks");
+    expect(seq[1].url).toBe("/concept/core-skills/cutbacks");
   });
 });

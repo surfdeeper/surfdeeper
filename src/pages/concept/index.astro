@@ -1,0 +1,41 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ConceptsGrid from "../../components/ConceptsGrid.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+---
+
+<Layout title="Concepts – SurfDeeper" description="Surf concepts and theory.">
+  <Breadcrumbs
+    items={[
+      { href: "/guide", label: "Guides" },
+      { label: "Concepts", ariaCurrent: "page" },
+    ]}
+  />
+
+  <header class="page-header">
+    <h1>Concepts</h1>
+    <p class="page-subtitle">Foundational ideas and ocean knowledge</p>
+  </header>
+
+  <ConceptsGrid />
+
+  <style>
+    .page-header {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .page-header h1 {
+      color: var(--color-accent);
+      font-size: var(--font-size-4xl);
+      margin: 0 0 var(--space-sm) 0;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .page-subtitle {
+      font-size: var(--font-size-xl);
+      opacity: 0.9;
+      margin: 0;
+    }
+  </style>
+</Layout>

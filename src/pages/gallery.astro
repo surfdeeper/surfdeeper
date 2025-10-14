@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import { getCollection } from "astro:content";
-import sections from "../content/guides/_sections.json";
+// Legacy sections file removed; we'll compute labels from category slugs
 
 // Import known diagram assets from src/assets so Astro can optimize them
 import spillingWaveImg from "../assets/spilling-wave.png";
@@ -20,8 +20,10 @@ interface GalleryImage {
   context?: string;
 }
 
-// Get all guides
-const allGuides = await getCollection("guides");
+// Get all typed guides (concepts and skills)
+const allConcepts = await getCollection("concepts");
+const allSkills = await getCollection("skills");
+const allGuides = [...allConcepts, ...allSkills];
 
 const images: GalleryImage[] = [];
 
@@ -39,21 +41,20 @@ const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
 const headingRegex = /^#{1,6}\s+(.+)$/gm;
 
 for (const guide of allGuides) {
-  // Skip section index pages entirely; gallery is for concept pages
-  if (guide.data.kind === "section") continue;
+  // Typed entries are only concepts/skills; no section index pages here
 
-  // Derive section from frontmatter category (preferred), fallback to legacy path
-  let sectionSlug = guide.data.category as string | undefined;
-  if (!sectionSlug) {
-    const slugParts = guide.slug.split("/");
-    if (slugParts.length > 1) sectionSlug = slugParts[0];
-  }
+  // Derive section from frontmatter category
+  let sectionSlug = (guide.data as any).category as string | undefined;
   if (!sectionSlug) continue;
 
-  const guideLink = `/guide/${guide.slug}`;
+  const base = guide.collection === "skills" ? "skill" : "concept";
+  const guideLink = `/${base}/${guide.slug}`;
   const guideTitle = guide.data.title;
-  const sectionData = sections[sectionSlug as keyof typeof sections];
-  const sectionLabel = sectionData?.label || sectionSlug;
+  const sectionLabel =
+    (sectionSlug || "")
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ") || sectionSlug;
 
   // Get the raw markdown body
   const body = guide.body;

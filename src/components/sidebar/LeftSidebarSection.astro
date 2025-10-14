@@ -9,9 +9,7 @@ const { section } = Astro.props;
 ---
 
 <li class="section-item">
-  <a href={`/guide/${section.slug}`} class="section-link">
-    {section.label}
-  </a>
+  <a href={section.href} class="section-link">{section.label}</a>
   {
     section.guides.length > 0 && (
       <ul class="nested-links">
@@ -22,9 +20,7 @@ const { section } = Astro.props;
         ))}
         {section.remainingCount > 0 && (
           <li class="more-items">
-            <a href={`/guide/${section.slug}`}>
-              {section.remainingCount} more →
-            </a>
+            <a href={section.href}>{section.remainingCount} more →</a>
           </li>
         )}
         {section.comingSoonCount > 0 && (

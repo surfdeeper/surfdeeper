@@ -1,0 +1,194 @@
+---
+import { getCollection } from "astro:content";
+
+export interface LinkItem {
+  id?: string;
+  title: string;
+  slug: string;
+  type: string; // "concept" | "skill" | "guide"
+}
+
+// Back-compat props (precomputed) + new minimal inputs
+interface Props {
+  // Legacy: if provided, we render these directly
+  prerequisites?: LinkItem[];
+  leadsTo?: LinkItem[];
+  // New: compute from ids and context
+  currentId?: string; // normalized id for the current doc (id or slug)
+  slug?: string; // current entry slug
+  dependsOnIds?: string[]; // frontmatter dependsOn ids
+  leadsToIds?: string[]; // frontmatter leadsTo ids
+}
+
+const props = Astro.props as Props;
+
+// Helper to compute link items when only ids are provided
+const computeLinks = async () => {
+  const currentId = (props.currentId || "").trim();
+  const slug = (props.slug || "").trim();
+  const dependsOnIds = Array.isArray(props.dependsOnIds)
+    ? (props.dependsOnIds as string[])
+    : [];
+  const leadsToIds = Array.isArray(props.leadsToIds)
+    ? (props.leadsToIds as string[])
+    : [];
+
+  // If no minimal inputs, return empty
+  if (!currentId && !slug) {
+    return { prerequisites: [] as LinkItem[], leadsTo: [] as LinkItem[] };
+  }
+
+  const concepts = await getCollection("concepts");
+  const skills = await getCollection("skills");
+  const all = [...concepts, ...skills];
+  const idToEntry = new Map<string, (typeof all)[number]>();
+  for (const e of all) {
+    const id = (((e as any).data?.id as string) || e.slug) as string;
+    if (!idToEntry.has(id)) idToEntry.set(id, e);
+  }
+
+  const entryToLink = (e: any): LinkItem => ({
+    id: (((e as any).data?.id as string) || e.slug) as string,
+    title: (e as any).data.title as string,
+    slug: e.slug as string,
+    type:
+      ((e as any).data?.type as string) || ((e as any).collection as string),
+  });
+
+  const mapIds = (ids?: string[]): LinkItem[] =>
+    (ids || [])
+      .map((id) => idToEntry.get(id))
+      .filter(Boolean)
+      .map((e: any) => entryToLink(e));
+
+  const prerequisites = mapIds(dependsOnIds);
+
+  // Reverse leads: any entry that dependsOn the current id or slug
+  const reverseLeads: LinkItem[] = all
+    .filter((e: any) => {
+      const deps = (e.data as any)?.dependsOn as string[] | undefined;
+      if (!Array.isArray(deps)) return false;
+      const norm = deps
+        .filter((d) => typeof d === "string")
+        .map((d) => d.trim().toLowerCase());
+      const idCandidate = currentId.trim().toLowerCase();
+      const slugCandidate = slug.trim().toLowerCase();
+      return norm.includes(idCandidate) || norm.includes(slugCandidate);
+    })
+    .map(entryToLink);
+
+  const leadsToDirect = mapIds(leadsToIds);
+  // Dedupe by id, and exclude self
+  const combined = [...leadsToDirect, ...reverseLeads].filter(
+    (l) => (l.id || l.slug) !== currentId,
+  );
+  const byId = new Map<string, LinkItem>();
+  for (const l of combined) {
+    const key = (l.id || l.slug) as string;
+    if (!byId.has(key)) byId.set(key, l);
+  }
+  const leadsTo = Array.from(byId.values());
+
+  return { prerequisites, leadsTo };
+};
+
+// Choose data source: legacy props or compute from ids
+const computed = await (async () => {
+  if (Array.isArray(props.prerequisites) || Array.isArray(props.leadsTo)) {
+    return {
+      prerequisites: props.prerequisites || [],
+      leadsTo: props.leadsTo || [],
+    };
+  }
+  return await computeLinks();
+})();
+
+const { prerequisites = [], leadsTo = [] } = computed;
+
+const basePathFor = (t: string) => {
+  const normalized = (t || "").toLowerCase().endsWith("s")
+    ? (t || "").toLowerCase().slice(0, -1)
+    : (t || "").toLowerCase();
+  if (normalized === "concept") return "concept";
+  if (normalized === "skill") return "skill";
+  return "guide";
+};
+const hasAny = prerequisites.length > 0 || leadsTo.length > 0;
+---
+
+<style>
+  .graph-links {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 2px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .graph-heading {
+    color: var(--color-accent);
+    font-size: var(--font-size-2xl);
+    margin: 0 0 var(--space-4) 0;
+    text-align: center;
+  }
+
+  .graph-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .graph-list li {
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-6);
+    position: relative;
+  }
+
+  .graph-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: bold;
+    font-size: var(--font-size-lg);
+  }
+
+  @media (min-width: 768px) {
+    .graph-links {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+{
+  hasAny && (
+    <section class="graph-links">
+      {prerequisites.length > 0 && (
+        <div class="graph-block">
+          <h2 class="graph-heading">Prerequisites</h2>
+          <ul class="graph-list">
+            {prerequisites.map((g) => (
+              <li>
+                <a href={`/${basePathFor(g.type)}/${g.slug}`}>{g.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {leadsTo.length > 0 && (
+        <div class="graph-block">
+          <h2 class="graph-heading">Leads to</h2>
+          <ul class="graph-list">
+            {leadsTo.map((g) => (
+              <li>
+                <a href={`/${basePathFor(g.type)}/${g.slug}`}>{g.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  )
+}

@@ -24,6 +24,9 @@ class LinkValidator {
   filesChecked: number;
   linksChecked: number;
   availableGuides: Set<string>;
+  availableConcepts: Set<string>;
+  availableSkills: Set<string>;
+  availablePaths: Set<string>;
   availablePublicFiles: Set<string>;
 
   constructor() {
@@ -36,6 +39,9 @@ class LinkValidator {
 
     // Track all available guide files for validation
     this.availableGuides = new Set();
+    this.availableConcepts = new Set();
+    this.availableSkills = new Set();
+    this.availablePaths = new Set();
     this.availablePublicFiles = new Set();
   }
 
@@ -44,20 +50,70 @@ class LinkValidator {
   }
 
   async buildFileIndex(): Promise<void> {
-    // Index all guide files
-    const guidesDir = path.join(this.contentDir, "guides");
-    const guideFiles = await this.getMarkdownFiles(guidesDir);
+    // Index all typed content files (concepts + skills)
+    const conceptsDir = path.join(this.contentDir, "concepts");
+    const skillsDir = path.join(this.contentDir, "skills");
+    const pathsDir = path.join(this.contentDir, "paths");
+    const [conceptFiles, skillFiles] = await Promise.all([
+      this.getMarkdownFiles(conceptsDir).catch(() => []),
+      this.getMarkdownFiles(skillsDir).catch(() => []),
+    ]);
 
-    for (const filePath of guideFiles) {
-      // Convert file path to guide slug format
-      const relativePath = path.relative(guidesDir, filePath);
+    const addSlugFrom = (
+      baseDir: string,
+      filePath: string,
+      kind: "concept" | "skill",
+    ) => {
+      const relativePath = path.relative(baseDir, filePath);
       const slug = relativePath.replace(/\.md$/, "").replace(/\/index$/, "");
-      this.availableGuides.add(slug);
-
-      // Also add the /index variant for section pages
-      if (!slug.includes("/")) {
-        this.availableGuides.add(`${slug}/index`);
+      if (slug) {
+        this.availableGuides.add(slug);
+        if (kind === "concept") this.availableConcepts.add(slug);
+        if (kind === "skill") this.availableSkills.add(slug);
       }
+    };
+
+    for (const fp of conceptFiles) addSlugFrom(conceptsDir, fp, "concept");
+    for (const fp of skillFiles) addSlugFrom(skillsDir, fp, "skill");
+
+    // Index path pages
+    try {
+      const pathFiles = await this.getMarkdownFiles(pathsDir);
+      for (const fp of pathFiles) {
+        const relativePath = path.relative(pathsDir, fp);
+        const slug = relativePath.replace(/\.md$/, "").replace(/\/index$/, "");
+        if (slug) this.availablePaths.add(slug);
+      }
+    } catch {
+      // ignore
+    }
+
+    // Also include section slugs derived from typed content categories
+    try {
+      const categories = new Set<string>();
+      const readAll = async (dir: string) => {
+        const files = await this.getMarkdownFiles(dir).catch(() => []);
+        for (const fp of files) {
+          const content = await fs.readFile(fp, "utf-8");
+          const fmMatch = /^---([\s\S]*?)---/m.exec(content);
+          if (fmMatch) {
+            const fm = fmMatch[1];
+            const catMatch = /^\s*category:\s*([^\n]+)$/m.exec(fm);
+            if (catMatch) {
+              const slug = catMatch[1].trim().replace(/^"|"$/g, "");
+              if (slug) categories.add(slug);
+            }
+          }
+        }
+      };
+      await readAll(conceptsDir);
+      await readAll(skillsDir);
+      for (const sectionSlug of categories) {
+        this.availableGuides.add(sectionSlug);
+        this.availableGuides.add(`${sectionSlug}/index`);
+      }
+    } catch (e) {
+      // ignore if category discovery fails
     }
 
     // Index all public files (images, etc.)
@@ -72,7 +128,7 @@ class LinkValidator {
     }
 
     console.log(
-      `📁 Indexed ${this.availableGuides.size} guide pages and ${this.availablePublicFiles.size} public files`,
+      `📁 Indexed ${this.availableGuides.size} typed guide pages (/concept, /skill) and ${this.availablePaths.size} paths, plus ${this.availablePublicFiles.size} public files`,
     );
   }
 
@@ -170,9 +226,35 @@ class LinkValidator {
     const [urlPath, hash] = url.split("#");
 
     if (urlPath.startsWith("/guide/")) {
+      // Legacy link; allow but warn and validate target exists in concepts/skills
       await this.validateGuideLink(
         urlPath,
         hash,
+        linkText,
+        filePath,
+        lineNumber,
+        fullMatch,
+      );
+      this.addWarning(
+        `Legacy /guide/ link found. Prefer typed routes (/concept/, /skill/, /paths/): ${urlPath}`,
+        filePath,
+        lineNumber,
+        fullMatch,
+      );
+    } else if (
+      urlPath.startsWith("/concept/") ||
+      urlPath.startsWith("/skill/")
+    ) {
+      await this.validateTypedGuideLink(
+        urlPath,
+        linkText,
+        filePath,
+        lineNumber,
+        fullMatch,
+      );
+    } else if (urlPath.startsWith("/paths/")) {
+      await this.validatePathLink(
+        urlPath,
         linkText,
         filePath,
         lineNumber,
@@ -217,10 +299,9 @@ class LinkValidator {
       let errorMsg = `Broken guide link: ${urlPath}`;
 
       if (suggestions.length > 0) {
-        errorMsg += `\n  Did you mean: ${suggestions
+        errorMsg += `\n  Did you mean one of: ${suggestions
           .slice(0, 3)
-          .map((s) => `/guide/${s}`)
-          .join(", ")}?`;
+          .join(", ")}? (use /concept/{slug} or /skill/{slug})`;
       }
 
       this.addError(errorMsg, filePath, lineNumber, fullMatch);
@@ -230,6 +311,46 @@ class LinkValidator {
     if (hash) {
       // For now, just log that we found a hash link
       // console.log(`Hash link found: ${urlPath}#${hash}`);
+    }
+  }
+
+  async validateTypedGuideLink(
+    urlPath: string,
+    linkText: string,
+    filePath: string,
+    lineNumber: number,
+    fullMatch: string,
+  ): Promise<void> {
+    const isConcept = urlPath.startsWith("/concept/");
+    const slug = urlPath.replace(/^\/(concept|skill)\//, "");
+    const ok = isConcept
+      ? this.availableConcepts.has(slug)
+      : this.availableSkills.has(slug);
+    if (!ok) {
+      this.addError(
+        `Broken ${isConcept ? "concept" : "skill"} link: ${urlPath}`,
+        filePath,
+        lineNumber,
+        fullMatch,
+      );
+    }
+  }
+
+  async validatePathLink(
+    urlPath: string,
+    linkText: string,
+    filePath: string,
+    lineNumber: number,
+    fullMatch: string,
+  ): Promise<void> {
+    const slug = urlPath.replace("/paths/", "");
+    if (!this.availablePaths.has(slug)) {
+      this.addError(
+        `Broken path link: ${urlPath}`,
+        filePath,
+        lineNumber,
+        fullMatch,
+      );
     }
   }
 

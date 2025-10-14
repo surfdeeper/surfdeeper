@@ -1,56 +1,61 @@
 import fs from "fs";
 import path from "path";
+import matter from "gray-matter";
 import { visit } from "unist-util-visit";
+import { isPlaceholderDoc } from "./shared/is-placeholder.mjs";
 
-const GUIDE_DIR = path.resolve(process.cwd(), "src/content/guides");
-
-function buildIdMap() {
-  const map = new Map(); // id -> slug
-  const alias = new Map(); // alias -> id
-
-  function walk(dir) {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        walk(full);
-      } else if (entry.isFile() && entry.name.endsWith(".md")) {
-        const rel = path.relative(GUIDE_DIR, full);
-        const slug = path.basename(rel, ".md");
-        const src = fs.readFileSync(full, "utf8");
-        const m = /^---[\s\S]*?---/m.exec(src);
-        let id = null;
-        if (m) {
-          const fm = m[0];
-          const idMatch = /^id:\s*([^\n#]+)$/m.exec(fm);
-          if (idMatch) id = idMatch[1].trim();
-          const aliasesMatch = /^aliases:\s*\[(.+?)\]/m.exec(fm);
-          if (aliasesMatch) {
-            const list = aliasesMatch[1]
-              .split(",")
-              .map((s) => s.replace(/["'\s]/g, "").trim())
-              .filter(Boolean);
-            for (const a of list) alias.set(a, id || slug);
-          }
-        }
-        const key = (id || slug).trim();
-        if (!map.has(key)) map.set(key, slug);
-      }
-    }
-  }
-
-  if (fs.existsSync(GUIDE_DIR)) walk(GUIDE_DIR);
-  return { map, alias };
-}
+const CONCEPTS_DIR = path.resolve(process.cwd(), "src/content/concepts");
+const SKILLS_DIR = path.resolve(process.cwd(), "src/content/skills");
 
 /**
  * Remark plugin to transform [[guide-id]] syntax into learning links.
  * Syntax: [[guide-id]] or [[guide-id|display text]]
- * Resolves to /guide/slug with special styling.
+ * Resolves to typed routes: /concept/:slug or /skill/:slug with special styling.
  */
 export default function remarkLearningLinks() {
-  const { map, alias } = buildIdMap();
+  const { map, alias, slugToId } = buildIdMap();
 
-  return (tree) => {
+  return (tree, file) => {
+    // If rendering a path page markdown, build a numbering map from its frontmatter nodes
+    let canonicalNodes = [];
+    try {
+      const filePath = file?.path || file?.history?.[0];
+      const isPathMd =
+        typeof filePath === "string" &&
+        filePath.includes(
+          `${path.sep}src${path.sep}content${path.sep}paths${path.sep}`,
+        ) &&
+        filePath.endsWith(".md");
+      if (isPathMd) {
+        const src = fs.readFileSync(filePath, "utf8");
+        const fm = matter(src);
+        const nodes = Array.isArray(fm.data?.nodes) ? fm.data.nodes : [];
+        // Map nodes to canonical IDs (prefer id, else slug)
+        canonicalNodes = nodes
+          .map((n) => {
+            const key = String(n).trim();
+            if (map.has(key)) return key; // it's an id
+            if (slugToId.has(key)) return slugToId.get(key);
+            return null;
+          })
+          .filter(Boolean);
+      }
+    } catch {}
+
+    const numberFor = (idOrSlug) => {
+      if (!canonicalNodes || canonicalNodes.length === 0) return null;
+      // normalize to id
+      let id = null;
+      if (map.has(idOrSlug))
+        id = idOrSlug; // id
+      else if (alias.has(idOrSlug)) id = alias.get(idOrSlug);
+      else if (slugToId.has(idOrSlug)) id = slugToId.get(idOrSlug);
+      if (!id) return null;
+      const idx = canonicalNodes.indexOf(id);
+      if (idx === -1) return null;
+      return String(idx + 1).padStart(2, "0");
+    };
+
     visit(tree, "text", (node, index, parent) => {
       if (!node.value || typeof node.value !== "string") return;
       if (!node.value.includes("[[")) return;
@@ -75,25 +80,34 @@ export default function remarkLearningLinks() {
         const label = labelParts.join("|") || idPart;
 
         // Resolve the guide
-        let resolvedSlug = null;
+        let resolved = null;
         if (map.has(idPart)) {
-          resolvedSlug = map.get(idPart);
+          resolved = map.get(idPart);
         } else if (alias.has(idPart)) {
           const id = alias.get(idPart);
           if (map.has(id)) {
-            resolvedSlug = map.get(id);
+            resolved = map.get(id);
           }
         }
 
-        if (resolvedSlug) {
+        if (resolved) {
+          const num = numberFor(idPart);
+          const isDisabled = !!resolved.placeholder;
+          const hProps = {
+            class: `learning-link${isDisabled ? " is-disabled u-coming-soon" : ""}`,
+            ...(num ? { "data-number": num } : {}),
+            ...(isDisabled
+              ? {
+                  "aria-disabled": "true",
+                  tabindex: -1,
+                  "aria-label": `${label} — coming soon`,
+                }
+              : {}),
+          };
           parts.push({
             type: "link",
-            url: `/guide/${resolvedSlug}`,
-            data: {
-              hProperties: {
-                class: "learning-link",
-              },
-            },
+            url: isDisabled ? "#" : `/${resolved.base}/${resolved.slug}`,
+            data: { hProperties: hProps },
             children: [{ type: "text", value: label }],
           });
         } else {
@@ -122,4 +136,35 @@ export default function remarkLearningLinks() {
       }
     });
   };
+}
+
+function buildIdMap() {
+  const map = new Map(); // id -> { slug, base, placeholder }
+  const alias = new Map(); // alias -> id
+  const slugToId = new Map(); // slug -> id
+
+  function walk(dir, base) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full, base);
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        const slug = path.basename(full, ".md");
+        const src = fs.readFileSync(full, "utf8");
+        const parsed = matter(src);
+        const id = (parsed.data?.id || slug).toString().trim();
+        const aliases = Array.isArray(parsed.data?.aliases)
+          ? parsed.data.aliases.map((s) => String(s).trim()).filter(Boolean)
+          : [];
+        for (const a of aliases) alias.set(a, id);
+        const placeholder = isPlaceholderDoc(parsed.content || "");
+        if (!map.has(id)) map.set(id, { slug, base, placeholder });
+        if (!slugToId.has(slug)) slugToId.set(slug, id);
+      }
+    }
+  }
+
+  if (fs.existsSync(CONCEPTS_DIR)) walk(CONCEPTS_DIR, "concept");
+  if (fs.existsSync(SKILLS_DIR)) walk(SKILLS_DIR, "skill");
+  return { map, alias, slugToId };
 }

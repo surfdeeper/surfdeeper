@@ -8,6 +8,9 @@ yarn-error.log*
 dist/
 .astro/
 
+# Generated files
+graph.json
+
 # Environment variables
 .env
 .env.local
