@@ -23,4 +23,6 @@ nodes:
 
 ## What Makes a Good First Wave?
 
-Catching your first wave isn’t about luck—it’s about understanding the connected flow from board setup to paddling, pop-up, and riding straight toward shore. Each step builds on the previous, forming a safe, repeatable sequence.
+The beginner path focuses on foundation, safety, and comfort in the water. You’ll learn to handle your board responsibly, understand surf etiquette, and practice simple skills that build confidence. The goal isn’t to ride long or far — it’s to move safely and intentionally through every step: carrying your board, walking it out through the whitewater, positioning yourself, catching a broken wave, standing up, and stopping in control.
+
+You’ll also start to feel what it’s like to balance in your surf stance and face the ocean with awareness — learning to turn your board back toward the waves between rides and prepare for the next one. Every part of this stage is about rhythm and familiarity: learning to read conditions, feel your board, and stay calm in motion.

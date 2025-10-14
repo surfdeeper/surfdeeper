@@ -5,7 +5,7 @@ type: skill
 skillLevel: beginner
 dependsOn: [paddling-posture, breath-and-relaxation]
 related: []
-paths: [beginner, getting-out-back, stop-pearling]
+paths: [getting-out-back, stop-pearling]
 aliases: [paddling, paddling-paddling]
 description: >-
   Master surf paddling with efficient stroke mechanics, smart body position, and calm breathing.
