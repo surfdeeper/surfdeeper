@@ -24,8 +24,6 @@ if (meta) {
   const rendered = await meta.render();
   Content = rendered.Content;
 }
-
-// Note: Inline link numbering is handled by the remark plugin (scripts/remark-learning-links.mjs)
 ---
 
 <Layout
@@ -228,22 +226,6 @@ if (meta) {
     }
 
     /* Disabled behavior now handled by global .is-disabled and .u-coming-soon */
-
-    /* SSR number badge to correlate with sidebar order */
-    .thread-body :global(.learning-link[data-number])::before {
-      content: attr(data-number);
-      display: inline-block;
-      font-variant-numeric: tabular-nums;
-      color: var(--color-accent);
-      background: var(--color-surface-raised);
-      border: 1px solid var(--color-accent-transparent);
-      border-radius: 6px;
-      padding: 0 var(--space-2);
-      line-height: 1.6;
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-bold);
-      margin-right: var(--space-2);
-    }
 
     .thread-body :global(.broken-learning-link) {
       color: var(--color-error);
