@@ -11,6 +11,9 @@ nodes:
   - cobra-pose
   - angling-down-the-line
   - avoid-pearling
+  - kneeling-paddle
+  - turning-on-longboard
+  - cross-stepping
 ---
 
 ## The Art of Longboarding
@@ -36,6 +39,12 @@ Longboards excel at catching waves early because of their **length and buoyancy*
 With all that nose out in front of you, pearling becomes a real concern. Learn to avoid pearling — and see the focused path Stop Pearling — by understanding weight distribution, wave timing, and board positioning. Unlike shortboards where you can recover quickly, a pearled longboard can be a slower, wetter disaster.
 
 The key is **finding your sweet spot** on the board—not too far forward (pearling risk) and not too far back (losing speed and glide).
+
+### Additional Fundamentals for Longboards
+
+- Kneeling repositioning for stability and visibility: see [Kneeling Paddle](:kneeling-paddle)
+- Gentle, flowing arcs that use rail and timing: see [Turning on a Longboard](:turning-on-longboard)
+- Moving on the board without losing trim: see [Cross Stepping](:cross-stepping)
 
 ## Classic Longboard Style
 
