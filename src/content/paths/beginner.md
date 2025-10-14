@@ -2,8 +2,8 @@
 # Note: slug is `beginner` by filename
 # Title and description power the Paths UI
 id: beginner
-title: Catching Your First Wave
-description: One fluid sequence from paddle to pop-up to first bottom turn—start on broken waves, connect the motions, and build flow.
+title: Beginner
+description: From basics to riding in whitewater.
 icon: 🏄
 order: 0
 type: path
