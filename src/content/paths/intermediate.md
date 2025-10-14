@@ -8,6 +8,7 @@ nodes:
   - cutbacks
   - angling-down-the-line
   - trimming-and-speed
+  - pressure-zones
   - bottom-turns
   - kick-outs
 ---
