@@ -9,6 +9,7 @@ nodes:
   - angling-down-the-line
   - trimming-and-speed
   - weight-distribution
+  - laminar-vs-turbulent-flow
   - bottom-turns
   - kick-outs
 ---

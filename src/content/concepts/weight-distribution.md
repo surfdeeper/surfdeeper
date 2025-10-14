@@ -13,7 +13,7 @@ aliases:
   ]
 dependsOn: [gliding-planing, trimming-and-speed, stance]
 leadsTo: [turning, bottom-turns]
-paths: [intermediate]
+paths: [intermediate, science-of-surfing]
 description: >-
   Replace the beginner-friendly “buttons” metaphor with a more accurate, fluid idea: your board responds to continuous weight distribution patterns, not discrete points.
 ---

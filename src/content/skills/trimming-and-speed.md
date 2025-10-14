@@ -5,7 +5,14 @@ type: skill
 skillLevel: beginner
 dependsOn: [angling-down-the-line]
 related: [avoid-pearling]
-paths: [stop-pearling, intermediate, takeoff-sequence, catching-unbroken-waves]
+paths:
+  [
+    stop-pearling,
+    intermediate,
+    takeoff-sequence,
+    catching-unbroken-waves,
+    science-of-surfing,
+  ]
 ---
 
 # Trimming and Speed
