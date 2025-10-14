@@ -12,14 +12,14 @@ nodes:
   - kick-outs
 ---
 
-Intermediate skills connect your fundamentals to reliable flow and control. Follow this progression in order:
+Intermediate skills connect your fundamentals to reliable flow and control. Think of this phase as building a confident rhythm—one linked decision at a time—so more of your sessions feel connected, deliberate, and fun.
 
-1. Reconnect with the pocket: [[cutbacks|Cutbacks]] bring you from the shoulder back to the power source. Focus on smooth arcs, held rail, and a rebound that keeps you moving back into the pocket instead of stalling on the flats.
+Start by reconnecting with the pocket. [[cutbacks|Cutbacks]] bring you off the shoulder and back to power, where the wave does more of the work. Aim for smooth arcs, steady rail, and a rebound that sends you forward rather than stalling on the flats.
 
-2. Travel with the section: [[angling-down-the-line|Angling down the line]] is how you draw clean, purposeful lines that match the wave’s speed—higher for glide and projection, lower to tap into push and set up direction changes.
+With that connection, travel with the section. [[angling-down-the-line|Angling down the line]] lets you draw purposeful lines that match the wave’s pace—higher for glide and projection, lower to tap into push and set up changes in direction.
 
-3. Convert line to speed: [[trimming-and-speed|Trimming for speed]] uses small weight shifts, subtle rail engagement, and timing. These micro‑adjustments help you stay in the pocket and make your next maneuvers easier.
+Now convert clean lines into momentum. [[trimming-and-speed|Trimming for speed]] is subtle and continuous—small weight shifts, light rail engagement, and timing that keeps you in the pocket so the next move is already loading.
 
-4. Set the platform: [Bottom turns](:bottom-turns) are your setup turn—how you load the rail and project up the face. Emphasize a clean line, patient drive, and vision to your next section.
+When it’s time to commit, build your platform. [Bottom turns](:bottom-turns) load the rail and project up the face with patience and clarity—eyes on the next section, body stacked, line clean.
 
-5. Exit cleanly: [Kick‑outs](:kick-outs) are a skill, not an afterthought. Learn to disengage safely and efficiently to avoid closeouts, protect yourself and others, and reset for the next wave without wasting energy.
+And finish with intention. [Kick‑outs](:kick-outs) aren’t an afterthought—they’re a safe, efficient reset that protects you and others and sets you up for the next wave without wasting energy.
