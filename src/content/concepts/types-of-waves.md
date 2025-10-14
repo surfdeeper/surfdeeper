@@ -7,8 +7,8 @@ description: >-
 
 
 dependsOn: []
-related: [read-the-ocean]
-paths: []
+related: [breaking-waves]
+paths: [ocean-knowledge]
 ---
 
 # The Types of Waves
