@@ -5,7 +5,7 @@ type: skill
 skillLevel: beginner
 dependsOn: [paddling-efficiency]
 related: [angling-down-the-line, avoid-pearling]
-paths: [beginner, longboarding, stop-pearling]
+paths: [beginner, longboarding, stop-pearling, green-waves]
 description: >-
   Master the cobra pose for precise longboard control — prevent pearling while maintaining speed and angle.
 ---
