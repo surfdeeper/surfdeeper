@@ -5,7 +5,7 @@ type: skill
 skillLevel: beginner
 dependsOn: [paddling-efficiency, angling-down-the-line]
 related: [cobra-pose]
-paths: [catching-your-first-wave, longboarding, stop-pearling]
+paths: [longboarding, stop-pearling]
 description: >-
   Learn to prevent nose-diving when catching waves. Master positioning, speed, and control to stay on top of the wave.
 ---

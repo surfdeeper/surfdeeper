@@ -89,7 +89,7 @@ Output structure:
       "description": "Master the art of angling...",
       "dependsOn": [],
       "leadsTo": [],
-      "paths": ["longboarding", "catching-your-first-wave"]
+      "paths": ["longboarding", "beginner"]
     }
   ],
   "skills": [...],

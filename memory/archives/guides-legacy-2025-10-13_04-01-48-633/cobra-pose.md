@@ -10,7 +10,7 @@ order: 3
 id: cobra-pose
 category: core-skills
 kind: concept
-paths: [longboarding, catching-your-first-wave]
+paths: [longboarding, beginner]
 ---
 
 # The Cobra Pose
