@@ -17,10 +17,12 @@ export default function remarkLearningLinks() {
 
   return (tree, file) => {
     // If rendering a path page markdown, build a numbering map from its frontmatter nodes
+    // Note: We no longer inject numbers into inline content; sidebar handles numbering.
     let canonicalNodes = [];
+    let isPathMd = false;
     try {
       const filePath = file?.path || file?.history?.[0];
-      const isPathMd =
+      isPathMd =
         typeof filePath === "string" &&
         filePath.includes(
           `${path.sep}src${path.sep}content${path.sep}paths${path.sep}`,
@@ -43,6 +45,8 @@ export default function remarkLearningLinks() {
     } catch {}
 
     const numberFor = (idOrSlug) => {
+      // Disable inline numbering within path markdown content; return null to omit data-number
+      if (isPathMd) return null;
       if (!canonicalNodes || canonicalNodes.length === 0) return null;
       // normalize to id
       let id = null;
