@@ -4,7 +4,7 @@ title: Ocean Knowledge
 type: concept
 dependsOn: []
 related: [wave-selection, types-of-waves]
-paths: [catching-unbroken-waves-]
+paths: [catching-unbroken-waves]
 ---
 
 Coming Soon.
