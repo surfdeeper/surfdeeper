@@ -71,6 +71,8 @@ This ensures `/paths/<id>` is generated for each entry in `src/content/paths/`.
 
 - Lint includes `scripts/validate-paths.js` which fails if any guide references a path that has no content page under `src/content/paths/<path>.md`.
 - Before adding a `paths: ["foo"]` tag to guides, create `src/content/paths/foo.md` with frontmatter (`title`, optional `description`, `icon`) and body content. The body renders on the path page.
+- Path ordering is controlled solely by the `nodes` array in the path frontmatter. It is required (non-empty) and must include every guide shown on the path, in the desired order. Use guide `id` or `slug` values.
+- Inline learning links in the path body (e.g., `[[cobra-pose]]`) must appear in the same sequence as `nodes`; a linter enforces presence and ordering, and builds will fail if out of sync.
 
 ## Component Refactoring
 

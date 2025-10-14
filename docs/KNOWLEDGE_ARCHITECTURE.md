@@ -169,3 +169,10 @@ Master your chest lift with [Cobra Pose](:cobra-pose) before attempting faster [
 ```
 
 This keeps links stable even if files are renamed or reorganized.
+
+## Path sequences and ordering
+
+- Each path lives at `src/content/paths/<id>.md` and must declare a non-empty `nodes: []` frontmatter array.
+- `nodes` is the canonical sequence for that path; items are referenced by guide `id` or `slug` and are rendered in the exact order provided.
+- The Path sidebar, previews, and inline `[[...]]` learning-link numbering all derive from `nodes`. There is no alphabetical or automatic graph-based fallback ordering.
+- A linter verifies that each `nodes` entry exists, appears in the path content body as a learning link, and that inline order matches `nodes`.

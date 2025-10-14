@@ -33,7 +33,8 @@ const paths = defineCollection({
     order: z.number().optional(),
     // New typed graph fields
     type: z.literal("path").optional(),
-    nodes: z.array(z.string()).optional().default([]),
+    // Ordering is author-controlled and required; no fallback ordering
+    nodes: z.array(z.string()).min(1),
   }),
 });
 // New: typed collections for concepts and skills

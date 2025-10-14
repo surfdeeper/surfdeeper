@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getOrderedPathItemsForSidebar } from "../utils/path-order";
 
 type Props = {
   pathId: string;
@@ -7,48 +7,10 @@ type Props = {
   title?: string;
 };
 
-const { pathId, nodes = [], title = "Path outline" } = Astro.props as Props;
+const { pathId, title = "Path outline" } = Astro.props as Props;
 
-// Fetch concepts and skills once and build a lookup map by id/slug
-const concepts = (await getCollection(
-  "concepts",
-)) as CollectionEntry<"concepts">[];
-const skills = (await getCollection("skills")) as CollectionEntry<"skills">[];
-const all = [...concepts, ...skills];
-
-const idToEntry = new Map<string, (typeof all)[number]>();
-for (const e of all) {
-  const id = ((e.data as any).id || e.slug) as string;
-  if (!idToEntry.has(id)) idToEntry.set(id, e);
-}
-
-// If explicit nodes provided in the path frontmatter, follow that order.
-// Otherwise, derive items from concepts/skills whose data.paths includes this pathId.
-const derivedIds = all
-  .filter(
-    (e) =>
-      Array.isArray((e.data as any).paths) &&
-      (e.data as any).paths.includes(pathId),
-  )
-  .map((e) => ((e.data as any).id || e.slug) as string)
-  .sort((a, b) => {
-    const ea = idToEntry.get(a)!;
-    const eb = idToEntry.get(b)!;
-    return (ea.data.title || "").localeCompare(eb.data.title || "");
-  });
-
-const orderedIds = nodes.length > 0 ? nodes : derivedIds;
-const items = orderedIds
-  .map((id) => idToEntry.get(id))
-  .filter(Boolean)
-  .map((e) => ({
-    id: ((e!.data as any).id || e!.slug) as string,
-    title: e!.data.title as string,
-    slug: e!.slug as string,
-    type:
-      (e!.data as any).type ||
-      ((e!.collection as string) === "concepts" ? "concept" : "skill"),
-  }));
+// Single source of truth: ordered nodes from path frontmatter
+const items = await getOrderedPathItemsForSidebar(pathId);
 ---
 
 <aside class="path-sidebar" aria-label="{title}">

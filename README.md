@@ -111,6 +111,30 @@ Output structure:
 }
 ```
 
+### Path ordering (single source of truth)
+
+- Each path page in `src/content/paths/<path-id>.md` must define a non-empty `nodes: []` array in frontmatter.
+- The `nodes` array is the only source of truth for the order of concepts and skills shown for that path.
+- Items can be referenced by canonical `id` or by their `slug`; both resolve to the same guide.
+- The Path sidebar and path previews use this order, and inline `[[...]]` learning links inside the path content are auto-numbered to match.
+- There is no fallback alphabetical or graph-derived ordering; omit or mis-order items and the linter/build will fail.
+
+Authoring example:
+
+```yaml
+---
+title: Catching Your First Wave
+description: One fluid sequence from paddle to pop-up.
+nodes:
+  - paddling-efficiency # id or slug
+  - cobra-pose
+  - angling-down-the-line
+  - pop-up
+---
+
+Practice this sequence: [[paddling-efficiency]] → [[cobra-pose]] → [[angling-down-the-line]] → [[pop-up]].
+```
+
 ## Available Scripts
 
 - `npm run dev` - Start the development server
