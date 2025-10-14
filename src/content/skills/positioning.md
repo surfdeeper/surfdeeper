@@ -3,7 +3,7 @@ id: positioning
 title: Positioning
 type: skill
 category: intermediate
-paths: [green-waves]
+paths: [catching-unbroken-waves-]
 ---
 
 Coming soon.
