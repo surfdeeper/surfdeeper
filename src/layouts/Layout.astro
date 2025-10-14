@@ -2,9 +2,7 @@
 import Navigation from "../components/Navigation.astro";
 import HeadMeta from "../components/HeadMeta.astro";
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
-import ThemeToggle from "../components/ThemeToggle.astro";
-import { Image } from "astro:assets";
-import logoV2 from "../assets/logo-v2.png";
+import Footer from "../components/Footer.astro";
 import "../styles/design-system.css";
 import "../styles/theme-dark.css";
 import "../styles/theme-light.css";
@@ -92,71 +90,7 @@ const canonicalURL = `${Astro.site}${path}`;
       )
     }
 
-    <footer class="footer">
-      <div class="footer-container">
-        <div class="footer-logo">
-          <Image
-            src={logoV2}
-            alt="SurfDeeper logo"
-            class="image-logo"
-            width={180}
-            height={108}
-            loading="lazy"
-            format="webp"
-            quality={85}
-          />
-          <span>Surf Deeper</span>
-        </div>
-        <div class="footer-links">
-          <div class="footer-section">
-            <h4>🌊 Ride the Wave</h4>
-            <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/guide">Guide</a></li>
-              <li><a href="/paths">Paths</a></li>
-              <li><a href="/maps">Map</a></li>
-              <li><a href="/gallery">Gallery</a></li>
-              <li><a href="/contribute">Contribute</a></li>
-            </ul>
-          </div>
-          <div class="footer-section">
-            <h4>🏄‍♂️ Drop In</h4>
-            <ul>
-              <li><a href="/contribute">Share Knowledge</a></li>
-              <li><a href="/maps">Add Spots</a></li>
-              <li><a href="/guide">Submit Techniques</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer-disclaimer">
-          <h4>⚠️ Disclaimer</h4>
-          <p>
-            <strong>FOR ENTERTAINMENT AND INFORMATIONAL PURPOSES ONLY.</strong>
-            Surfing is an inherently dangerous activity that carries significant
-            risk of injury or death. Before attempting any surfing activity, consult
-            with your physician and ensure you are in proper physical condition.
-            All activities should be performed under adult supervision and guidance
-            from qualified experts. By using this website, you acknowledge that you
-            assume all risks and waive any claims against Surf Deeper, its contributors,
-            and affiliates for any injuries, damages, or losses that may occur. This
-            website provides no warranties or guarantees of any kind. Use at your
-            own risk.
-          </p>
-        </div>
-        <div class="footer-bottom">
-          <p>&copy; 2024 Surf Deeper. Community-driven surf knowledge.</p>
-          <div class="footer-controls">
-            <ThemeToggle />
-          </div>
-          <p class="data-attribution" aria-label="Data attribution">
-            Weather data by
-            <a href="https://open-meteo.com/" target="_blank" rel="noopener"
-              >Open‑Meteo</a
-            >
-          </p>
-        </div>
-      </div>
-    </footer>
+    <Footer />
     <style>
       body {
         display: flex;
@@ -176,115 +110,6 @@ const canonicalURL = `${Astro.site}${path}`;
       main.full-width {
         max-width: 1200px;
         padding: var(--space-lg) var(--space-md);
-      }
-
-      /* Footer Styles */
-      .main-footer {
-        background-color: var(--color-surface-secondary);
-        border-top: 2px solid var(--color-accent);
-        margin-top: auto;
-      }
-
-      .footer-container {
-        max-width: var(--size-max-width);
-        margin: 0 auto;
-        padding: var(--space-lg);
-      }
-
-      .footer-logo {
-        display: flex;
-        align-items: center;
-        gap: var(--space-sm);
-        margin-bottom: var(--space-lg);
-        color: var(--color-accent);
-        font-weight: var(--font-weight-bold);
-        font-size: var(--font-size-xl);
-      }
-
-      .footer-section h4 {
-        color: var(--color-accent);
-        margin-bottom: var(--space-sm);
-        font-size: var(--font-size-lg);
-      }
-
-      .footer-section ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .footer-section li {
-        margin-bottom: var(--space-sm);
-      }
-
-      .data-attribution a {
-        color: var(--color-primary);
-        text-decoration: underline;
-        text-underline-offset: 2px;
-      }
-
-      .footer-section a {
-        color: var(--color-text-primary);
-        text-decoration: none;
-        transition: color 0.3s ease;
-      }
-
-      .footer-section a:hover {
-        color: var(--color-accent);
-      }
-
-      .footer-disclaimer {
-        background-color: var(--color-surface-primary);
-        border: 2px solid var(--color-surface-secondary);
-        border-radius: var(--border-radius-lg);
-        padding: var(--space-md);
-        margin-bottom: var(--space-lg);
-      }
-
-      .footer-disclaimer h4 {
-        color: var(--color-accent);
-        margin: 0 0 var(--space-sm) 0;
-        font-size: var(--font-size-base);
-        text-align: center;
-      }
-
-      .footer-disclaimer p {
-        color: var(--color-text-primary);
-        margin: 0;
-        font-size: var(--font-size-xs);
-        line-height: var(--line-height-relaxed);
-        text-align: center;
-      }
-
-      .footer-disclaimer strong {
-        color: var(--color-accent);
-        font-weight: var(--font-weight-bold);
-      }
-
-      .footer-bottom {
-        border-top: 1px solid var(--color-border);
-        padding-top: var(--space-4);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--space-4);
-      }
-
-      .footer-bottom p {
-        color: var(--color-text-primary);
-        margin: 0;
-        font-size: var(--font-size-sm);
-      }
-
-      .footer-controls {
-        display: flex;
-        align-items: center;
-      }
-
-      .data-attribution {
-        margin-top: var(--space-2);
-        color: var(--color-text-dim);
-        font-size: var(--font-size-xs);
       }
 
       /* Leaflet Map Dark Theme - Prevent white flicker on tile load */
@@ -319,10 +144,6 @@ const canonicalURL = `${Astro.site}${path}`;
       /* Responsive Design */
       @media (max-width: 768px) {
         main {
-          padding: 1rem;
-        }
-
-        .footer-container {
           padding: 1rem;
         }
       }
