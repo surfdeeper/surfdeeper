@@ -3,7 +3,7 @@ id: kick-outs
 title: Kick-outs
 type: skill
 skillLevel: beginner
-paths: [intermediate]
+paths: [intermediate, catching-unbroken-waves]
 ---
 
 Coming soon.
