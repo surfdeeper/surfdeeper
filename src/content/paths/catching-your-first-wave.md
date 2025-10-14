@@ -15,11 +15,9 @@ nodes:
   - avoid-pearling
 ---
 
-At a glance, practice this sequence: [[paddling-efficiency|paddling technique]] → [[cobra-pose|cobra lift]] → [[angling-down-the-line|angle down the line]] → [[pop-up|pop-up]] → [[avoid-pearling|avoid pearling]].
-
 ## What Makes a Good First Wave?
 
-Catching your first wave isn't about random luck—it's about understanding the **connected flow** from paddling to standing to riding. Think of it as one continuous motion, not isolated steps. Each part flows naturally into the next: paddle position → [[cobra-pose]] → angle → [[pop-up]] → bottom turn.
+Catching your first wave isn't about random luck—it's about understanding the **connected flow** from paddling to standing to riding. Think of it as one continuous motion, not isolated steps. Each part flows naturally into the next, in order.
 
 ### Start on Broken Waves
 
