@@ -19,7 +19,6 @@ const meta = pathMeta.find((t: CollectionEntry<"paths">) => t.slug === id);
 const title = meta?.data.title || id;
 const description = meta?.data.description || "";
 const icon = meta?.data.icon || "";
-const nodes = (meta?.data as any)?.nodes || [];
 let Content: any = null;
 if (meta) {
   const rendered = await meta.render();
@@ -58,7 +57,7 @@ if (meta) {
 
   <div class="content-wrap">
     <div class="sidebar-col" role="complementary">
-      <PathSidebar pathId={id} nodes={nodes} title="On this path" />
+      <PathSidebar pathId={id} title="On this path" />
     </div>
     <div class="main-col" role="main">
       {

@@ -205,71 +205,9 @@ function validateBidirectionalLinks() {
       Array.isArray(fm.data.nodes) ? fm.data.nodes.map(String) : [],
     );
 
-    if (linkedGuides.size === 0) {
-      console.error(
-        `❌ Invariant violated: Path '${pathSlug}' has no inline learning links (expected [[id]] or :id magic links)`,
-      );
-      console.error(
-        `   ↳ Fix: Add at least one [[guide-id]] reference in: ${path.relative(
-          ROOT,
-          pathFile,
-        )}`,
-      );
-      errors++;
-    }
-
-    // Enforce that every node in frontmatter appears as an inline link in content
-    const missingNodes = Array.from(nodeIds).filter(
-      (n) => !linkedGuides.has(n),
-    );
-    if (missingNodes.length > 0) {
-      console.error(
-        `❌ Path '${pathSlug}' frontmatter lists node(s) not referenced inline in content: ${missingNodes.join(
-          ", ",
-        )}`,
-      );
-      console.error(
-        `   ↳ Fix: Include each as [[${missingNodes[0]}]] or [label](:${missingNodes[0]}) in the markdown body`,
-      );
-      errors++;
-    }
-
-    // Enforce inline order matches nodes order
-    if (nodeIds.size > 0 && linkedGuides.size > 0) {
-      const nodesOrder = Array.from(nodeIds);
-      // Map first occurrence position for each node id
-      const firstPos = new Map();
-      for (const id of nodesOrder) {
-        const occ = inlineRefs.find((r) => r.id === id);
-        if (occ) firstPos.set(id, occ.index);
-      }
-      // Only check order when all nodes are present inline
-      if (firstPos.size === nodesOrder.length) {
-        let inOrder = true;
-        for (let i = 1; i < nodesOrder.length; i++) {
-          const prev = firstPos.get(nodesOrder[i - 1]);
-          const curr = firstPos.get(nodesOrder[i]);
-          if (prev > curr) {
-            inOrder = false;
-            break;
-          }
-        }
-        if (!inOrder) {
-          const foundOrder = nodesOrder
-            .slice()
-            .sort((a, b) => firstPos.get(a) - firstPos.get(b));
-          console.error(
-            `❌ Path '${pathSlug}' inline learning links are out of order. Expected order (frontmatter 'nodes'):\n   ${nodesOrder.join(
-              " → ",
-            )}\n   Found order in content:\n   ${foundOrder.join(" → ")}`,
-          );
-          console.error(
-            `   ↳ Fix: Reorder inline references to match 'nodes' sequence, since paths are ordered journeys.`,
-          );
-          errors++;
-        }
-      }
-    }
+    // Inline learning links in path content are optional. We no longer require
+    // any inline learning links, nor that nodes appear inline or in a specific
+    // order. Validation below only checks existence and bidirectional mapping.
 
     // Check each linked guide exists and references this path back
     for (const guideId of linkedGuides) {
@@ -331,12 +269,12 @@ function validateBidirectionalLinks() {
       if (!referencedInPath) {
         const guide = guideMap.get(id);
         console.error(
-          `❌ Missing path reference: Guide '${id}' references path '${pathSlug}', but the path content doesn't reference it (neither in nodes[] nor with [[${id}]])`,
+          `❌ Missing path reference: Guide '${id}' references path '${pathSlug}', but the path doesn't reference it in frontmatter nodes[]`,
         );
         console.error(`   ↳ Path: ${path.relative(ROOT, pathFile)}`);
         console.error(`   ↳ Guide: ${guide?.path}`);
         console.error(
-          `   ↳ Fix: Add '${id}' to 'nodes: []' in the path frontmatter or include [[${id}]] in the path body`,
+          `   ↳ Fix: Add '${id}' to 'nodes: []' in the path frontmatter`,
         );
         errors++;
       }

@@ -19,21 +19,21 @@ Longboarding is surfing's **flowing meditation**—a dance of glide, trim, and g
 
 ### Why Start with a Longboard?
 
-If you're new to surfing, a longboard is often the **ideal first board**. The extra length and volume make paddling easier, catching waves more forgiving, and standing up more stable—giving you more time to focus on fundamentals like [[cobra-pose]] and [[angling-down-the-line]].
+If you're new to surfing, a longboard is often the **ideal first board**. The extra length and volume make paddling easier, catching waves more forgiving, and standing up more stable—giving you more time to focus on fundamentals like cobra pose and angling down the line.
 
-A simple sequence to reinforce: [[cobra-pose|cobra lift]] → [[angling-down-the-line|angle down the line]] → [[avoid-pearling|avoid pearling]] as waves steepen.
+A simple sequence to reinforce: cobra lift → angle down the line → avoid pearling as waves steepen.
 
 ## Core Longboard Skills
 
 ### Positioning and Paddle
 
-The same principles that help you catch your first wave apply to longboarding, but with more emphasis on **glide and momentum**. Master [[cobra-pose|cobra pose]] to transition smoothly from paddle to pop-up, and understand [[angling-down-the-line|angling down the line]] to set your line early and maintain speed.
+The same principles that help you catch your first wave apply to longboarding, but with more emphasis on **glide and momentum**. Master cobra pose to transition smoothly from paddle to pop-up, and understand angling down the line to set your line early and maintain speed.
 
 Longboards excel at catching waves early because of their **length and buoyancy**. This means you can position yourself further outside and catch waves before they steepen—a huge advantage in crowded lineups.
 
 ### Avoiding the Pearling Trap
 
-With all that nose out in front of you, pearling becomes a real concern. Learn [[avoid-pearling]] — and see the focused path [Stop Pearling](:stop-pearling) — by understanding weight distribution, wave timing, and board positioning. Unlike shortboards where you can recover quickly, a pearled longboard can be a slower, wetter disaster.
+With all that nose out in front of you, pearling becomes a real concern. Learn to avoid pearling — and see the focused path Stop Pearling — by understanding weight distribution, wave timing, and board positioning. Unlike shortboards where you can recover quickly, a pearled longboard can be a slower, wetter disaster.
 
 The key is **finding your sweet spot** on the board—not too far forward (pearling risk) and not too far back (losing speed and glide).
 
