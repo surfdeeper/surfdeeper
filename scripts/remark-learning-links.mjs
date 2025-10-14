@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { visit } from "unist-util-visit";
+import { isPlaceholderDoc } from "./shared/is-placeholder.mjs";
 
 const CONCEPTS_DIR = path.resolve(process.cwd(), "src/content/concepts");
 const SKILLS_DIR = path.resolve(process.cwd(), "src/content/skills");
@@ -91,15 +92,22 @@ export default function remarkLearningLinks() {
 
         if (resolved) {
           const num = numberFor(idPart);
+          const isDisabled = !!resolved.placeholder;
+          const hProps = {
+            class: `learning-link${isDisabled ? " is-disabled u-coming-soon" : ""}`,
+            ...(num ? { "data-number": num } : {}),
+            ...(isDisabled
+              ? {
+                  "aria-disabled": "true",
+                  tabindex: -1,
+                  "aria-label": `${label} — coming soon`,
+                }
+              : {}),
+          };
           parts.push({
             type: "link",
-            url: `/${resolved.base}/${resolved.slug}`,
-            data: {
-              hProperties: {
-                class: "learning-link",
-                ...(num ? { "data-number": num } : {}),
-              },
-            },
+            url: isDisabled ? "#" : `/${resolved.base}/${resolved.slug}`,
+            data: { hProperties: hProps },
             children: [{ type: "text", value: label }],
           });
         } else {
@@ -137,7 +145,7 @@ export default function remarkLearningLinks() {
 }
 
 function buildIdMap() {
-  const map = new Map(); // id -> { slug, base }
+  const map = new Map(); // id -> { slug, base, placeholder }
   const alias = new Map(); // alias -> id
   const slugToId = new Map(); // slug -> id
 
@@ -149,24 +157,15 @@ function buildIdMap() {
       } else if (entry.isFile() && entry.name.endsWith(".md")) {
         const slug = path.basename(full, ".md");
         const src = fs.readFileSync(full, "utf8");
-        const m = /^---[\s\S]*?---/m.exec(src);
-        let id = null;
-        if (m) {
-          const fm = m[0];
-          const idMatch = /^id:\s*([^\n#]+)$/m.exec(fm);
-          if (idMatch) id = idMatch[1].trim();
-          const aliasesMatch = /^aliases:\s*\[(.+?)\]/m.exec(fm);
-          if (aliasesMatch) {
-            const list = aliasesMatch[1]
-              .split(",")
-              .map((s) => s.replace(/["'\s]/g, "").trim())
-              .filter(Boolean);
-            for (const a of list) alias.set(a, id || slug);
-          }
-        }
-        const key = (id || slug).trim();
-        if (!map.has(key)) map.set(key, { slug, base });
-        if (!slugToId.has(slug)) slugToId.set(slug, key);
+        const parsed = matter(src);
+        const id = (parsed.data?.id || slug).toString().trim();
+        const aliases = Array.isArray(parsed.data?.aliases)
+          ? parsed.data.aliases.map((s) => String(s).trim()).filter(Boolean)
+          : [];
+        for (const a of aliases) alias.set(a, id);
+        const placeholder = isPlaceholderDoc(parsed.content || "");
+        if (!map.has(id)) map.set(id, { slug, base, placeholder });
+        if (!slugToId.has(slug)) slugToId.set(slug, id);
       }
     }
   }

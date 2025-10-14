@@ -228,6 +228,8 @@ if (meta) {
       border-bottom-color: var(--color-accent);
     }
 
+    /* Disabled behavior now handled by global .is-disabled and .u-coming-soon */
+
     /* SSR number badge to correlate with sidebar order */
     .thread-body :global(.learning-link[data-number])::before {
       content: attr(data-number);

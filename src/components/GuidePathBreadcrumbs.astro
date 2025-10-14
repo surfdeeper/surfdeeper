@@ -107,9 +107,16 @@ if (guidePaths && guidePaths.length > 0) {
           <nav class="crumbs" aria-label={`Path progression: ${p.title}`}>
             {p.sequence.map((s, idx) => (
               <span class={`crumb${s.isCurrent ? " is-current" : ""}`}>
-                <a href={s.url} aria-current={s.isCurrent ? "page" : undefined}>
+                <a
+                  href={s.isPlaceholder ? "#" : s.url}
+                  class={s.isPlaceholder ? "is-disabled" : undefined}
+                  aria-disabled={s.isPlaceholder ? "true" : undefined}
+                  tabindex={s.isPlaceholder ? -1 : undefined}
+                  aria-current={s.isCurrent ? "page" : undefined}
+                >
                   {s.title}
                 </a>
+                {s.isPlaceholder && <span class="soon"> (coming soon)</span>}
                 {idx < p.sequence.length - 1 && (
                   <span class="sep" aria-hidden="true">
                     →
@@ -181,6 +188,14 @@ if (guidePaths && guidePaths.length > 0) {
     color: var(--color-accent);
     font-weight: var(--font-weight-semibold);
     border-bottom-color: var(--color-accent-transparent);
+  }
+
+  /* Disabled placeholder items use global .is-disabled styles */
+
+  .crumb .soon {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-style: italic;
   }
 
   .sep {

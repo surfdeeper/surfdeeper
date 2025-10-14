@@ -1,16 +1,27 @@
 ---
 import { getOrderedPathItemsForSidebar } from "../utils/path-order";
+import { loadGuides, buildGraph } from "../utils/knowledge-graph";
 
 type Props = {
   pathId: string;
-  nodes?: string[];
   title?: string;
 };
 
 const { pathId, title = "Path outline" } = Astro.props as Props;
 
-// Single source of truth: ordered nodes from path frontmatter
-const items = await getOrderedPathItemsForSidebar(pathId);
+// Use ordered nodes from path frontmatter (id-or-slug resolved) as single source of truth
+const baseItems = await getOrderedPathItemsForSidebar(pathId);
+
+// Centralized placeholder detection via knowledge graph
+const allGuides = await loadGuides();
+const graph = buildGraph(allGuides);
+const placeholderById = new Map<string, boolean>();
+for (const n of graph.nodes) placeholderById.set(n.id, !!n.isPlaceholder);
+
+const items = baseItems.map((e) => ({
+  ...e,
+  isPlaceholder: placeholderById.get(e.id) === true,
+}));
 ---
 
 <aside class="path-sidebar" aria-label="{title}">
@@ -23,11 +34,17 @@ const items = await getOrderedPathItemsForSidebar(pathId);
         <ol class="outline">
           {items.map((it) => (
             <li>
-              <a href={`/${it.type}/${it.slug}`} class="outline-link">
+              <a
+                href={it.isPlaceholder ? "#" : `/${it.type}/${it.slug}`}
+                class={`outline-link${it.isPlaceholder ? " is-disabled" : ""}`}
+                aria-disabled={it.isPlaceholder ? "true" : undefined}
+                tabindex={it.isPlaceholder ? -1 : undefined}
+              >
                 <span class="kicker">
                   {it.type === "concept" ? "Concept" : "Skill"}
                 </span>
                 <span class="label">{it.title}</span>
+                {it.isPlaceholder && <span class="soon">coming soon</span>}
               </a>
             </li>
           ))}
@@ -117,6 +134,13 @@ const items = await getOrderedPathItemsForSidebar(pathId);
       grid-column: 2;
       font-size: var(--font-size-md);
       font-weight: var(--font-weight-semibold);
+    }
+
+    .soon {
+      grid-column: 2;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      font-style: italic;
     }
   </style>
 </aside>
