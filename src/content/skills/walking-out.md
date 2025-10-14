@@ -3,7 +3,7 @@ id: walking-out
 title: Walking Out
 type: skill
 skillLevel: beginner
-paths: [catching-your-first-wave]
+paths: [beginner]
 aliases: [whitewater-entry, carry-to-waist-deep]
 ---
 

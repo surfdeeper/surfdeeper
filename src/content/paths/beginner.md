@@ -1,7 +1,7 @@
 ---
-# Note: slug is `catching-your-first-wave` by filename
+# Note: slug is `beginner` by filename
 # Title and description power the Paths UI
-id: catching-your-first-wave
+id: beginner
 title: Catching Your First Wave
 description: One fluid sequence from paddle to pop-up to first bottom turn—start on broken waves, connect the motions, and build flow.
 icon: 🏄

@@ -3,7 +3,7 @@ id: stance
 title: Surf Stance
 type: skill
 skillLevel: beginner
-paths: [catching-your-first-wave]
+paths: [beginner]
 ---
 
 Coming soon.

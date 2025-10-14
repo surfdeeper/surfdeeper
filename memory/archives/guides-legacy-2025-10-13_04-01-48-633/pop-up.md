@@ -10,7 +10,7 @@ order: 6
 id: pop-up
 category: core-skills
 kind: concept
-paths: [catching-your-first-wave]
+paths: [beginner]
 ---
 
 # The Pop-Up

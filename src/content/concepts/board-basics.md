@@ -2,7 +2,7 @@
 id: board-basics
 title: Board Basics
 type: concept
-paths: [catching-your-first-wave]
+paths: [beginner]
 ---
 
 1. Board Familiarity & Setup

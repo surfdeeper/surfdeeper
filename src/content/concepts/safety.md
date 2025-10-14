@@ -2,7 +2,7 @@
 id: safety
 title: Safety Basics
 type: concept
-paths: [catching-your-first-wave]
+paths: [beginner]
 level: beginner
 aliases: [surf-safety, water-safety]
 ---
