@@ -10,7 +10,7 @@ order: 5
 id: avoid-pearling
 category: core-skills
 kind: concept
-paths: [longboarding, catching-your-first-wave]
+paths: [longboarding, beginner]
 ---
 
 # Avoiding Pearling
