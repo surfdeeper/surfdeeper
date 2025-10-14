@@ -4,7 +4,7 @@ title: The Pop-Up
 type: skill
 skillLevel: beginner
 dependsOn: [cobra-pose, paddling-efficiency]
-related: []
+related: [stance]
 paths: [beginner]
 description: >-
   Master the fundamental pop-up technique — from lying to standing on your board.
@@ -24,22 +24,21 @@ The pop-up is the fundamental movement that gets you from lying on your board to
 ### 1. Starting Position
 
 - Lie flat on your board with your chest up
-- Hands positioned under your shoulders
-- Feet together, toes pointed
+- Hands positioned on board, by your ribs
+- Feet together
 - Look forward, not down
 
-### 2. The Push-Up
+### 2. Cobra Pose (setup)
 
-- Push up with your hands while keeping your chest up
-- Don't arch your back - keep your core engaged
-- This creates space for your feet to come through
+- Press through your hands with your chest up to create space for your feet
+- Keep your core engaged; avoid overarching your lower back
 
 ### 3. Bring Your Feet Up
 
 - In one smooth motion, bring your back foot to where your knees were
-- Then bring your front foot to the middle of the board
-- Your back foot should be perpendicular to the stringer
-- Your front foot should be at a 45-degree angle
+- Then bring your front foot to the middle of the board, between where your hands were
+
+Tip: Don’t jump or stomp your feet — calmly slide them into position to keep the board from bouncing and to stay balanced.
 
 ### 4. Stand Up
 
@@ -55,11 +54,6 @@ The pop-up is the fundamental movement that gets you from lying on your board to
 - Problem: Bringing your knees up first, then trying to get your feet under you
 - Fix: Practice the motion on land - hands, then feet, then stand
 
-### The "Belly Flop"
-
-- Problem: Landing on your stomach instead of your feet
-- Fix: Focus on bringing your feet to the right position before standing
-
 ### Looking Down
 
 - Problem: Looking at your feet or the board
@@ -69,15 +63,13 @@ The pop-up is the fundamental movement that gets you from lying on your board to
 
 ### On Land
 
-1. Pop-up Practice: Do 20 pop-ups on your living room floor
-2. Balance Board: Practice standing on a balance board
-3. Yoga: Warrior poses help with the stance
+Pop-up Practice: Do repetitions of pop-ups on your living room floor or a yoga mat marked with tape for the "stringer"
 
 ### In the Water
 
-1. White Water Practice: Start in the white water
-2. Timing: Practice the timing without worrying about the wave
-3. Repetition: Do it over and over until it's muscle memory
+White Water Practice: Practice in the white water until it is automatic
+
+Partner-Assisted: During calm water or lulls, have a friend hold the nose of your board steady while you practice a smooth pop-up and sliding your feet into position. Focus on balance and calm movements without the wave pushing you.
 
 ## Pro Tips
 
@@ -85,6 +77,7 @@ The pop-up is the fundamental movement that gets you from lying on your board to
 - Don't Rush: Take your time to get the technique right
 - Practice Daily: Even 10 minutes a day will help
 - Film Yourself: Record your pop-ups to see what you're doing wrong
+- Slide, don’t stomp: Sliding your feet up is gentler on the board and helps you land balanced.
 
 ## Equipment
 
