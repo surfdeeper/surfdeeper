@@ -5,7 +5,7 @@ type: skill
 skillLevel: beginner
 dependsOn: [cobra-pose, paddling-efficiency]
 related: [stance]
-paths: [beginner, catching-unbroken-waves]
+paths: [beginner, takeoff-sequence, catching-unbroken-waves]
 description: >-
   Master the fundamental pop-up technique — from lying to standing on your board.
 
