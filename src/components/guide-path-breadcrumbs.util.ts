@@ -4,7 +4,13 @@ export type PathCrumb = {
   id: string;
   title: string;
   icon?: string;
-  sequence: { id: string; title: string; url: string; isCurrent: boolean }[];
+  sequence: {
+    id: string;
+    title: string;
+    url: string;
+    isCurrent: boolean;
+    isPlaceholder?: boolean;
+  }[];
 };
 
 export function orderByLeadsTo(sub: GuideGraph): GuideNode[] {
@@ -68,6 +74,7 @@ export function computePathCrumbs(
       title: n.title,
       url: n.url,
       isCurrent: n.id === guideId,
+      isPlaceholder: n.isPlaceholder,
     }));
     const meta = metaById.get(pathId);
     return {

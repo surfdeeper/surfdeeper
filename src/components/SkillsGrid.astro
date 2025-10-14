@@ -51,9 +51,12 @@ const skills = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
               <div class="card-header">
                 <h3 class="card-title heading heading-sm">
                   <a
-                    class={`card-link${disabled ? " is-disabled" : ""}`}
+                    class={`card-link${disabled ? " is-disabled u-coming-soon" : ""}`}
                     href={disabled ? "#" : href}
                     aria-disabled={disabled ? "true" : undefined}
+                    aria-label={
+                      disabled ? `${s.data.title} — coming soon` : undefined
+                    }
                     tabindex={disabled ? -1 : undefined}
                   >
                     {s.data.title}
