@@ -8,66 +8,55 @@ icon: 🏄
 order: 0
 type: path
 nodes:
+  - board-parts
+  - leash-safety
+  - surf-etiquette
+  - carrying-board
+  - whitewater-entry
+  - paddling-posture
   - paddling-efficiency
   - cobra-pose
-  - angling-down-the-line
   - pop-up
+  - ride-straight
+  - safe-stopping
+  - re-mounting
   - avoid-pearling
+  - pop-up-drills
+  - turning-in-whitewater
+  - catching-unbroken-waves
 ---
 
 ## What Makes a Good First Wave?
 
-Catching your first wave isn't about random luck—it's about understanding the **connected flow** from paddling to standing to riding. Think of it as one continuous motion, not isolated steps. Each part flows naturally into the next, in order.
+Catching your first wave isn’t about luck—it’s about understanding the connected flow from board setup to paddling, pop-up, and riding straight toward shore. Each step builds on the previous, forming a safe, repeatable sequence.
 
-### Start on Broken Waves
+1. Board Familiarity & Setup
+   - Before entering the water, learn your board and equipment:
+     - Identify board parts: [[board-parts|nose, tail, deck, rails, fins]].
+     - Attach and wear the [[leash-safety|leash]] properly.
+     - Learn basic [[surf-etiquette|etiquette]] — never ditch your board and respect others in the water.
 
-We recommend starting on **already broken waves**, similar to the approach Surf Simply uses. These waves remove unpredictability while letting you focus on timing, balance, and the flow of your movement. Once you're confident catching broken waves, you'll naturally progress to unbroken waves where speed, positioning, and wave reading become critical.
+2. Entering the Water Safely
+   - Hold the board securely and orient the [[carrying-board|nose toward the ocean]].
+   - Walk out to waist-deep water, handling small incoming waves with control [[whitewater-entry|whitewater entry]].
 
-## The Takeoff Sequence
+3. Finding Trim & Paddling Basics
+   - Lie flat, centered on the board, with proper [[paddling-posture|body position]] for balance.
+   - Begin short, smooth strokes as the wave approaches using [[paddling-efficiency|efficient paddling]] techniques.
 
-The takeoff is **one fluid motion**, not a checklist. Here's how the pieces connect:
+4. Whitewater Takeoff Flow
+   - Use the [[cobra-pose|cobra lift]] as the wave lifts you—transition smoothly into the pop-up.
+   - Perform the [[pop-up|pop-up]] into a balanced stance.
+   - Ride straight toward shore — focus on [[ride-straight|straight-line control]] rather than turning.
 
-### 1. Strategic Paddling
+5. Safe Stopping & Recovery
+   - Drop to knees or sit to safely stop the board [[safe-stopping|safe stopping]].
+   - Maintain board control and remount as needed [[re-mounting|remounting]].
 
-Learn proper [[paddling-efficiency|paddling technique]] to position yourself where the wave will carry you. Paddling isn't about brute force—it's about **strategic positioning**. Over-paddling exhausts you and puts you in the wrong spot, often resulting in the wave breaking on top of you.
+6. Common Fixes & Drills
+   - Adjust body position to avoid [[avoid-pearling|pearling]] and maintain speed.
+   - Practice the paddle-to-pop-up flow on land or in small waves [[pop-up-drills|practice drills]].
 
-> **Key insight**: The phrase "catching a wave" is slightly misleading. You don't chase waves aggressively; you align with them and let them carry you.
-
-### 2. The Cobra Lift
-
-As the wave begins to lift you, use [[cobra-pose|cobra pose]] to press into the board and raise your chest smoothly. This subtle lift is your transition from paddling into the pop-up—it's not a separate move, it's the **bridge** between phases.
-
-### 3. Angle & Pop-Up
-
-Master [[angling-down-the-line|angling down the line]] to match the wave's direction as you rise. The [[pop-up|pop-up]] flows directly from your cobra lift and paddle momentum. Understanding the popping mechanics helps you move smoothly rather than mechanically.
-
-Your body should flow from the chest lift directly into your feet finding their place on the board—**no pause, no hesitation**.
-
-### 4. Into the Bottom Turn
-
-Once upright, your momentum naturally guides the board into a bottom turn. This isn't an afterthought—it's the **natural extension** of your takeoff's flow.
-
-## Common Challenges
-
-Even with perfect flow, takeoffs can be tricky. Here's how to troubleshoot without oversimplifying:
-
-### Pearling (Nose Dives)
-
-Learn to [[avoid-pearling|avoid pearling]] — and see the focused path [Stop Pearling](:stop-pearling) — by understanding **all the variables**: board length, speed, timing, position, and angle. Simple advice like "lean back more" might fix pearling but can stall your board if speed is lacking. The solution is rarely a single tweak—it's finding the right balance between speed, angle, and weight distribution.
-
-### Late Catches
-
-If you're consistently behind the wave, check your **positioning and paddle timing** rather than just paddling harder. Remember: the wave should catch you, not the other way around.
-
-### Stalling or Falling Off
-
-Angling and weight distribution are crucial. Too far forward risks pearling; too far back causes stalling. The solution is finding the **right flow** between speed, angle, and weight.
-
-## Key Principles
-
-1. **Flow over steps** – The takeoff is one continuous motion, not disconnected parts
-2. **Position over power** – Strategic paddling beats aggressive chasing
-3. **Start simple** – Master broken waves before progressing to unbroken
-4. **Holistic troubleshooting** – Avoid oversimplified single-fix solutions
-
-Master the connected flow, and your first rides transform from lucky accidents into natural extensions of your movement in the water.
+7. Next Step Pathways
+   - Progress to [[turning-in-whitewater|turning in whitewater]] to learn steering and directional control.
+   - Later, move to [[catching-unbroken-waves|catching unbroken waves]] to combine takeoff with wave reading and positioning.
