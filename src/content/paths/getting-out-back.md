@@ -4,7 +4,15 @@ description: Learn the strategies and skills to reach the lineup efficiently and
 icon: 🏁
 order: 20
 type: path
-nodes: [paddling-efficiency, paddling-posture, breath-and-relaxation]
+nodes:
+  [
+    paddling-efficiency,
+    paddling-posture,
+    breath-and-relaxation,
+    punch-through,
+    duck-dive,
+    turtle-roll,
+  ]
 ---
 
 Reaching the lineup quickly keeps energy for wave riding. Combine smart positioning with the right technique for conditions and board type.
@@ -14,6 +22,11 @@ Build this base: [[paddling-efficiency|paddling efficiency]] to cover distance, 
 ## Choose the Right Technique
 
 Shortboards excel with duck dives. Longboards and funboards rely on turtle rolls and timing. Use what fits the board and moment.
+
+### Whitewater: Punch Through (Basic)
+
+- When it’s too shallow or too foamy to dive, [[punch-through|punch through]] the whitewater
+- Time for the lull in energy, keep speed, lower your chest, and push through the foam
 
 ### Shortboards: Duck Dive
 
@@ -35,4 +48,4 @@ Shortboards excel with duck dives. Longboards and funboards rely on turtle rolls
 
 1. Refine paddling mechanics in flat water
 2. Add angled paddling and board control
-3. Drill duck dives or turtle rolls for your board
+3. Drill [[duck-dive]] (shortboards), [[turtle-roll]] (longboards), and [[punch-through]] for whitewater
