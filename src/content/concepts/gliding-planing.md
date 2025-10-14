@@ -6,7 +6,7 @@ level: beginner
 dependsOn: [paddling-posture, paddling-efficiency, feeling-the-wave]
 leadsTo: [angling-down-the-line, pop-up, trimming-and-speed]
 related: [avoid-pearling]
-paths: [takeoff-sequence]
+paths: [takeoff-sequence, science-of-surfing]
 aliases: [glide, planing, finding-glide, feeling-glide]
 description: >-
   Feel the exact moment your board releases and starts to plane — and use that sensation to time your last strokes and pop-up.
