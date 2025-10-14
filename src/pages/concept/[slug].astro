@@ -26,55 +26,7 @@ const data = entry.data as any;
 const currentId = ((data.id || entry.slug) as string).trim();
 const guidePaths: string[] = Array.isArray(data.paths) ? data.paths : [];
 
-// Build related graph links across concepts + skills
-const skills = await getCollection("skills");
-const all = [...concepts, ...skills];
-const idToEntry = new Map<string, (typeof all)[number]>();
-for (const e of all) {
-  const id = ((e.data as any).id || e.slug) as string;
-  if (!idToEntry.has(id)) idToEntry.set(id, e);
-}
-
-type RelatedLink = { id: string; title: string; slug: string; type: string };
-const mapIds = (ids?: string[]): RelatedLink[] =>
-  (ids || [])
-    .map((id) => idToEntry.get(id))
-    .filter(Boolean)
-    .map((e: any) => ({
-      id: ((e!.data as any).id || e!.slug) as string,
-      title: e!.data.title,
-      slug: e!.slug,
-      type: (e!.data as any).type || (e!.collection as string),
-    }));
-
-const prerequisites = mapIds(data.dependsOn);
-// Build reverse "leads to" links: any entry that dependsOn this currentId
-const entryToLink = (e: any): RelatedLink => ({
-  id: ((e!.data as any).id || e!.slug) as string,
-  title: e!.data.title,
-  slug: e!.slug,
-  type: (e!.data as any).type || (e!.collection as string),
-});
-const reverseLeads: RelatedLink[] = all
-  .filter((e: any) => {
-    const deps = (e.data as any)?.dependsOn as string[] | undefined;
-    if (!Array.isArray(deps)) return false;
-    const norm = deps
-      .filter((d) => typeof d === "string")
-      .map((d) => d.trim().toLowerCase());
-    const idCandidate = currentId.trim().toLowerCase();
-    const slugCandidate = entry.slug.trim().toLowerCase();
-    return norm.includes(idCandidate) || norm.includes(slugCandidate);
-  })
-  .map(entryToLink);
-const leadsTo = (() => {
-  const combined = [...mapIds(data.leadsTo), ...reverseLeads].filter(
-    (l) => l.id !== currentId,
-  );
-  const byId = new Map<string, RelatedLink>();
-  for (const l of combined) if (!byId.has(l.id)) byId.set(l.id, l);
-  return Array.from(byId.values());
-})();
+// Delegate related graph link computation to the GraphLinks component
 ---
 
 <Layout
@@ -99,7 +51,12 @@ const leadsTo = (() => {
       )
     }
 
-    <GraphLinks prerequisites={prerequisites} leadsTo={leadsTo} />
+    <GraphLinks
+      currentId={currentId}
+      slug={entry.slug}
+      dependsOnIds={data.dependsOn}
+      leadsToIds={data.leadsTo}
+    />
   </article>
 
   <style>
