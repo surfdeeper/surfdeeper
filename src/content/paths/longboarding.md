@@ -12,6 +12,7 @@ nodes:
   - angling-down-the-line
   - avoid-pearling
   - kneeling-paddle
+  - shuffle-stepping
   - turning-on-longboard
   - cross-stepping
 ---
