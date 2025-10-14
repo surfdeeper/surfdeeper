@@ -43,18 +43,26 @@ const headingRegex = /^#{1,6}\s+(.+)$/gm;
 for (const guide of allGuides) {
   // Typed entries are only concepts/skills; no section index pages here
 
-  // Derive section from frontmatter category
-  let sectionSlug = (guide.data as any).category as string | undefined;
-  if (!sectionSlug) continue;
+  // Derive section from frontmatter category; fallback to collection name
+  // so uncategorized entries (e.g., concepts like Types of Waves) still appear.
+  let sectionSlug =
+    ((guide.data as any).category as string | undefined) || guide.collection;
 
   const base = guide.collection === "skills" ? "skill" : "concept";
   const guideLink = `/${base}/${guide.slug}`;
   const guideTitle = guide.data.title;
+  const collectionLabelMap: Record<string, string> = {
+    concepts: "Concepts",
+    skills: "Skills",
+  };
+
   const sectionLabel =
+    collectionLabelMap[sectionSlug] ||
     (sectionSlug || "")
       .split("-")
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ") || sectionSlug;
+      .join(" ") ||
+    sectionSlug;
 
   // Get the raw markdown body
   const body = guide.body;
