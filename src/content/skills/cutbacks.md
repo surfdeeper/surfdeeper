@@ -7,7 +7,7 @@ description: >-
   Master the cutback to stay in the pocket and maintain position on the wave.
 
 
-paths: [core]
+paths: [intermediate]
 ---
 
 # Cutbacks
