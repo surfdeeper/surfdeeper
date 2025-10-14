@@ -1,0 +1,71 @@
+---
+import GuidePathBreadcrumbs from "./GuidePathBreadcrumbs.astro";
+
+interface Props {
+  guideId: string;
+  guidePaths: string[];
+}
+
+const { guideId, guidePaths } = Astro.props as Props;
+---
+
+{
+  guidePaths && guidePaths.length > 0 && (
+    <section class="sidebar-card" aria-labelledby="sidebar-paths-heading">
+      <h2 id="sidebar-paths-heading" class="card-title">
+        Paths
+      </h2>
+
+      <ul class="path-list">
+        {guidePaths.map((p) => (
+          <li>
+            <a href={`/paths/${p}`}>{p}</a>
+          </li>
+        ))}
+      </ul>
+
+      <details class="details">
+        <summary class="summary">View full path breadcrumbs</summary>
+        <div class="details-content">
+          <GuidePathBreadcrumbs guideId={guideId} guidePaths={guidePaths} />
+        </div>
+      </details>
+    </section>
+  )
+}
+
+<style>
+  .sidebar-card {
+    border: 1px solid var(--color-border);
+    padding: var(--space-4);
+  }
+  .card-title {
+    font-size: var(--font-size-lg);
+    margin: 0 0 var(--space-3) 0;
+    color: var(--color-text);
+  }
+  .path-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3) 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .path-list a {
+    text-decoration: none;
+    color: var(--color-accent);
+  }
+  .path-list a:hover {
+    text-decoration: underline;
+  }
+  .details {
+    margin-top: var(--space-2);
+  }
+  .summary {
+    cursor: pointer;
+    color: var(--color-text-muted);
+  }
+  .details-content {
+    margin-top: var(--space-3);
+  }
+</style>

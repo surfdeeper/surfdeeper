@@ -1,0 +1,84 @@
+---
+import GraphLinks from "./GraphLinks.astro";
+
+interface Props {
+  currentId: string;
+  slug: string;
+  dependsOnIds?: string[];
+  leadsToIds?: string[];
+}
+
+const {
+  currentId,
+  slug,
+  dependsOnIds = [],
+  leadsToIds = [],
+} = Astro.props as Props;
+
+const prereqCount = Array.isArray(dependsOnIds) ? dependsOnIds.length : 0;
+const leadsCount = Array.isArray(leadsToIds) ? leadsToIds.length : 0;
+---
+
+<section class="sidebar-card" aria-labelledby="sidebar-graph-heading">
+  <h2 id="sidebar-graph-heading" class="card-title">Related</h2>
+  <div class="counts">
+    <span class="count"
+      ><strong>{prereqCount}</strong> prerequisite{
+        prereqCount === 1 ? "" : "s"
+      }</span
+    >
+    <span class="sep" aria-hidden="true">·</span>
+    <span class="count"
+      ><strong>{leadsCount}</strong> next topic{
+        leadsCount === 1 ? "" : "s"
+      }</span
+    >
+  </div>
+
+  <details class="details">
+    <summary class="summary">See full relationships</summary>
+    <div class="details-content">
+      <GraphLinks
+        currentId={currentId}
+        slug={slug}
+        dependsOnIds={dependsOnIds}
+        leadsToIds={leadsToIds}
+      />
+    </div>
+  </details>
+</section>
+
+<style>
+  .sidebar-card {
+    border: 1px solid var(--color-border);
+    padding: var(--space-4);
+  }
+  .card-title {
+    font-size: var(--font-size-lg);
+    margin: 0 0 var(--space-3) 0;
+    color: var(--color-text);
+  }
+  .counts {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+  .count strong {
+    color: var(--color-text);
+  }
+  .sep {
+    opacity: 0.6;
+  }
+  .details {
+    margin-top: var(--space-2);
+  }
+  .summary {
+    cursor: pointer;
+    color: var(--color-text-muted);
+  }
+  .details-content {
+    margin-top: var(--space-3);
+  }
+</style>
