@@ -1,0 +1,240 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+import { Image } from "astro:assets";
+import logoV2 from "../assets/logo-v2.png";
+---
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-logo">
+      <Image
+        src={logoV2}
+        alt="SurfDeeper logo"
+        class="image-logo"
+        width={180}
+        height={108}
+        loading="lazy"
+        format="webp"
+        quality={85}
+      />
+      <span>Surf Deeper</span>
+    </div>
+    <div class="footer-links">
+      <div class="footer-section">
+        <h4>🌊 Ride the Wave</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/guide">Guide</a></li>
+          <li><a href="/paths">Paths</a></li>
+          <li><a href="/maps">Map</a></li>
+          <li><a href="/gallery">Gallery</a></li>
+          <li><a href="/contribute">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>🏄‍♂️ Drop In</h4>
+        <ul>
+          <li><a href="/contribute">Share Knowledge</a></li>
+          <li><a href="/maps">Add Spots</a></li>
+          <li><a href="/guide">Submit Techniques</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-disclaimer">
+      <h4>⚠️ Disclaimer</h4>
+      <p>
+        <strong>FOR ENTERTAINMENT AND INFORMATIONAL PURPOSES ONLY.</strong>
+        Surfing is an inherently dangerous activity that carries significant risk
+        of injury or death. Before attempting any surfing activity, consult with
+        your physician and ensure you are in proper physical condition. All activities
+        should be performed under adult supervision and guidance from qualified experts.
+        By using this website, you acknowledge that you assume all risks and waive
+        any claims against Surf Deeper, its contributors, and affiliates for any
+        injuries, damages, or losses that may occur. This website provides no warranties
+        or guarantees of any kind. Use at your own risk.
+      </p>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Surf Deeper. Community-driven surf knowledge.</p>
+      <div class="footer-controls">
+        <ThemeToggle />
+      </div>
+      <p class="data-attribution" aria-label="Data attribution">
+        Weather data by
+        <a href="https://open-meteo.com/" target="_blank" rel="noopener"
+          >Open‑Meteo</a
+        >
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* Footer root and container */
+  .footer {
+    background-color: var(--color-surface-secondary);
+    border-top: 2px solid var(--color-accent);
+    margin-top: auto;
+    width: 100%;
+  }
+
+  .footer-container {
+    max-width: var(--size-max-width);
+    margin: 0 auto;
+    padding: var(--space-lg);
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  /* Top row: brand + links (desktop) */
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-accent);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
+  }
+
+  .footer-links {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .footer-section h4 {
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-lg);
+  }
+
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-section li {
+    margin-bottom: var(--space-sm);
+  }
+
+  .footer-section a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-section a:hover {
+    color: var(--color-accent);
+  }
+
+  /* Disclaimer card */
+  .footer-disclaimer {
+    background-color: var(--color-surface-primary);
+    border: 2px solid var(--color-surface-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-md);
+  }
+
+  .footer-disclaimer h4 {
+    color: var(--color-accent);
+    margin: 0 0 var(--space-sm) 0;
+    font-size: var(--font-size-base);
+    text-align: center;
+  }
+
+  .footer-disclaimer p {
+    color: var(--color-text-primary);
+    margin: 0;
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-relaxed);
+    text-align: center;
+  }
+
+  .footer-disclaimer strong {
+    color: var(--color-accent);
+    font-weight: var(--font-weight-bold);
+  }
+
+  /* Bottom bar */
+  .footer-bottom {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .footer-bottom p {
+    color: var(--color-text-primary);
+    margin: 0;
+    font-size: var(--font-size-sm);
+  }
+
+  .footer-controls {
+    display: flex;
+    align-items: center;
+  }
+
+  .data-attribution {
+    margin-top: var(--space-2);
+    color: var(--color-text-dim);
+    font-size: var(--font-size-xs);
+  }
+
+  .data-attribution a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Responsive layout */
+  @media (min-width: 900px) {
+    .footer-container {
+      grid-template-columns: 1fr 2fr; /* brand | links */
+      grid-template-areas:
+        "brand links"
+        "disclaimer disclaimer"
+        "bottom bottom";
+      align-items: start;
+    }
+
+    .footer-logo {
+      grid-area: brand;
+    }
+    .footer-links {
+      grid-area: links;
+    }
+    .footer-disclaimer {
+      grid-area: disclaimer;
+    }
+    .footer-bottom {
+      grid-area: bottom;
+    }
+
+    .footer-links {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 899px) {
+    .footer-container {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-logo {
+      margin-bottom: var(--space-md);
+    }
+
+    .footer-links {
+      grid-template-columns: 1fr; /* stack sections on mobile */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .footer-container {
+      padding: 1rem;
+    }
+  }
+</style>
