@@ -30,6 +30,13 @@ You’ll spend most of your session paddling. Efficient technique saves energy, 
 - Quiet, streamlined body; legs together and relaxed
 - Let the board plane; avoid pressing the nose down
 
+> Board-type nuance
+>
+> - Longboards (especially for beginners): keep the nose close to the water — around an inch above or just touching. If it’s riding high, slide forward; if it’s starting to bury, slide back or add a touch of cobra.
+> - Shortboards: keep the board essentially flat at a slight planing angle. Don’t chase a visible nose lift — maintain a neutral, level glide and let the rocker and speed keep the nose clear.
+
+See also: [Board Trim 101](:board-trim)
+
 ## The Breathing Connection
 
 - Match breath to stroke rhythm to stay relaxed and powerful

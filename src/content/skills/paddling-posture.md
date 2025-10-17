@@ -19,3 +19,10 @@ Good paddling posture keeps your board trimming flat and your shoulders happy.
 - Gentle hip pressure to keep the nose from pearling
 
 Focus on feeling the board plane rather than forcing it down into the water.
+
+> Board-type nuance
+>
+> - Longboard beginners: aim for the nose to skim the surface — roughly ~1 inch above or even feathering the water. If the nose is way up, you’re probably too far back and plowing instead of gliding.
+> - Shortboards: think “flat and planing.” Keep a light sternum lift so the board runs level; don’t try to hold the nose up — the rocker already handles that.
+
+See also: [Board Trim 101](:board-trim)
