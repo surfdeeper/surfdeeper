@@ -16,6 +16,13 @@ description: >-
 
 Pearling is when your board’s nose dives under water. It’s usually caused by being too far forward, too slow, or taking off too late so the wave grabs the nose before the tail.
 
+> Board-type nuance
+>
+> - Longboards: keep the nose close to the water — around an inch above or barely skimming — while paddling in. Micro‑adjust forward/back to stay in glide without plowing or burying the nose.
+> - Shortboards: prioritize a flat, planing trim with a light sternum lift. Don’t try to visibly lift the nose; instead, get speed early and set your down-the-line angle.
+
+See also: [Board Trim 101](:board-trim)
+
 ## The Scoot Back Technique
 
 Scooting back moves weight off the nose to prevent pearling.

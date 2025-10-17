@@ -35,6 +35,8 @@ The same principles that help you catch your first wave apply to longboarding, b
 
 Longboards excel at catching waves early because of their **length and buoyancy**. This means you can position yourself further outside and catch waves before they steepen—a huge advantage in crowded lineups.
 
+> New longboarders: a useful trim cue while paddling is to keep the nose just skimming the surface — roughly ~1 inch above or feathering the water. It helps you find glide and avoid plowing. This cue isn’t meant for shortboards, where a neutral, flat planing angle is the target.
+
 ### Avoiding the Pearling Trap
 
 With all that nose out in front of you, pearling becomes a real concern. Learn to avoid pearling — and see the focused path Stop Pearling — by understanding weight distribution, wave timing, and board positioning. Unlike shortboards where you can recover quickly, a pearled longboard can be a slower, wetter disaster.
