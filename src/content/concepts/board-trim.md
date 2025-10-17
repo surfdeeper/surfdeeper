@@ -36,6 +36,12 @@ Finding trim is the foundation of easy paddling, early entry, and clean takeoffs
 - In small waves, adjust your position a few inches at a time and feel for less splash and more glide
 - Pair trim drills with [Paddling Posture](:paddling-posture) and [Efficient Paddling](:paddling-efficiency)
 
+## Plowing vs. Planing vs. Pearling
+
+- Planing (goal): board feels light and fast with minimal splash; water releases cleanly off the rails and tail.
+- Plowing (too far back/too much drag): nose rides high, bow wave/splash off the chest area, wake feels sticky. Fix: slide forward a few inches and/or relax legs; seek a level, quiet glide.
+- Pearling (too far forward/late): nose starts to bite or go under as the wave lifts. Fix: add a touch of cobra or slide back an inch or two; angle down the line and keep paddling for speed.
+
 ## See also
 
 - [Gliding vs. Planing](:gliding-planing)
