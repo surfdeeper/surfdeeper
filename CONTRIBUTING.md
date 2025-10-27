@@ -51,6 +51,10 @@ Spots live under `src/content/spots/` with structured frontmatter (see `src/cont
 ## PR guidelines
 
 - Keep PRs small and focused
+- Use semantic commit messages with prefixes: `feat:`, `content:`, `fix:`, `chore:`, `refactor:`, `docs:`, `style:`, `test:`, `perf:`, `ci:`, `build:`, or `revert:`
+  - Example: `feat: add new duck dive guide`
+  - Example: `content: update cobra pose description`
+  - Example: `fix: correct broken link in README`
 - If you introduce new tags (`paths`, `appliesTo`), keep them concise; we’ll normalize vocab during review
 - If you must change a route, update inbound references and relationship lists
 
