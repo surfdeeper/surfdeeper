@@ -2,8 +2,9 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
-import GuidePathBreadcrumbs from "../../components/GuidePathBreadcrumbs.astro";
-import GraphLinks from "../../components/GraphLinks.astro";
+import GuideDetailLayout from "../../components/GuideDetailLayout.astro";
+import SidebarPathSummary from "../../components/SidebarPathSummary.astro";
+import SidebarGraphSummary from "../../components/SidebarGraphSummary.astro";
 
 export async function getStaticPaths() {
   const entries = await getCollection("skills");
@@ -40,27 +41,33 @@ const guidePaths: string[] = Array.isArray(data.paths) ? data.paths : [];
     ]}
   />
 
-  <article class="guide-article">
-    <Content />
+  <GuideDetailLayout>
+    <div slot="sidebar" class="sidebar-stack">
+      {
+        guidePaths.length > 0 && (
+          <SidebarPathSummary guideId={currentId} guidePaths={guidePaths} />
+        )
+      }
+      <SidebarGraphSummary
+        currentId={currentId}
+        slug={entry.slug}
+        dependsOnIds={data.dependsOn}
+        leadsToIds={data.leadsTo}
+      />
+    </div>
 
-    {
-      guidePaths.length > 0 && (
-        <GuidePathBreadcrumbs guideId={currentId} guidePaths={guidePaths} />
-      )
-    }
-
-    <GraphLinks
-      currentId={currentId}
-      slug={entry.slug}
-      dependsOnIds={data.dependsOn}
-      leadsToIds={data.leadsTo}
-    />
-  </article>
+    <article class="guide-article">
+      <Content />
+    </article>
+  </GuideDetailLayout>
 
   <style>
     .guide-article {
-      max-width: 800px;
-      margin: 0 auto;
+      max-width: none;
+    }
+    .sidebar-stack {
+      display: grid;
+      gap: var(--space-4);
     }
   </style>
 </Layout>

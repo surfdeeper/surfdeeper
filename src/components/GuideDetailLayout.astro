@@ -1,0 +1,58 @@
+---
+// Presentational layout for guide detail pages with a right sidebar
+// Slots:
+// - default: main content
+// - sidebar: widgets to render in the right sidebar
+---
+
+<div class="detail-layout">
+  <div class="grid">
+    <!-- Sidebar first in DOM so it appears above the fold on mobile -->
+    <aside class="sidebar">
+      <slot name="sidebar" />
+    </aside>
+    <main class="content">
+      <slot />
+    </main>
+  </div>
+</div>
+
+<style>
+  .detail-layout {
+    /* Center the grid and allow a wider max width than article pages */
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr; /* mobile: stacked */
+    grid-template-areas:
+      "sidebar"
+      "content";
+    gap: var(--space-6);
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+  }
+
+  .content {
+    grid-area: content;
+    min-width: 0; /* allow content to shrink in grid */
+  }
+
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: minmax(0, 2fr) minmax(260px, 360px);
+      grid-template-areas: "content sidebar";
+      gap: var(--space-8);
+    }
+    .sidebar {
+      position: sticky;
+      top: var(--space-8);
+      align-self: start; /* stick within the viewport */
+    }
+  }
+</style>
