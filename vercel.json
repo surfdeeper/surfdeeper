@@ -2,20 +2,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "astro",
-  "redirects": [
-    { "source": "/spot-guides", "destination": "/spots", "permanent": true },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "surfdeeper.com"
-        }
-      ],
-      "destination": "https://surfdeeper.com/$1",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
