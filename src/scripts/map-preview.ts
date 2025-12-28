@@ -2,6 +2,13 @@
 import { DEFAULT_THEME_HOMEPAGE } from "../config/map-constants";
 import { getStoredTheme } from "../utils/leaflet-setup";
 import { getTheme, addThemeSwitcherToMap } from "../utils/map-theme-switcher";
+import {
+  createConditionsGrid,
+  createLegend,
+  addLayerControls,
+  gridParamsForZoom,
+  refreshConditionsOverlays,
+} from "../utils/map-overlays";
 
 interface SpotData {
   title: string;
@@ -45,7 +52,7 @@ export function initMapPreview() {
   const L = window.L;
 
   // Initialize map after a brief delay to ensure container has proper dimensions
-  setTimeout(() => {
+  setTimeout(async () => {
     const map = L.map("map-preview", {
       scrollWheelZoom: false,
       dragging: true,
@@ -113,6 +120,29 @@ export function initMapPreview() {
 
     // Set view to show entire Santa Cruz to Bolinas coastline
     map.setView([37.44, -122.36], 9);
+
+    // Add lightweight conditions overlays on homepage
+    try {
+      const { gridSize, spacing } = gridParamsForZoom(map.getZoom(), 37.44);
+      const { wind: windMarkers, swell: swellMarkers } =
+        await createConditionsGrid(37.44, -122.36, gridSize, spacing);
+      const windLayer = L.layerGroup(windMarkers);
+      const swellLayer = L.layerGroup(swellMarkers);
+      const windLegend = createLegend("wind");
+      const swellLegend = createLegend("swell");
+      windLayer.addTo(map);
+      swellLayer.addTo(map);
+      windLegend.addTo(map);
+      swellLegend.addTo(map);
+      addLayerControls(map, windLayer, swellLayer, windLegend, swellLegend);
+      map.on("zoomend", () => {
+        refreshConditionsOverlays(map, windLayer, swellLayer).catch((e) =>
+          console.error(e),
+        );
+      });
+    } catch (e) {
+      console.warn("Homepage overlays unavailable:", e);
+    }
 
     // Force map to recalculate size after initialization
     setTimeout(() => {
